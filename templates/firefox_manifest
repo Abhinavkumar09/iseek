@@ -1,0 +1,14 @@
+{
+	"name": "ISEEK",
+	"description": "TBD",
+	"launch_path": "/",
+	"icons": {
+		"60": "/site_media/sudoku_60.png",
+		"128": "/site_media/sudoku_128.png"
+	},
+	"developer": {
+		"name": "MotiLabs",
+		"url": "http://motilabs.etal.in"
+	},
+	"default_locale": "en"
+}

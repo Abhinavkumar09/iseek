@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id='loading'>
+	<div id='loading_container'>
+		Loading...
+		<div id='loading_progress'></div>
+	</div>
+</div>
+
+<video id='myvideo'><source src='/site_media/assets/new_game/video/output1.ogg' type='video/ogg'></video>
+
+<div class='game_container'>
+	<canvas id='game_canvas' width='800' height='600'></canvas>
+
+	<div id='debug_board_container'>
+		<div id='debug_board'></div>
+		<button onclick='game.refresh_debug();'>Refresh</button>
+	</div>
+</div>
+
+<div id='external_game_item'></div>
+
+	<script type="text/javascript" src="/site_media/javascript/javascript.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_building.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/new_javascript_material.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_people.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_scenes.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/stage_primary_stages.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_score.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_tag.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_talk.js"></script>
+	<script type="text/javascript" src="/site_media/javascript/javascript_custom_components.js"></script>
+
+
+	<script type="text/javascript" src="/site_media/javascript/javascript_load.js"></script>
+
+{% endblock %}
+

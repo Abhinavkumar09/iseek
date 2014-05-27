@@ -1,0 +1,361 @@
+<game>
+	<timescale>300</timescale>
+	<gameurl>/site_media/assets/intro/</gameurl>
+	<javascript>/site_media/assets/intro/javascript.js</javascript>
+
+	<part id='1'>
+		<event id='1'>
+			<starttime>0</starttime>
+			<duration>50</duration>
+			<image>1</image>
+			<position>relative</position>
+			<xpos>0px</xpos>
+			<ypos>0px</ypos>
+			<width>800px</width>
+			<height>600px</height>
+			<z_index>0</z_index>
+		</event>
+		<event id='2'>
+			<starttime>0</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>130px</xpos>
+			<ypos>430px</ypos>
+			<width>100px</width>
+			<height>160px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='3'>
+			<starttime>2</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>140px</xpos>
+			<ypos>420px</ypos>
+			<width>100px</width>
+			<height>150px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='4'>
+			<starttime>4</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>160px</xpos>
+			<ypos>410px</ypos>
+			<width>100px</width>
+			<height>150px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='5'>
+			<starttime>6</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>200px</xpos>
+			<ypos>400px</ypos>
+			<width>95px</width>
+			<height>143px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='6'>
+			<starttime>8</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>220px</xpos>
+			<ypos>395px</ypos>
+			<width>95px</width>
+			<height>143px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='7'>
+			<starttime>10</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>240px</xpos>
+			<ypos>390px</ypos>
+			<width>90px</width>
+			<height>135px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='8'>
+			<starttime>12</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>260px</xpos>
+			<ypos>385px</ypos>
+			<width>90px</width>
+			<height>135px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='9'>
+			<starttime>14</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>280px</xpos>
+			<ypos>385px</ypos>
+			<width>90px</width>
+			<height>135px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='10'>
+			<starttime>16</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>300px</xpos>
+			<ypos>385px</ypos>
+			<width>85px</width>
+			<height>128px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='11'>
+			<starttime>18</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>320px</xpos>
+			<ypos>385px</ypos>
+			<width>85px</width>
+			<height>128px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='12'>
+			<starttime>20</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>340px</xpos>
+			<ypos>385px</ypos>
+			<width>80px</width>
+			<height>120px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='13'>
+			<starttime>22</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>360px</xpos>
+			<ypos>385px</ypos>
+			<width>80px</width>
+			<height>120px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='14'>
+			<starttime>24</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>380px</xpos>
+			<ypos>382px</ypos>
+			<width>75px</width>
+			<height>112px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='15'>
+			<starttime>26</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>395px</xpos>
+			<ypos>380px</ypos>
+			<width>75px</width>
+			<height>112px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='16'>
+			<starttime>28</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>410px</xpos>
+			<ypos>380px</ypos>
+			<width>75px</width>
+			<height>112px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='17'>
+			<starttime>30</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>425px</xpos>
+			<ypos>380px</ypos>
+			<width>73px</width>
+			<height>112px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='18'>
+			<starttime>32</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>440px</xpos>
+			<ypos>380px</ypos>
+			<width>69px</width>
+			<height>102px</height>
+			<z_index>1</z_index>
+		</event>
+		<event id='19'>
+			<starttime>34</starttime>
+			<duration>2</duration>
+			<image>3</image>
+			<position>absolute</position>
+			<xpos>455px</xpos>
+			<ypos>375px</ypos>
+			<width>65px</width>
+			<height>90px</height>
+			<z_index>1</z_index>
+		</event>
+
+		<partaction id='20'>
+			<starttime>0</starttime>
+			<duration>50</duration>
+			<image>4</image>
+			<position>absolute</position>
+			<xpos>740px</xpos>
+			<ypos>0px</ypos>
+			<width>50px</width>
+			<height>50px</height>
+			<z_index>10</z_index>
+			<onclick>logout();</onclick>
+		</partaction>
+
+		<partaction id='21'>
+			<starttime>0</starttime>
+			<duration>50</duration>
+			<image>5</image>
+			<position>absolute</position>
+			<xpos>650px</xpos>
+			<ypos>0px</ypos>
+			<width>50px</width>
+			<height>50px</height>
+			<z_index>10</z_index>
+			<onclick>show_options(game, 2);</onclick>
+		</partaction>
+
+		<partaction id='22'>
+			<starttime>0</starttime>
+			<duration>50</duration>
+			<image>9</image>
+			<position>absolute</position>
+			<xpos>10px</xpos>
+			<ypos>0px</ypos>
+			<width>50px</width>
+			<height>50px</height>
+			<z_index>10</z_index>
+			<onclick>back();</onclick>
+		</partaction>
+	</part>
+
+	<part id='2'>
+		<partaction id='1'>
+			<image>6</image>
+			<position>absolute</position>
+			<xpos>100px</xpos>
+			<ypos>200px</ypos>
+			<width>150px</width>
+			<height>150px</height>
+			<z_index>1</z_index>
+			<onclick>show_basket_design(game, 1);</onclick>
+		</partaction>
+
+		<partaction id='2'>
+			<image>7</image>
+			<position>absolute</position>
+			<xpos>300px</xpos>
+			<ypos>200px</ypos>
+			<width>150px</width>
+			<height>150px</height>
+			<z_index>1</z_index>
+			<onclick>show_basket_design(game, 2);</onclick>
+		</partaction>
+
+		<partaction id='3'>
+			<image>8</image>
+			<position>absolute</position>
+			<xpos>500px</xpos>
+			<ypos>200px</ypos>
+			<width>150px</width>
+			<height>150px</height>
+			<z_index>1</z_index>
+			<onclick>show_basket_design(game, 3);</onclick>
+		</partaction>
+
+		<partaction id='4'>
+			<image>4</image>
+			<position>absolute</position>
+			<xpos>740px</xpos>
+			<ypos>0px</ypos>
+			<width>50px</width>
+			<height>50px</height>
+			<z_index>10</z_index>
+			<onclick>logout();</onclick>
+		</partaction>
+
+		<partaction id='5'>
+			<image>9</image>
+			<position>absolute</position>
+			<xpos>10px</xpos>
+			<ypos>0px</ypos>
+			<width>50px</width>
+			<height>50px</height>
+			<z_index>10</z_index>
+			<onclick>goback(game, 1);</onclick>
+		</partaction>
+
+	</part>
+
+
+	<asset id='1'>
+		<type>image</type>
+		<value>background.jpg</value>
+	</asset>
+
+	<asset id='2'>
+		<type>image</type>
+		<value>background2.jpg</value>
+	</asset>
+
+	<asset id='3'>
+		<type>image</type>
+		<value>person1.jpg</value>
+	</asset>
+
+	<asset id='4'>
+		<type>image</type>
+		<value>logout.png</value>
+	</asset>
+
+	<asset id='5'>
+		<type>image</type>
+		<value>basket_option.png</value>
+	</asset>
+
+	<asset id='6'>
+		<type>image</type>
+		<value>basket_1.png</value>
+	</asset>
+
+	<asset id='7'>
+		<type>image</type>
+		<value>basket_2.png</value>
+	</asset>
+
+	<asset id='8'>
+		<type>image</type>
+		<value>basket_3.png</value>
+	</asset>
+
+	<asset id='9'>
+		<type>image</type>
+		<value>back.png</value>
+	</asset>
+</game>
+
