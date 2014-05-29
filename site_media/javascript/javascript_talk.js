@@ -259,7 +259,7 @@ Q.Sprite.extend("QuestionChoices", {
 		if(this.p.isClickable)
 			this.p.textUI.p.x += 50;
 
-		this.p.h = height + 10;
+		this.p.h = height + 10; 
 	},
 
 	touch: function(e) {
