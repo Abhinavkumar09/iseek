@@ -13,7 +13,6 @@ Q.component("PriceTag", {
 			opts.material = this;
 			tag = new Q.Tag(opts);
 			this.stage.insert(tag, this);
-			tag.show();
 		}      
 	}
 });
@@ -52,10 +51,6 @@ Q.Sprite.extend("Tag", {
 		}
 	},
 
-	show: function() {
-		this.stage.insert(new Q.UI.Text({label:"" + this.p.material.p[this.p.variable], size: 14, family: "Arial"}), this);
-	},
-
 	draw: function(ctx) {
 		ctx.beginPath();
 		ctx.arc(0, 0, this.p.radius, 0, 2 * Math.PI, false);
@@ -68,6 +63,10 @@ Q.Sprite.extend("Tag", {
 			ctx.strokeStyle = this.p.borderColor;
 			ctx.stroke();
 		}
+		var label = "" + this.p.material.p[this.p.variable];
+		ctx.font = "14px Arial";
+		var metrics = ctx.measureText(label);
+		ctx.fillText(label, -metrics.width/2, -7);
 	},
 
 });

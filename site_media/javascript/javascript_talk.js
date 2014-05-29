@@ -65,7 +65,7 @@ Q.component("Talk", {
 			}
 			this.p.quote = new Q.Quote({speaker:this, labels:labels, mirror: mirror});
 			this.stage.insert(this.p.quote);
-			this.p.quote.show();
+//			this.p.quote.show();
 		},
 
 	}
@@ -139,6 +139,7 @@ Q.Sprite.extend("Quote",{
 		this.p.y = this.p.speaker.p.y +  (-this.p.speaker.p.cy - this.p.height / 2);
 
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -147,7 +148,7 @@ Q.Sprite.extend("Quote",{
 		this.destroy();
 	},
 
-	show: function() {
+	inserted: function() {
 		this.stage.insert(this.p.ui_text, this);
 	},
 
@@ -213,6 +214,7 @@ Q.Sprite.extend("QuestionChoices", {
 		this.add("Touch");
 		this.on("touch");
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -238,7 +240,7 @@ Q.Sprite.extend("QuestionChoices", {
 		}
 	},
 
-	show: function() {
+	inserted: function() {
 		var offset = 10;
 		var height = 0;
 		var l = 0;
@@ -308,12 +310,10 @@ Q.Sprite.extend("MyQuestion", {
 		max_height = text_height + 2 * (question.choices.length + 1.5) * text_height;
 		questionSprite = new Q.QuestionChoices({label: question.question, y: - max_height / 2 + text_height, w: this.p.w, question: question, listener: this.p.listener});
 		box.insert(questionSprite);
-		questionSprite.show();
 		for(i = 0; i < question.choices.length; i++) {
 			choice = question.choices[i];
 			questionSprite = new Q.QuestionChoices({index: i, label: choice, y: questionSprite.p.y + questionSprite.p.h / 2 + 2 * text_height, w: this.p.w, isClickable:true, question: question, listener: this.p.listener});
 			box.insert(questionSprite);
-			questionSprite.show();
 		}
 		box.fit(20);
 	},

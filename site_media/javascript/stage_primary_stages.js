@@ -28,9 +28,10 @@ Q.Sprite.extend("Transition", {
 			spent_time: 0,
 			total_time: 0.5,
 		});
+		this.on("inserted");
 	},
 
-	show: function() {
+	inserted: function() {
 		var alpha = 0;
 		if (this.p.direction == "light")
 			alpha = 1;
@@ -85,7 +86,6 @@ Q.Sprite.extend("Transition", {
 Q.scene("TransitionScene", function(stage) {
 	flicker = new Q.Transition({x: Q.width/2, y: Q.height/2, direction: stage.options.direction});
 	stage.insert(flicker);
-	flicker.show();
 });
 
 Q.scene("Dialog", function(stage) {
@@ -172,6 +172,7 @@ Q.Sprite.extend("Element", {
 		this.add("Touch");
 		this.on("touch");
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -204,7 +205,7 @@ Q.Sprite.extend("Element", {
 
 	},
 
-	show: function() {
+	inserted: function() {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
@@ -223,6 +224,7 @@ Q.Sprite.extend("ElementSelector", {
 	init: function(p) {
 		this._super(Q._defaults(p, {w: Q.width/2 - 10, h: Q.height}));
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -243,7 +245,7 @@ Q.Sprite.extend("ElementSelector", {
 		this.destroy();
 	},
 
-	show: function() {
+	inserted: function() {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
@@ -275,14 +277,12 @@ Q.Sprite.extend("ElementSelector", {
 			this.stage.elementselector.trigger("destroyme");
 			this.stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, index: this.p.certificate_index});
 			this.stage.insert(this.stage.certificateselector);
-			this.stage.certificateselector.show();
 		});
 
 		var y = -box.p.cy + navbox.p.h + 50;
 		for(var i = 0; i < this.p.badge.elements.length; i++) {
 			element = new Q.Element({y: y, w: this.p.w - 20, element: this.p.badge.elements[i], index: i});
 			box.insert(element);
-			element.show();
 			y += 100;
 		}
 	},
@@ -301,6 +301,7 @@ Q.Sprite.extend("Badge", {
 		this.add("Touch");
 		this.on("touch");
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -316,7 +317,7 @@ Q.Sprite.extend("Badge", {
 	},
 
 
-	show: function() {
+	inserted: function() {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
@@ -335,7 +336,6 @@ Q.Sprite.extend("Badge", {
 		this.stage.certificateselector.trigger("destroyme");
 		this.stage.elementselector = new Q.ElementSelector({x: Q.width * 3 / 4 + 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, badge: this.p.badge, certificate_index: this.p.certificate_index});
 		this.stage.insert(this.stage.elementselector);
-		this.stage.elementselector.show();
 	}
 });
 
@@ -344,6 +344,7 @@ Q.Sprite.extend("BadgeSelector", {
 	init: function(p) {
 		this._super(p, {});
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -358,11 +359,10 @@ Q.Sprite.extend("BadgeSelector", {
 	},
 
 
-	show: function() {
+	inserted: function() {
 		for(var j = 0; j < this.p.certificate.badges.length; j++) {
 			badge = new Q.Badge({y: -this.p.h/2 + (j + 0.45) * 90, x: 0, w: this.p.w - 20, badge: this.p.certificate.badges[j], index: j, certificate_index: this.p.index});
 			this.stage.insert(badge, this);
-			badge.show();
 		}
 	},
 
@@ -374,6 +374,7 @@ Q.Sprite.extend("CertificateSelector", {
 	init: function(p) {
 		this._super(Q._defaults(p, {index: 0}));
 		this.on("destroyme");
+		this.on("inserted");
 	},
 
 	destroyme: function() {
@@ -393,7 +394,7 @@ Q.Sprite.extend("CertificateSelector", {
 		this.destroy();
 	},
 
-	show: function() {
+	inserted: function() {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
@@ -445,8 +446,6 @@ Q.Sprite.extend("CertificateSelector", {
 
 		var certificate = new Q.BadgeSelector({x: 0, y: 50, h: (this.p.h-100), w: this.p.w, certificate: this.stage.options.certificates[this.p.index], index: this.p.index, certificate_index: this.p.index});
 		box.insert(certificate);
-		certificate.show();
-
 	},
 });
 
@@ -454,10 +453,11 @@ Q.Sprite.extend("CertificateSelector", {
 Q.Sprite.extend("InventoryStats", {
 	init: function(p) {
 		this._super(Q._defaults(p, {h: 300, w: Q.width/2}));
+		this.on("inserted");
 	},
 
 
-	show: function() {
+	inserted: function() {
 		var title = new Q.UI.Text({x: -this.p.w/2 + 100, y: -50, label: "Inventory"});
 		this.stage.insert(title, this);
 
@@ -490,10 +490,11 @@ Q.Sprite.extend("InventoryStats", {
 Q.Sprite.extend("GameStats", {
 	init: function(p) {
 		this._super(Q._defaults(p, {h: Q.height, w: Q.width/2}));
+		this.on("inserted");
 	},
 
 
-	show: function() {
+	inserted: function() {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
@@ -511,17 +512,14 @@ Q.Sprite.extend("GameStats", {
 		this.stage.insert(health_icon, this);
 		var healthbar = new Q.ScoreBar({x: player.p.x + 150, y: player.p.y - 15, w: 100, h: 20});
 		this.stage.insert(healthbar, this);
-		healthbar.show();
 
 		var money_icon = new Q.Medal({asset: "Icons/money.png", x: player.p.x + 80, y: player.p.y + 15, w: 100, });
 		this.stage.insert(money_icon, this);
 		var financebar = new Q.ScoreBar({x: player.p.x + 150, y: player.p.y + 15, w: 100, h: 20, parameter: "money", fillStyle: "green", label: true});
 		this.stage.insert(financebar, this);
-		financebar.show();
 		
 		var inventory = new Q.InventoryStats({x: 0, y: player.p.y + 150});
 		this.stage.insert(inventory, this);
-		inventory.show();
 	},
 });
 
@@ -532,12 +530,10 @@ Q.scene("LevelSelector", function(stage) {
 
 	stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, certificates: stage.options.certificates});
 	stage.insert(stage.certificateselector);
-	stage.certificateselector.show();
 
 
 	stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, });
 	stage.insert(stage.gamestats);
-	stage.gamestats.show();
 
 	Q.audio.stop();
 	Q.audio.play("Lazy_Day.wav", {loop: true});

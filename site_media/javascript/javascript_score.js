@@ -208,63 +208,30 @@ Q.Sprite.extend("ScoreBar", {
 		Q.state.on("change." + this.p.parameter,this,"score");
 	},
 
-	show: function() {
-		width = this.p.w * this.p.score / this.p.maxScore;
-		if(this.p.label)
-			width = this.p.w;
-
-		this.p.outline = new Q.UI.Container({
-			w: this.p.w,
-			h: this.p.h,
-			radius: 0,
-			border: 1,
-			shadow: false,
-			stroke: 'black',
-			fill: "rgba(255, 255, 255, 0.2)"
-		});
-
-		var box = this.stage.insert(this.p.outline, this);
-
-		this.p.bar = new Q.UI.Container({
-			w: width,
-			h: this.p.h,
-			radius: 0,
-			border: 0,
-			shadow: false,
-			stroke: 'black',
-			fill: this.p.fillStyle
-		});
-
-		box.insert(this.p.bar);
-
-		if(this.p.label) {
-			this.p.ui_text = new Q.UI.Text({label: "" + this.p.score, size: 14, family:'Arial', type: Q.SPRITE_NONE});
-			box.insert(this.p.ui_text);
-		}
-	},
-
-	fdsdraw: function(ctx) {
+	draw: function(ctx) {
 		width = this.p.w * this.p.score / this.p.maxScore;
 		if(this.p.label)
 			width = this.p.w;
 
 		ctx.beginPath();
 		ctx.rect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-		ctx.lineWidth = 1;
+		ctx.lineWidth = "1";
 		ctx.strokeStyle = 'black';
 		ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
 		ctx.fill();
 		ctx.stroke();
 
 		ctx.beginPath();
-		ctx.lineWidth = 0;
+		ctx.lineWidth = "0";
 		ctx.rect(-this.p.cx + 1, -this.p.cy + 1, width - 2, this.p.h - 2);
 		ctx.fillStyle = this.p.fillStyle;
 		ctx.fill();
 
 		if(this.p.label) {
 			ctx.fillStyle = 'black';
-			ctx.fillText(this.p.score, -this.p.cx + 1, -this.p.cy + 1);
+			ctx.font = "14px Arial";
+			var metrics = ctx.measureText(this.p.score);
+			ctx.fillText(this.p.score, -metrics.width/2, -7);
 		}
 	
 	},
