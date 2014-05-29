@@ -7,23 +7,16 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 			min_value: 0,
 			max_value: 100,
 			value: 50,
+			pos: {'x': 0, 'y': 0},
 		}));
 
 		this.callback = callback;
-		this.p.pos = [];
-		this.p.pos.x = 0;
-		this.p.pos.y = 0;
 
 		this.p.cx = this.p.w/2;
 		this.p.cy = this.p.h/2;
 		this.add("Touch");
-//		this.on('touch');
 		this.on('drag');
 	},
-
-//	touch: function(touch) {
-//		this.move(touch);
-//	},
 
 	drag: function(touch) {
 		this.move(touch);
@@ -38,6 +31,9 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 		if(this.p.pos.x > this.p.cx)
 			this.p.pos.x = this.p.cx;
 		this.p.value = Math.floor(this.p.min_value + (this.p.max_value - this.p.min_value) * (this.p.cx + this.p.pos.x) / this.p.w);
+
+		this.trigger('change');
+
 		if(this.callback) {
 			this.callback();
 		}
@@ -59,45 +55,86 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 });
 
 
+
 Q.UI.Spinner = Q.UI.Container.extend("UI.Spinner", {
 	init: function(p, callback) {
 		this._super(Q._defaults(p,{
 			type: Q.SPRITE_MATERIAL,
-			h: 20,
-			w: 100,
+			h: 80, // 40 for text and 20 each for triangles
+			w: 50,
 			min_value: 0,
 			max_value: 100,
 			value: 50,
 		}));
 
 		this.callback = callback;
-		this.p.pos = [];
-		this.p.pos.x = 0;
-		this.p.pos.y = 0;
 
-		this.p.cx = this.p.w/2;
-		this.p.cy = this.p.h/2;
 		this.add("Touch");
-		this.on('touch');
-		this.on('touchend');
+		this.on("touch");
+		this.on("touchEnd");
+
+//		this.on("inserted", this, "addButtons");
+	},
+
+	changeValue: function(dvalue) {
+		this.p.value += dvalue;
+		if(this.p.value < this.p.min_value) {
+			this.p.value = this.p.min_value;
+		}
+		if(this.p.value > this.p.max_value) {
+			this.p.value = this.p.max_value;
+		}
+
+		this.trigger('change');
+
+		if(this.callback) {
+			this.callback();
+		}
 	},
 
 	touch: function(touch) {
-		this.p.is_pressed = true;
+		var m = this.matrix.m;
+		var y = (touch.y - m[5])/m[3];
+		var obj = this;
+		if(y > 0) {
+			obj.changeValue(-1);
+			this.p.interval = setInterval(function(){obj.changeValue(-1);}, 300);
+		} else {
+			obj.changeValue(1);
+			this.p.interval = setInterval(function(){obj.changeValue(1);}, 300);
+		}
 	},
 
-	touchend: function(touch) {
-		this.p.is_pressed = false;
+	touchEnd: function(touch) {
+		clearInterval(this.p.interval);
 	},
 
 	draw: function(ctx) {
 		ctx.save();
 		ctx.beginPath();
+		ctx.lineWidth = "1";
+		var X0 =   0, Y0 = -40,
+		    X1 =  10, Y1 = -20,
+		    X2 = -10, Y2 = -20;
+		ctx.moveTo(X0,Y0);
+		ctx.lineTo(X1,Y1);
+		ctx.lineTo(X2,Y2);
+		ctx.lineTo(X0,Y0);
+		ctx.fill();
 
-		ctx.fillStyle = "rgb(255,255,255)";
-		ctx.fillRect(this.p.pos.x - 4, -this.p.cy - 5, 8, this.p.h + 10);
+		    X0 =   0, Y0 = 40,
+		    X1 =  10, Y1 = 20,
+		    X2 = -10, Y2 = 20;
+		ctx.moveTo(X0,Y0);
+		ctx.lineTo(X1,Y1);
+		ctx.lineTo(X2,Y2);
+		ctx.lineTo(X0,Y0);
+		ctx.fill();
 
-		ctx.fillText(this.p.value + "", 0, this.p.h);	
+		var label = this.p.value + "";
+		var metrics = Q.ctx.measureText(label);
+		var fontsize = 24;
+		ctx.fillText(label, - (metrics.width / 2), - (fontsize * 1.2 / 2));
 		ctx.restore();
 	},
 
