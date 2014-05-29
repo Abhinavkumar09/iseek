@@ -227,7 +227,7 @@ Q.Sprite.extend("QuestionChoices", {
 		var offset = 50;
 		if(this.p.isClickable) {
 			ctx.beginPath();
-			ctx.rect(-this.p.w/2, -this.p.h, this.p.w, 2 * this.p.h);
+			ctx.rect(-this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
 			ctx.lineWidth = 1;
 			ctx.strokeStyle = 'grey';
 			ctx.stroke();
@@ -259,7 +259,7 @@ Q.Sprite.extend("QuestionChoices", {
 		if(this.p.isClickable)
 			this.p.textUI.p.x += 50;
 
-		this.p.h = height;
+		this.p.h = height + 10;
 	},
 
 	touch: function(e) {
