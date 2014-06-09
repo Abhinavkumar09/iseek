@@ -728,6 +728,8 @@ Q.scene("market_research_1_School",function(stage) {
 
 	Mira.onquestioncompletion = function () {
 		console.log("Done");
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+		stage.pause();
 	};
 
 	Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element, nextStage: Q.STAGE_LEVEL_PRIMARY, context: Mira, func: "onquestioncompletion"});
