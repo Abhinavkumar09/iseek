@@ -310,7 +310,6 @@ Q.scene("market_research_1_House", function(stage) {
 	Mira.addMaterialContainer("Player");
 	stage.player = Mira;
 
-
 });
 
 
@@ -727,13 +726,11 @@ Q.scene("market_research_1_School",function(stage) {
 	stage.player = Mira;
 
 
-	// Blackboard
-	var Blackboard = Q("Blackboard").first();
-	Blackboard.p.lessons = stage.options.element.element;
+	Mira.onquestioncompletion = function () {
+		console.log("Done");
+	};
 
-
-
-	Blackboard.teach(true);
+	Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element, nextStage: Q.STAGE_LEVEL_PRIMARY, context: Mira, func: "onquestioncompletion"});
 
 
 	stage.accept_material = function(material_name) {

@@ -44,7 +44,7 @@
   <image source="../figs/blackboard.png" width="611" height="150"/>
   <tile id="0">
    <properties>
-    <property name="Class" value="Blackboard"/>
+    <property name="Class" value="Sprite"/>
     <property name="asset" value="classroom/blackboard.png"/>
     <property name="name" value="Blackboard"/>
    </properties>
