@@ -14,22 +14,17 @@ Q.Sprite.extend("MyVideo",{
 });
 
 Q.component("Video", {
-	added: function() {
-//		this.entity.p.video_state = false;
-	},
-
 	extend: {
 		show_video: function(lesson) {
+			console.log("Video.show_video");
 			newvideo = document.getElementById("myvideo");
+			newvideo.play();
 			var myvideo = new Q.MyVideo({filename: lesson.filename, w: 400, h: 300, x: this.p.x, y: this.p.y});
 			this.stage.insert(myvideo);
-//			this.p.video_state = true;
 			lesson.status = 0;
-//			player = this;
 			newvideo.onended = function(e) {
 				myvideo.destroy();
 				lesson.status = 1;
-//				player.p.video_state = false;
 			};
 		},
 
@@ -38,9 +33,6 @@ Q.component("Video", {
 
 
 Q.component("Talk", {
-	added: function() {
-	},
-
 	extend: {
 		info: function() {
 			console.log("infoing: " + this.p.name);
@@ -351,7 +343,7 @@ Q.Sprite.extend("Questionnaire", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 		}));
-		this.add("Question");
+		this.add("Question, Video");
 //		if(this.p.speaker) {
 //			this.p.x = this.p.speaker.p.x;
 //			this.p.y = this.p.speaker.p.y;
@@ -360,6 +352,7 @@ Q.Sprite.extend("Questionnaire", {
 	},
 
 	show: function(wait) {
+		console.log("Questionnaire.show");
 		questionnaire = this;
 		if(this.p.questions.status == 0){ // Running
 			setTimeout(function(){questionnaire.show(true);}, 1000);
@@ -379,7 +372,14 @@ Q.Sprite.extend("Questionnaire", {
 			return;
 		}
 
-		this.show_question(this.p.questions);
+		if(this.p.questions instanceof Question) {
+			console.log("instanceof Question");
+			this.show_question(this.p.questions);
+		}
+		else if(this.p.questions instanceof Video) {
+			console.log("instanceof Video");
+			this.show_video(this.p.questions);
+		}
 		setTimeout(function(){questionnaire.show(true);}, 1000);
 	},
 });
