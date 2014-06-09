@@ -22,7 +22,7 @@ Q.scene("health_1",function(stage) {
 		i += 1;
 	}
 
-	var sahiya = new Q.Sahiya({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
+	var sahiya = new Q.Person({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
 	stage.insert(sahiya);
 	Sahiya.off("hit", Sahiya, "collision");
 	
