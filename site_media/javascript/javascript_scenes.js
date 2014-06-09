@@ -22,13 +22,49 @@ Q.scene("health_1",function(stage) {
 		i += 1;
 	}
 
-
-
-	// Sahiya
 	var sahiya = new Q.Sahiya({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
 	stage.insert(sahiya);
-	sahiya.info({duration:-1});
+	Sahiya.off("hit", Sahiya, "collision");
 	
+	Sahiya.p.labels = [
+			"Hi Mira! The health center is closed as we have", 
+			"lost all the keys. People have taken the keys", 
+			"for their well-being and have not returned them.", 
+			"To unlock the door, you have to get keys from", 
+			"the three healthiest persons in the community:", 
+			"Ram, Alam, Arvind"
+		];
+
+	Sahiya.collision = function(col) {
+		if(Q.game.player.keys.length >= 3){ // assumed relationship key attained at the end
+			this.p.labels = [
+				"So now you know what is important",
+				"for good health - a sound mind,",
+				"a healthy body and amiable relationship", 
+				"with those around you!",
+				"Now, you can enter the healthcenter"
+			];
+		}
+		else if(Q.game.player.keys.length >= 2) { // assumed body key is attained second
+			this.p.labels = [
+				"Mira, you have the 'mind' and 'body' keys",
+				"but again, that is not enough. A sound mind",
+				"and a health body only flourish when you have",
+				"good relations with your friends and family.", 
+				"Go to Arvind and get the relationship key"
+			]
+		}
+		else if(Q.game.player.keys.length >= 1) { // assumed mind key is attained first
+			this.p.labels = [
+				"Mira, now you have the 'mind' key but ",
+				"that is not enough for all round good health.",
+				"A sound mind is boosted by a healthy body,",
+				"so now go to Alam and get the body key"
+			]
+		}
+		Sahiya.quote(Sahiya.p.labels);
+	};
+	Sahiya.on("hit", Sahiya, "collision");
 
 	var Ram = new Q.Person({asset: "People/pranav.png", x:800, y:600, isInteractable:true, name:"Ram"});
 	stage.insert(Ram);
@@ -114,8 +150,10 @@ Q.scene("health_1",function(stage) {
 		var i = 0;
 		while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 			b = Q("Building").at(i);
-			if(b.p.name == "HealthCenter")
+			if(b.p.name == "HealthCenter"){
+				Sahiya.info({duration:-1});
 				b.setInteractable(true);
+			}
 			i += 1;
 		}
 	};
