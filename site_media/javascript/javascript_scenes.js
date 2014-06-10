@@ -21,16 +21,16 @@ Q.scene("health_1",function(stage) {
 		b.p.nextScene = stage.name + "_" + b.p.name;
 		
 		if(b.p.name == "HealthCenter" && !(b.p.isInteractable)){
-			b.collision = function(col) {
+			b.collide = function(col) {
 				Sahiya.info({duration:-1});
 			}
-			b.on("hit", b, "collision");
+			b.on("hit", b, "collide");
 		}
 		i += 1;
 	}
 
-	var sahiya = new Q.Person({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
-	stage.insert(sahiya);
+	var Sahiya = new Q.Person({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
+	stage.insert(Sahiya);
 	Sahiya.p.labels = [
 			"Hi Mira! The health center is closed as we have", 
 			"lost all the keys. People have taken the keys", 
