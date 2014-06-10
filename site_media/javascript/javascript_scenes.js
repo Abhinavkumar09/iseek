@@ -12,23 +12,33 @@ Q.scene("health_1",function(stage) {
 
 	Mira.addKeyContainer();
 
-
+	// Sahiya
+	var sahiya = new Q.Sahiya({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
+	stage.insert(sahiya);
+	sahiya.info({duration:-1});
+	
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
 		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
 		b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = stage.name + "_" + b.p.name;
+
+		if(b.p.name == "HealthCenter"){
+			if(!(b.p.isInteractable)){
+				b.collide = function(col) {
+				sahiya.info({duration:-1});
+				sahiya.p.labels = [
+						    "Mira, you need ALL three - mind,",
+						    "body and relationship - keys in order",
+						    "to enter the health center"
+					          ];
+			      	}
+				b.on("hit", Ram, "collide");
+			}
+		}
 		i += 1;
 	}
-
-
-
-	// Sahiya
-	var sahiya = new Q.Sahiya({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
-	stage.insert(sahiya);
-	sahiya.info({duration:-1});
-	
 
 	var Ram = new Q.Person({asset: "People/pranav.png", x:800, y:600, isInteractable:true, name:"Ram"});
 	stage.insert(Ram);
