@@ -377,32 +377,3 @@ Q.Person.extend("Player", {
 	},
 
 });
-
-
-Q.Person.extend("Sahiya", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-		labels: [
-			"Hi Mira! The health center is closed as we have", 
-			"lost all the keys. People have taken the keys", 
-			"for their well-being and have not returned them.", 
-			"To unlock the door, you have to get keys from", 
-			"the three healthiest persons in the community:", 
-			"Ram, Shyam, Sita"
-		]}));
-	},
-
-	collision: function(col) {
-		// Check the current state
-		if(Q.game.player.keys >= 3) 
-			this.p.labels = [
-				"So now you know what is important",
-				"for good health - a sound mind,",
-				"a healthy body and amiable relationship", 
-				"with those around you!"
-			]
-		this.quote(this.p.labels);
-	}
-});
-
-
