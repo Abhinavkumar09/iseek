@@ -165,10 +165,17 @@ Q.Sprite.extend("CircularProgressBar", {
 			ctx.arc(0, - this.p.max_width + this.p.min_width, this.p.radius + this.p.max_width, end_angle, start_angle, true);
 			ctx.closePath();
 			if(i <= this.p.finished_count) {
-				ctx.fillStyle = "black";
+				var grd = ctx.createLinearGradient(0, -this.p.radius, 0, this.p.radius);
+				grd.addColorStop(0,"red");
+				grd.addColorStop(0.5,"white");
+				grd.addColorStop(1,"green");
+
+				// Fill with gradient
+				ctx.fillStyle=grd;
 			} else {
 				ctx.fillStyle = "grey";
 			}
+			
 			ctx.fill();
 
 			start_angle = end_angle + offset;
