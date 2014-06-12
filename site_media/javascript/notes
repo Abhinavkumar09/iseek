@@ -50,3 +50,18 @@ Health elements:
 2) Memory games
 3) 
 
+
+
+
+0) When the player is angry, everything has an angry face like flowers will have angry face. 
+1) For some feelings, the player may have to take a timeout (use system time for that).
+
+
+Add random events like baskets were stolen. Then make the player spend some money on infrastructure like locks.
+
+
+
+On Mini Map glow the location where the player needs to go
+
+Check if we can skip openERP UI to update data
+

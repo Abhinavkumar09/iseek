@@ -45,7 +45,7 @@ Q.component("Talk", {
 			this.stage.insert(new Q.Info({speaker:this}), this);
 		},
 
-		quote: function(labels, mirror) {
+		quote: function(labels, mirror, duration) {
 			if(! mirror)
 				mirror = 1;
 
@@ -55,9 +55,8 @@ Q.component("Talk", {
 				this.p.quote.trigger("destroyme");
 				this.p.quote = null;					
 			}
-			this.p.quote = new Q.Quote({speaker:this, labels:labels, mirror: mirror});
+			this.p.quote = new Q.Quote({speaker:this, labels:labels, mirror: mirror, duration: duration});
 			this.stage.insert(this.p.quote);
-//			this.p.quote.show();
 		},
 
 	}
@@ -98,18 +97,18 @@ Q.Sprite.extend("Info",{
 
 Q.Sprite.extend("Quote",{ 
 	init: function(p) {
-		this._super(p, {
+		this._super(Q._defaults(p, {
 			name: "Quote",
 			labels: ["Hi!"],
-			end_labels: null,
 			radius: 12,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			time_spent: 0,
+			duration: 5,
 			speaker: null,
 			mirror: 1,
 			z: 10,
-		});
+		}));
 
 		text = "";
 		ifFirst = true;
@@ -172,14 +171,9 @@ Q.Sprite.extend("Quote",{
 	},
 
 	step: function(dt) {
-		this.p.time_spent += dt
-		if(this.p.time_spent > 5)
-			if(!this.p.end_labels)
-				this.trigger("destroyme");
-			else
-				this.p.labels = this.p.end_labels;
-		if(this.p.time_spent > 10)
-				this.trigger("destroyme");
+		this.p.time_spent += dt;
+		if(this.p.time_spent > this.p.duration)
+			this.trigger("destroyme");
 	}
 
 });
