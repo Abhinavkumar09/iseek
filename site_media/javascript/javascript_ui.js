@@ -141,3 +141,39 @@ Q.UI.Spinner = Q.UI.Container.extend("UI.Spinner", {
 });
 
 
+Q.Sprite.extend("CircularProgressBar", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			radius: 30,
+			min_width: 2,
+			max_width: 5,
+			max_count: 3,
+			finished_count: 2,
+		}));
+	},
+
+	draw: function(ctx) {
+		ctx.save();
+		var start_angle = Math.PI/2;
+		var offset = Math.PI/30;
+
+		for(var i = 1; i <= this.p.max_count; i++) {
+			ctx.beginPath();
+			var end_angle = start_angle + Math.PI / this.p.max_count - offset;
+
+			ctx.arc(0, 0, this.p.radius, start_angle, end_angle);
+			ctx.arc(0, - this.p.max_width + this.p.min_width, this.p.radius + this.p.max_width, end_angle, start_angle, true);
+			ctx.closePath();
+			if(i <= this.p.finished_count) {
+				ctx.fillStyle = "black";
+			} else {
+				ctx.fillStyle = "grey";
+			}
+			ctx.fill();
+
+			start_angle = end_angle + offset;
+		}
+		ctx.restore();
+	},
+});
+
