@@ -329,7 +329,8 @@ Q.Sprite.extend("Badge", {
 
 		var box = this.stage.insert(this.p.box, this);
 		box.insert(new Q.UI.Text({x: 0, y: 0, label: this.p.badge.name}));
-		box.insert(new Q.Medal({x: -this.p.w/2 +25, y: 0, asset: this.p.badge.image}));
+		box.insert(new Q.Medal({x: -this.p.w/2 + 50, y: 0, asset: this.p.badge.image}));
+		box.insert(new Q.CircularProgressBar({x: -this.p.w/2 + 50, y: 0}));
 	},
 
 	touch: function(col) {
