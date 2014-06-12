@@ -22,7 +22,7 @@ Q.scene("health_1",function(stage) {
 		
 		if(b.p.name == "HealthCenter" && !(b.p.isInteractable)){
 			b.collide = function(col) {
-				Sahiya.info({duration:-1});
+				Sahiya.info({duration:-1, showOnMiniMap: true});
 			}
 			b.on("hit", b, "collide");
 		}

@@ -8,6 +8,7 @@ Q.scene("navigation",function(stage) {
 
 	var minimap = new Q.MiniMap({width: minimap_width, height: minimap_height});
 	var minimapcursor = new Q.MiniMapCursor({w: minimap_width * Q.width / 80 / 32, h: minimap_height * Q.height / 60 / 32, minimap_width: minimap_width, minimap_height: minimap_height});
+	var minimapinfo = new Q.MiniMapInfo({minimap_width: minimap_width, minimap_height: minimap_height});
 
 	var container = stage.insert(new Q.UI.Container({
 		//fill: "gray",
@@ -22,6 +23,7 @@ Q.scene("navigation",function(stage) {
 
 	stage.insert(minimap, container);
 	stage.insert(minimapcursor, container);
+	stage.insert(minimapinfo, container);
 });
 
 
@@ -98,6 +100,48 @@ Q.Sprite.extend("MiniMap", {
 
 });
 
+
+// Shows a blinking light on the minimap where the user's attention is required
+Q.Sprite.extend("MiniMapInfo", {
+	init: function(p) {
+		this._super(p, {
+			time_spent:0,
+			duration: 0.5,
+			radius: 0,
+			max_radius: 10,
+		});
+
+		this.on("show");
+	},
+
+	show: function(location) {
+		console.log("show");
+		this.p.location = location;
+		if(this.p.location) {
+			this.p.x = location.p.x * this.p.minimap_width / 80 / 32 - this.p.minimap_width / 2;
+			this.p.y = location.p.y * this.p.minimap_height / 60 / 32 - this.p.minimap_height / 2;
+		}
+	},
+
+	draw: function(ctx) {
+		if(! this.p.location)
+			return;
+
+		ctx.beginPath();
+		ctx.arc(0, 0, this.p.radius, 0, 2* Math.PI);
+		ctx.fillStyle = "red";
+		ctx.fill();
+		ctx.closePath();
+	},
+
+	step: function(dt) {
+		this.p.time_spent += dt;
+		if(this.p.time_spent >= this.p.duration)
+			this.p.time_spent = 0;
+
+		this.p.radius = this.p.max_radius * this.p.time_spent / this.p.duration;
+	},
+});
 
 Q.Sprite.extend("MiniMapCursor", {
 	init: function(p) {

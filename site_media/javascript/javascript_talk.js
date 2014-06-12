@@ -34,24 +34,15 @@ Q.component("Video", {
 
 Q.component("Talk", {
 	extend: {
-		info: function() {
-			console.log("infoing: " + this.p.name);
-			//this.children.forEach(function(child) {
-			//	if(child.isA("Info")) {
-			//		console.log("destroying info");
-			//		child.trigger("destroyme");
-			//	}
-			//});
-			this.stage.insert(new Q.Info({speaker:this}), this);
+		info: function(options) {
+			this.stage.insert(new Q.Info(Q._defaults(options, {speaker: this})), this);
 		},
 
 		quote: function(labels, mirror, duration) {
 			if(! mirror)
 				mirror = 1;
 
-			//console.log("talking: " + this.p.name + ":" + labels);
 			if(this.p.quote) {
-//				console.log("destroying quote");
 				this.p.quote.trigger("destroyme");
 				this.p.quote = null;					
 			}
@@ -64,32 +55,34 @@ Q.component("Talk", {
 
 Q.Sprite.extend("Info",{ 
 	init: function(p) {
-		this._super(p, {
+		this._super(Q._defaults(p, {
 			z: 3,
 			name: "Info",
 			type: Q.SPRITE_NONE,
 			time_spent: 0,
 			duration: 10,
 			speaker: null,
-			asset: 'Icons/icon_info.png'
-		});
+			asset: 'Icons/icon_info.png',
+			showOnMiniMap: false,
+		}));
 		this.p.x = 0;
 		this.p.y = - this.p.speaker.p.h/2 - this.p.h/2;
-		this.on("destroyme");
+		this.on("inserted");
 	},
 
-	destroyme: function() {
-//		console.log("destroyme");
-		this.destroy();
+	inserted: function() {
+		if(this.p.showOnMiniMap) {
+			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", this.p.speaker);
+		}
 	},
-
 
 	step: function(dt) {
 		this.p.time_spent += dt
-		if((this.p.time_spent > this.p.duration) || (this.p.duration< 0))
-			this.trigger("destroyme");
+		if((this.p.time_spent > this.p.duration) && (this.p.duration > 0)) {
+			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", null);
+			this.destroy();
+		}
 	}
-
 });
 
 
