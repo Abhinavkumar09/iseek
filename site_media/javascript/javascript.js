@@ -656,7 +656,36 @@ Q.Sprite.extend("Aakashvani",{
 });
 
 
+/**
+ * Storage Function
+ * Store the Value
+ * @param dataSet the name of the entry
+ * @param dataValue the value of the entry
+ * @return the result of operation
+ */
+function storeValue(dataSet, dataValue){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.setItem(dataSet,dataValue);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
 
+/**
+ * Storage Function
+ * Fetch the Value
+ * @param dataSet the name of the entry
+ * @return the value of given name in local storage
+ */
+function fetchValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.getItem(dataSet);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
 
 
 

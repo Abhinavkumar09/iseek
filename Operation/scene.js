@@ -85,19 +85,17 @@ Q.scene('MasterSchedule',function(stage){
     Q.clearStages();
     Q.stageScene("menu");
   });
-  //$.getJSON("data.json", function(json) {
-      //console.log(json); // this will show the info it in firebug console
-  //});
+  //var javascript = require('../site_media/javascript/javascript.js');
   var response = '{"array": [{"array1": [0,1,1,1]},{"array2": [1,2,2,2]},{"array3": [0,3,3,3]},{"array4": [0,4,4,4]}]}';
   
 
-  if(localStorage.getItem("dataVal") == null){
-    localStorage.setItem("dataVal",response);
-    var obj = localStorage.getItem("dataVal");
+  if(fetchValue("dataVal") == null){
+    storeValue("dataVal",response);
+    var obj = fetchValue("dataVal");
     console.log(obj);
   }
   else{
-    response = localStorage.getItem("dataVal");
+    response = fetchValue("dataVal");
   }
   var jsonObject = JSON.parse(response);
 
