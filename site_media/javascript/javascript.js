@@ -687,6 +687,21 @@ function fetchValue(dataSet){
 	}
 }
 
+/**
+ * Storage Function
+ * Remove the Value
+ * @param dataSet the name of the entry
+ * @return the result of operation
+ */
+function removeValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.removeItem(dataSet);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
+
 
 
 
