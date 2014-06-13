@@ -1,4 +1,6 @@
 Q.scene("LevelFinished",function(stage) {
+	console.log("finish element: " + Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.name);
+	Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.isFinished = true;
 	var box = stage.insert(new Q.UI.Container({
 		x: Q.width/2, 
 		y: Q.height/2, 
@@ -55,7 +57,6 @@ Q.Sprite.extend("Transition", {
 				if(this.p.direction == "dark") {
 					for(i in this.stage.options.nextStage) {
 						if(this.stage.options.nextStage[i][0] == "stageScene") {
-//							console.log("i: " + i + ", stageScene");
 							// start the scene related to this building
 							Q.stageScene(this.stage.options.nextStage[i][1], this.stage.options.nextStage[i][2], this.stage.options.nextStage[i][3]);
 						}
@@ -144,14 +145,8 @@ Q.scene("DialogBox",function(stage) {
 	var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Continue" }))         
 	var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, label: stage.options.label }));
 	button.on("click",function() {
-//		Q.clearStage(Q.STAGE_LEVEL_LEARNING_MODULE);
-//		Q.clearStage(Q.STAGE_LEVEL_PRIMARY);
-//		Q.clearStage(Q.STAGE_LEVEL_NAVIGATION);
-//		Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
-		console.log("button click");
 		Q.clearStage(Q.STAGE_LEVEL_DIALOG);
 	});
-//	box.fit(20);
 });
 
 
@@ -188,11 +183,6 @@ Q.Sprite.extend("Element", {
 	},
 
 	touch: function(e) {
-		console.log("starting element");
-//		Q.clearStage(Q.STAGE_LEVEL_LEARNING_MODULE);
-//		Q.stageScene(this.p.element.element_id, Q.STAGE_LEVEL_PRIMARY, {element: this.p.element});
-//		Q.stageScene("navigation", Q.STAGE_LEVEL_NAVIGATION);
-
 		var options = Q._defaults(this.stage.options, {direction: "dark"});
 		options["nextStage"] = [
 			["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
@@ -261,16 +251,11 @@ Q.Sprite.extend("ElementSelector", {
 			w: this.p.w,
 			h: 100,
 			y: -box.p.cy + 50,
-//			border: 0,
-//			shadow: false,
-//			stroke: '#6b513e',
-//			fill: "#eaae83"
 		});
 
 		navbox = box.insert(this.p.navbox);
 
 		navbox.insert(new Q.UI.Text({x: 0, y: 0, label: this.p.badge.name}));
-		//box.insert(new Q.Medal({x: -this.p.w/2 +25, y: 0, asset: this.p.badge.image}));
 		var leftbutton = navbox.insert(new Q.UI.Button({x: -this.p.w/2 + 25, y: 0, fill: "#CCCCCC", label: "<" }));
 
 		leftbutton.on("click",function() {
@@ -330,7 +315,7 @@ Q.Sprite.extend("Badge", {
 		var box = this.stage.insert(this.p.box, this);
 		box.insert(new Q.UI.Text({x: 0, y: 0, label: this.p.badge.name}));
 		box.insert(new Q.Medal({x: -this.p.w/2 + 50, y: 0, asset: this.p.badge.image}));
-		box.insert(new Q.CircularProgressBar({x: -this.p.w/2 + 50, y: 0}));
+		box.insert(new Q.CircularProgressBar({x: -this.p.w/2 + 50, y: 0, finished_count: this.p.badge.countFinishedElements()}));
 	},
 
 	touch: function(col) {
@@ -415,16 +400,6 @@ Q.Sprite.extend("CertificateSelector", {
 		});
 
 		navbox = box.insert(this.p.navbox);
-
-		blah = new Q.UI.Container({
-			w: navbox.p.w,
-			h: navbox.p.h,
-			border: 1,
-			shadow: false,
-			stroke: '#6b513e',
-			fill: "grey"
-		});
-		//navbox.insert(blah);
 
 		var leftbutton = navbox.insert(new Q.UI.Button({ x: -this.p.w/2 + 25, y: 0, fill: "#CCCCCC", label: "<" }));
 		var label = navbox.insert(new Q.UI.Text({x: 0, y: 0, label: this.stage.options.certificates[this.p.index].name }));

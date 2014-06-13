@@ -76,6 +76,16 @@ function CertificateBadge(name, image, isFinished, elements) {
 		console.log("activating element MOL");
 		this.elements[0].activate(myQ);
 	};
+
+	this.countFinishedElements = function() {
+		var count = 0;
+		for(i in this.elements) {
+			if(this.elements[i].isFinished)
+				count++;
+		}
+		console.log("finished count: " + count);
+		return count;
+	};
 }
 
 function Certificate(name, isFinished, badges) {
@@ -459,14 +469,14 @@ var game = new Game("Test Game");
 							"market_research_1",
 							"Lecture",
 							false,
-								q2,
+							q2,
 							{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
 						),
 						new CertificateElement(
 							"market_research_2",
 							"007",
 							false,
-								null,
+							null,
 							{House: true, Market: true, Workshop: true, School:false, SeemaWorkshop: true, HealthCenter: false}
 						),
 					]
@@ -480,14 +490,14 @@ var game = new Game("Test Game");
 							"health_1",
 							"Health",
 							false,
-								{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
+							{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
 						),
 						new CertificateElement(
 							"health_2",
 							"Test",
 							false,
-								health_test[0],
+							health_test[0],
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
 						),
 					]
