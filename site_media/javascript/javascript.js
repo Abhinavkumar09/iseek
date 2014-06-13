@@ -160,7 +160,7 @@ function Game(name) {
 		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'healthcenter.tmx',
 
 		// Audio
-//		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
+		'sell_buy_item.wav', 'put_pick_item.wav', 'Lazy_Day.wav', 'Tavern.wav',
 	];
 
 
@@ -664,6 +664,53 @@ Q.Sprite.extend("Aakashvani",{
 	}
 
 });
+
+
+/**
+ * Storage Function
+ * Store the Value
+ * @param dataSet the name of the entry
+ * @param dataValue the value of the entry
+ * @return the result of operation
+ */
+function storeValue(dataSet, dataValue){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.setItem(dataSet,dataValue);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
+
+/**
+ * Storage Function
+ * Fetch the Value
+ * @param dataSet the name of the entry
+ * @return the value of given name in local storage
+ */
+function fetchValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.getItem(dataSet);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
+
+/**
+ * Storage Function
+ * Remove the Value
+ * @param dataSet the name of the entry
+ * @return the result of operation
+ */
+function removeValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+	    return localStorage.removeItem(dataSet);
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	    return null;
+	}
+}
 
 
 
