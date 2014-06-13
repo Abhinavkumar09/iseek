@@ -71,7 +71,7 @@ Q.scene('AdminLayout',function(stage) {
 });
 
 Q.scene('MasterSchedule',function(stage){
-  var MSTb = stage.insert(new Q.MSTb({x: Q.width/2, y: Q.height/2, scale: 1}));
+  
 
   var rlButton = stage.insert(new Q.UI.Button({ x: 100, y: 50, z: 1, w:100, fill: "#99FF66",
                                            label: "Reload", scale:0.5, color:"#339933" }));
@@ -85,6 +85,149 @@ Q.scene('MasterSchedule',function(stage){
     Q.clearStages();
     Q.stageScene("menu");
   });
+  //$.getJSON("data.json", function(json) {
+      //console.log(json); // this will show the info it in firebug console
+  //});
+  var response = '{"array": [{"array1": [0,1,1,1]},{"array2": [1,2,2,2]},{"array3": [0,3,3,3]},{"array4": [0,4,4,4]}]}';
+  
+
+  if(localStorage.getItem("dataVal") == null){
+    localStorage.setItem("dataVal",response);
+    var obj = localStorage.getItem("dataVal");
+    console.log(obj);
+  }
+  else{
+    response = localStorage.getItem("dataVal");
+  }
+  var jsonObject = JSON.parse(response);
+
+  var plus31 = stage.insert(new Q.UI.Button({ x: Q.width/2-60, y: Q.height/2+80, z:10, w:10, h:10, fill: "#CCCCCC",
+                                           label: "+" }));
+  var plus32 = stage.insert(new Q.UI.Button({ x: Q.width/2+20, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var plus33 = stage.insert(new Q.UI.Button({ x: Q.width/2+100, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var plus34 = stage.insert(new Q.UI.Button({ x: Q.width/2+180, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var minus31 = stage.insert(new Q.UI.Button({ x: Q.width/2-100, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus32 = stage.insert(new Q.UI.Button({ x: Q.width/2-20, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus33 = stage.insert(new Q.UI.Button({ x: Q.width/2+60, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus34 = stage.insert(new Q.UI.Button({ x: Q.width/2+140, y: Q.height/2+80, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var plus41 = stage.insert(new Q.UI.Button({ x: Q.width/2-60, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var plus42 = stage.insert(new Q.UI.Button({ x: Q.width/2+20, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var plus43 = stage.insert(new Q.UI.Button({ x: Q.width/2+100, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var plus44 = stage.insert(new Q.UI.Button({ x: Q.width/2+180, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "+" }));
+  var minus41 = stage.insert(new Q.UI.Button({ x: Q.width/2-100, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus42 = stage.insert(new Q.UI.Button({ x: Q.width/2-20, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus43 = stage.insert(new Q.UI.Button({ x: Q.width/2+60, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  var minus44 = stage.insert(new Q.UI.Button({ x: Q.width/2+140, y: Q.height/2+160, w:10, h:10, fill: "#CCCCCC",
+                                       label: "-" }));
+  plus31.on("click",function() {
+    jsonObject.array[2].array3[0]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus31.on("click",function(){
+    if(jsonObject.array[2].array3[0]!=0)
+      jsonObject.array[2].array3[0]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus32.on("click",function() {
+    jsonObject.array[2].array3[1]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus32.on("click",function(){
+    if(jsonObject.array[2].array3[1]!=0)
+      jsonObject.array[2].array3[1]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus33.on("click",function() {
+    jsonObject.array[2].array3[2]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus33.on("click",function(){
+    if(jsonObject.array[2].array3[2]!=0)
+      jsonObject.array[2].array3[2]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus34.on("click",function() {
+    jsonObject.array[2].array3[3]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus34.on("click",function(){
+    if(jsonObject.array[2].array3[3]!=0)
+      jsonObject.array[2].array3[3]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus41.on("click",function() {
+    jsonObject.array[3].array4[0]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus41.on("click",function(){
+    if(jsonObject.array[3].array4[0]!=0)
+      jsonObject.array[3].array4[0]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus42.on("click",function() {
+    jsonObject.array[3].array4[1]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus42.on("click",function(){
+    if(jsonObject.array[3].array4[1]!=0)
+      jsonObject.array[3].array4[1]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus43.on("click",function() {
+    jsonObject.array[3].array4[2]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus43.on("click",function(){
+    if(jsonObject.array[3].array4[2]!=0)
+      jsonObject.array[3].array4[2]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  plus44.on("click",function() {
+    jsonObject.array[3].array4[3]+=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+  minus44.on("click",function(){
+    if(jsonObject.array[3].array4[3]!=0)
+      jsonObject.array[3].array4[3]-=1;
+    response = JSON.stringify(jsonObject);
+    localStorage.setItem("dataVal",response);
+  });
+
+
+
+
+
+  var MSTb = stage.insert(new Q.MSTb({x: Q.width/2, y: Q.height/2, scale: 1}));
+  MSTb.p.dataVal = jsonObject.array;
 });
 
 

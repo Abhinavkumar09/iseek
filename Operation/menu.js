@@ -911,12 +911,13 @@ Q.UI.Container.extend("MSTb", {
 			align: "center",
 			infoShow: false,
 			info: "Where you\nmanage the\norders, hold your\nrecords and files.",
-			box: null
+			box: null,
+			dataVal: null
 		});
 
 		if(this.p.isInteractable) {
-			this.on("touch");
-			this.on("touchEnd");
+			//this.on("touch");
+			//this.on("touchEnd");
 			if(this.p.dragable){
 				this.on("drag");
 			}
@@ -1016,6 +1017,18 @@ Q.UI.Container.extend("MSTb", {
 			textSize = ctx.measureText(textvalArr[i]);
 	        ctx.fillText(textvalArr[i], startX, startY);
 	        startY += linespacing;
+	    }
+
+	    for( var i =0; i<4;i++){
+	    	//console.log(this.p.dataVal.array1[2]);
+	    	ctx.fillText(this.p.dataVal[0].array1[i],-80+i*80,-80);
+			textSize = ctx.measureText(this.p.dataVal[0].array1[i]);
+			ctx.fillText(this.p.dataVal[1].array2[i],-80+i*80,0);
+			textSize = ctx.measureText(this.p.dataVal[1].array2[i]);
+			ctx.fillText(this.p.dataVal[2].array3[i],-80+i*80,80);
+			textSize = ctx.measureText(this.p.dataVal[2].array3[i]);
+			ctx.fillText(this.p.dataVal[3].array4[i],-80+i*80,160);
+			textSize = ctx.measureText(this.p.dataVal[3].array4[i]);
 	    }
 	}
 });
