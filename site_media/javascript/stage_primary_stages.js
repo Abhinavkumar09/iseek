@@ -1,6 +1,14 @@
 Q.scene("LevelFinished",function(stage) {
 	console.log("finish element: " + Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.name);
 	Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.isFinished = true;
+	//Store finished element into local storage
+	if(storeValue(Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.element_id,true)!==true){
+		console.log("Store finished element failed");
+	}
+	else{
+		console.log("Store finished element success");
+		//console.log(JSON.stringify(Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element));
+	}
 	var box = stage.insert(new Q.UI.Container({
 		x: Q.width/2, 
 		y: Q.height/2, 

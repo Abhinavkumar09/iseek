@@ -468,14 +468,14 @@ var game = new Game("Test Game");
 						new CertificateElement(
 							"market_research_1",
 							"Lecture",
-							false,
+							fetchValue("market_research_1"),
 							q2,
 							{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
 						),
 						new CertificateElement(
 							"market_research_2",
 							"007",
-							false,
+							fetchValue("market_research_2"),
 							null,
 							{House: true, Market: true, Workshop: true, School:false, SeemaWorkshop: true, HealthCenter: false}
 						),
@@ -489,14 +489,14 @@ var game = new Game("Test Game");
 						new CertificateElement(
 							"health_1",
 							"Health",
-							false,
+							fetchValue("health_1"),
 							{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
 						),
 						new CertificateElement(
 							"health_2",
 							"Test",
-							false,
+							fetchValue("health_2"),
 							health_test[0],
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
 						),
@@ -675,11 +675,14 @@ Q.Sprite.extend("Aakashvani",{
  */
 function storeValue(dataSet, dataValue){
 	if(typeof(Storage) !== "undefined") {
-	    return localStorage.setItem(dataSet,dataValue);
+	    localStorage.setItem(dataSet,dataValue);
+	    if(String(fetchValue(dataSet))===String(dataValue)){
+	    	return true;
+	    }
 	} else {
 	    console.log("Browser doesn't support local storage.")
-	    return null;
 	}
+	return false;
 }
 
 /**
@@ -690,11 +693,12 @@ function storeValue(dataSet, dataValue){
  */
 function fetchValue(dataSet){
 	if(typeof(Storage) !== "undefined") {
+		console.log(localStorage.getItem(dataSet));
 	    return localStorage.getItem(dataSet);
 	} else {
-	    console.log("Browser doesn't support local storage.")
-	    return null;
+	    console.log("Browser doesn't support local storage.");
 	}
+	return false;
 }
 
 /**
@@ -705,11 +709,14 @@ function fetchValue(dataSet){
  */
 function removeValue(dataSet){
 	if(typeof(Storage) !== "undefined") {
-	    return localStorage.removeItem(dataSet);
+	    localStorage.removeItem(dataSet);
+	    if(fetchValue(dataSet)===null){
+	    	return true;
+	    }
 	} else {
-	    console.log("Browser doesn't support local storage.")
-	    return null;
+	    console.log("Browser doesn't support local storage.");
 	}
+	return false;
 }
 
 
