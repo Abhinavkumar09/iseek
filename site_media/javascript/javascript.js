@@ -424,7 +424,9 @@ var game = new Game("Test Game");
 	for(i = 0; i < c.length-1; i++)
 		c[i].next = [c[i+1], c[i+1], c[i+1], c[i+1]];
 
-
+	/** Health Badge
+	  * Health Element Questions
+	  */
 	var health_test = new Array(3);
 	health_test[0] = new Question([
 		"Oh, hello! How are you? I’m still fit (frown face, lonely) and better than everyone else! I wish I had more friends though and that I was more motivated to finish my work for my business. Can you help me?",
@@ -453,7 +455,55 @@ var game = new Game("Test Game");
 
 	for(i = 0; i < health_test.length - 1; i++)
 		health_test[i].next = [health_test[i+1], health_test[i+1], health_test[i+1]];
+	/************ Health Element Questions Finished ************/
 
+	/** Finance Badge
+	  * Loan Element Questions
+	  */
+	var loan_test = new Array(4);
+	loan_test[0] = new Question([
+		"How many people are in your SHG?",
+		[
+			"5",
+			"6",
+			"7",
+			"8",
+			"9",
+			"10",
+		]
+	]);
+	loan_test[1] = new Question([
+		"How many baskets can 1 person prepare in 1 day?",
+		[
+			"1",
+			"2",
+			"3",
+			"4",
+			"5",
+		]
+	]);
+	loan_test[2] = new Question([
+		"How much would you like to price each basket for selling?",
+		[
+			"1",
+			"5",
+			"10",
+			"20",
+			"50",
+		]
+	]);
+	loan_test[3] = new Question([
+		"How much would your SHG take loan from the bank?",
+		[
+			"10000",
+			"12500",
+			"15000",
+		]
+	]);
+
+	for(i = 0; i < loan_test.length - 1; i++)
+		loan_test[i].next = [loan_test[i+1], loan_test[i+1], loan_test[i+1]];
+	/************ Loan Element Questions Finished ************/
 
 	game.certificates = [
 		new Certificate(
@@ -499,6 +549,21 @@ var game = new Game("Test Game");
 							fetchValue("health_2"),
 							health_test[0],
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
+						),
+					]
+
+				),
+				new CertificateBadge(
+					"Finance", 
+					"Objects/Medal/badge01.png",
+					false, 
+					[
+						new CertificateElement(
+							"loan_1",
+							"Loan",
+							fetchValue("loan_1"),
+							loan_test[0],
+							{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
 						),
 					]
 

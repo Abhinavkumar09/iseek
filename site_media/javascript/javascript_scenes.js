@@ -886,6 +886,49 @@ Q.scene("market_research_1_SeemaWorkshop", function(stage) {
 
 });
 
+/**
+  * Finance Badge
+  * Loan Element Scene
+  */
+
+ Q.scene("loan_1", function(stage) {
+	stage.name = "loan_1";
+	Q.stageTMX("VirtualWorld.tmx", stage);
+
+	Q.audio.stop();
+	Q.audio.play("Tavern.wav", {loop: true});
+
+	var Mira = Q("Player").first();
+	Mira.add("KeyCarrier");
+	stage.add("viewport").follow(Mira);
+	//Mira.addMaterialContainer("Player");
+
+	Mira.addKeyContainer();
+
+
+	var i = 0;
+	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
+		b = Q("Building").at(i);
+		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
+		b.setInteractable(stage.options.element.interactability[b.p.name]);
+		b.p.nextScene = stage.name + "_" + b.p.name;
+		/*
+		if(b.p.name == "Market" && !(b.p.isInteractable)){
+			b.collide = function(col) {
+				Sahiya.info({duration:-1, showOnMiniMap: true});
+			}
+			b.on("hit", b, "collide");
+		}*/
+		i += 1;
+	}
+
+
+	stage.accept_material = function(material_name) {
+		console.log("cannot accept the material");
+		return false;
+	};
+});
+
 
 
 
