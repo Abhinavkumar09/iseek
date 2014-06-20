@@ -500,6 +500,16 @@ var game = new Game("Test Game");
 			"15000",
 		]
 	]);
+	loan_test[4] = new Question([
+		"How much would be the wage per person per week?",
+		[
+			"50",
+			"75",
+			"100",
+			"125",
+			"150",
+		]
+	])
 
 	for(i = 0; i < loan_test.length - 1; i++)
 		loan_test[i].next = [loan_test[i+1], loan_test[i+1], loan_test[i+1]];
@@ -782,6 +792,14 @@ function removeValue(dataSet){
 	    console.log("Browser doesn't support local storage.");
 	}
 	return false;
+}
+
+function timeoutLoop(fn, reps, delay) {
+  if (reps > 0)
+    setTimeout(function() {
+                 fn;
+                 timeoutLoop(fn, reps-1, delay);
+               }, delay);
 }
 
 

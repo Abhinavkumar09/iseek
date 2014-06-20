@@ -111,6 +111,7 @@ Q.scene("Dialog", function(stage) {
 			Q.stage(stage.options.nextStage).unpause();
 			Q.clearStage(Q.STAGE_LEVEL_DIALOG);	
 			Q("Player", Q.STAGE_LEVEL_PRIMARY).first().resetKeyContainer();
+			stage.options.context[stage.options.func]();
 		});
 		box.fit(20);
 	}
