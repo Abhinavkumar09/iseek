@@ -926,32 +926,6 @@ Q.scene("loan_1_Market", function(stage) {
 	stage.acceptable_materials = ["basket_01", "basket_02"];
 	stage.stock_name = "Market";
 
-	var market_tables = [
-		{
-		}, 
-		{
-			'basket_01': [
-				new Material('basket_01', {price: 15, isClickable: true, ifBelongsToPlayer: false, commission: 100}),
-			]
-		}, 
-		{
-			'basket_03': [
-				new Material('basket_03', {price: 10, isClickable: true, ifBelongsToPlayer: false, commission: 100}),
-			]
-		}, 
-		{
-			'basket_02': [
-				new Material('basket_02', {price: 5, isClickable: true, ifBelongsToPlayer: false, commission: 100}),
-			]
-		}, 
-		{
-			'basket_02': [
-				new Material('basket_02', {price: 5, isClickable: true, ifBelongsToPlayer: false, commission: 100}),
-			]
-		}
-	];
-	//var market_tables = [{}, {}, {}, {}, {}];
-
 	Q.stageTMX("market.tmx", stage);
 
 
@@ -1064,6 +1038,36 @@ Q.scene("loan_1_Market", function(stage) {
 				}
 				case 20:{
 					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {dialog: Hari.p.labels[1], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Hari, func: "oncompletion"});
+					break;
+				}
+				case 22:{
+					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: loan_test[0], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Shyam, func: "oncompletion"});
+					console.log(counter);
+					break;
+				}
+				case 23:{
+					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: loan_test[1], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Shyam, func: "oncompletion"});
+					console.log(counter);
+					break;
+				}
+				case 24:{
+					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: loan_test[2], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Shyam, func: "oncompletion"});
+					console.log(counter);
+					break;
+				}
+				case 25:{
+					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: loan_test[3], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Shyam, func: "oncompletion"});
+					console.log(counter);
+					break;
+				}
+				case 26:{
+					Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: loan_test[4], nextStage: Q.STAGE_LEVEL_PRIMARY, context: Shyam, func: "oncompletion"});
+					console.log(counter);
+					break;
+				}
+				case 27:{
+					//now the last question is answered.
+					console.log(counter);
 					break;
 				}
 				default: break;

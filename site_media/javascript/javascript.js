@@ -460,7 +460,7 @@ var game = new Game("Test Game");
 	/** Finance Badge
 	  * Loan Element Questions
 	  */
-	var loan_test = new Array(4);
+	var loan_test = new Array(5);
 	loan_test[0] = new Question([
 		"How many people are in your SHG?",
 		[

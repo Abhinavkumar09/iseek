@@ -105,8 +105,9 @@ Q.scene("Dialog", function(stage) {
 	}));
 
 	if(stage.options.dialog) {
-		var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Continue" }));
-		var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, label: stage.options.dialog }));
+		var label = box.insert(new Q.UI.Text({x:10, y: 0, label: stage.options.dialog, align: "center", color: "white", size: 12, lineHeight: 1.2 }));
+		var button = box.insert(new Q.UI.Button({ x: 0, y: label.p.h/2+50, fill: "#CCCCCC", label: "Continue" }));
+		console.log(label.p.h);
 		button.on("click",function() {
 			Q.stage(stage.options.nextStage).unpause();
 			Q.clearStage(Q.STAGE_LEVEL_DIALOG);	
