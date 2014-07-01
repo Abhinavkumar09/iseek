@@ -163,15 +163,8 @@ Q.loadTMX(Q.options.resources,function() {
 
 	Q.state.reset({ material_names: game.material_names, Player_stock: game.Player_stock, House_stock: game.House_stock, Market_stock: game.Market_stock, Workshop_stock: game.Workshop_stock, Health:100, money:100});
 
-//	Q.stageScene("navigation", Q.STAGE_LEVEL_NAVIGATION);
-	Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
-//	Q.stageScene("level1", Q.STAGE_LEVEL_PRIMARY);
-//	Q.stageScene("scorecard", Q.STAGE_LEVEL_SCORECARD);
-//	Q.stageScene("School_insidescene", Q.STAGE_LEVEL_PRIMARY);
-	
-	//check the certificates and accordingly activate an element
-	game.activateElement();
-
+//	Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
+	Q.stageScene("test", Q.STAGE_LEVEL_LEARNING_MODULE, {});
 }, {
 	progressCallback: function(loaded,total) {
 		var element = document.getElementById("loading_progress");

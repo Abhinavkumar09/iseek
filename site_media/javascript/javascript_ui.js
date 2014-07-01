@@ -184,3 +184,165 @@ Q.Sprite.extend("CircularProgressBar", {
 	},
 });
 
+
+
+Q.Sprite.extend("Circle", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			radius: 10,
+			w: 20,
+			h: 20,
+			fillStyle: null,
+			strokeStyle: "black",
+		}));
+		console.log("Circle");
+	},
+
+	draw: function(ctx) {
+		ctx.save();
+		ctx.beginPath();
+		ctx.arc(0, 0, this.p.radius, 0, 2 * Math.PI);
+		ctx.strokeStyle = this.p.stokeStyle;
+		ctx.stroke();
+		if(this.p.fillStyle) {
+			ctx.fillStyle = this.p.fillStyle;
+			ctx.fill();
+		}
+
+		if(this.p.isSelected) {
+			ctx.beginPath();
+			ctx.arc(0, 0, this.p.radius - 2, 0, 2 * Math.PI);
+			ctx.fillStyle = this.p.fillStyle;
+			ctx.fill();
+		}
+		ctx.restore();
+	},
+});
+
+
+/* 
+	w, h: defines the size of the square
+*/
+Q.Sprite.extend("Rectangle", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			w: 15,
+			h: 15,
+			fillStyle: null,
+			strokeStyle: "black",
+		}));
+	},
+
+	draw: function(ctx) {
+		ctx.save();
+		ctx.beginPath();
+		ctx.moveTo(-this.p.cx, -this.p.cy);
+		ctx.lineTo(this.p.cx, -this.p.cy);
+		ctx.lineTo(this.p.cx, this.p.cy);
+		ctx.lineTo(-this.p.cx, this.p.cy);
+		ctx.lineTo(-this.p.cx, -this.p.cy);
+
+		ctx.strokeStyle = this.p.stokeStyle;
+		ctx.stroke();
+		if(this.p.fillStyle) {
+			ctx.fillStyle = this.p.fillStyle;
+			ctx.fill();
+		}
+
+		if(this.p.isSelected) {
+			ctx.beginPath();
+			ctx.lineWidth= 2;
+			ctx.moveTo(-this.p.cx, -this.p.cy + this.p.h * 0.5);
+			ctx.lineTo(-this.p.cx + this.p.w * 0.4, -this.p.cy + this.p.h * 0.8);
+			ctx.lineTo(this.p.cx, -this.p.cy - this.p.h * 0.2);
+			ctx.stroke();
+		}
+
+		ctx.restore();
+	},
+});
+
+/*
+	type: 0 means no separation, 1 means compute the separation based on the layout size
+*/
+Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
+	init: function(p) {
+		this.children = [];
+		this._super(Q._defaults(p, {
+			type: Q.SPRITE_NONE, 
+			layout: Q.UI.Layout.VERTICAL, 
+			align: 0, 
+			separationType: 0
+		}));
+
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+
+	insert: function(sprite) {
+		this.stage.insert(sprite, this);
+		this.relayout();
+		this.realign();
+		// Bind to destroy
+		return sprite;
+	},
+
+	relayout: function() {
+		var totalWidth = 0;
+		var totalHeight = 0;
+		for(var i=0;i<this.children.length;i++) {
+			totalWidth += this.children[i].p.w;
+			totalHeight += this.children[i].p.h;
+		}
+
+		 // separation between elements
+		var separation_x = this.p.separation_x || 0;
+		var separation_y = this.p.separation_y || 0;
+		if((this.p.separationType == 1) & (this.children.length > 1)) {
+			if(this.p.layout == Q.UI.Layout.VERTICAL)
+				separation_y = (this.p.h - totalHeight) / (this.children.length - 1);
+			else
+				separation_x = (this.p.w - totalWidth) / (this.children.length - 1);
+		}
+
+		// Make sure all elements have the same space between them
+		totalWidth += separation_x * (this.children.length - 1);
+		totalHeight += separation_y * (this.children.length - 1);
+		var offset_x = -totalWidth/2;
+		var offset_y = -totalHeight/2;
+		for(var i = 0; i < this.children.length; i++) {
+			if(this.p.layout == Q.UI.Layout.VERTICAL) {
+				this.children[i].p.y = offset_y + this.children[i].p.h/2;
+				offset_y += separation_y + this.children[i].p.h;
+			} else {
+				this.children[i].p.x = offset_x + this.children[i].p.w/2;
+				offset_x += separation_x + this.children[i].p.w;
+			}
+		}
+	},
+
+	realign: function() {
+		var top_offset = - this.p.cy;
+		var separation_y = this.p.separation_y || 0;
+		for(var i = 0; i < this.children.length; i++) {
+			if((this.p.align & Q.UI.Layout.LEFT_ALIGN) & (this.p.layout == Q.UI.Layout.VERTICAL)){
+				this.children[i].p.x = - this.p.cx + this.children[i].p.cx;
+			}
+			if(this.p.align & Q.UI.Layout.START_TOP) {
+		//		this.children[i].p.y = top_offset + this.children[i].p.cy;
+				top_offset += this.children[i].p.h + separation_y;
+			}
+		}
+	},
+});
+Q.UI.Layout.VERTICAL = 1;
+Q.UI.Layout.HORIZONTAL = 2;
+
+Q.UI.Layout.LEFT_ALIGN = 1;
+Q.UI.Layout.START_TOP = 2;
