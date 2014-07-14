@@ -241,6 +241,45 @@ Q.scene("health_1_HealthCenter", function(stage) {
 	}, 500);
 });
 
+Q.scene("test_HealthCenter", function(stage) {
+	console.log("HealthCenter");
+	stage.stock_name = "HealthCenter";
+	stage.acceptable_materials = [];
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX("healthcenter.tmx", stage);
+
+
+	// Map Exit Door
+	var exit_door = new Q.Door({width:96, height: 8, h: 16, w: 96, x: 400, y: 590});
+	stage.insert(exit_door);
+
+	setTimeout(function(){
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Getting Up To Speed Done"});
+		stage.pause();
+	}, 500);
+});
+
+Q.scene("test",function(stage) {
+	console.log("TestElement");
+	stage.name = "test";
+	stage.acceptable_materials = [];
+
+	Q.stageTMX("VirtualWorld.tmx", stage);
+
+	var Mira = Q("Player").first();
+	stage.add("viewport").follow(Mira);
+
+	var i = 0;
+	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
+		b = Q("Building").at(i);
+		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
+		b.setInteractable(stage.options.element.interactability[b.p.name]);
+		b.p.nextScene = stage.name + "_" + b.p.name;
+		i += 1;
+	}
+	
+});
 
 Q.scene("health_2",function(stage) {
 	stage.name = "health_2";
