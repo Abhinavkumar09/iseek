@@ -505,7 +505,7 @@ var game = new Game("Test Game");
 							"Test2",
 							fetchValue("test_element"),
 							null,
-							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
 						),	
 					]
 

@@ -257,17 +257,18 @@ Q.scene("test_element",function(stage)
   stage.add("viewport").follow(Mira);
  
   var i = 0;
-  while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) 
-  {
+  while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 	b = Q("Building").at(i);
 	console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
 	b.setInteractable(stage.options.element.interactability[b.p.name]);
 	b.p.nextScene = stage.name + "_" + b.p.name;
-		
+	i += 1;
   }
+
  
     
 });
+
 
 Q.scene("test_element_HealthCenter",function(stage)
 {
@@ -288,7 +289,7 @@ Q.scene("test_element_HealthCenter",function(stage)
 		stage.pause();
 	}, 500); 
 
-});
+});  
 
 /* Test code ends here */
 
