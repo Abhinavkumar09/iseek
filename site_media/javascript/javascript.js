@@ -495,18 +495,18 @@ var game = new Game("Test Game");
 						),
 						new CertificateElement(
 							"health_2",
-							"Test",
+							"Test1",
 							fetchValue("health_2"),
 							health_test[0],
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
 						),
-						new CertificateElement(
+		/* Test element    */  		new CertificateElement(
 							"test_element",
-							"Test 2",
+							"Test2",
 							fetchValue("test_element"),
 							null,
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
-						),
+						),	
 					]
 
 				),
