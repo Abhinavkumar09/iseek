@@ -500,6 +500,13 @@ var game = new Game("Test Game");
 							health_test[0],
 							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
 						),
+						new CertificateElement(
+							"test_element",
+							"Test 2",
+							fetchValue("test_element"),
+							null,
+							{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+						),
 					]
 
 				),
