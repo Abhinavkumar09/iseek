@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block loadgame %}
+//			loading_img = new Image();
+//			loading_img.width = 800;
+//			loading_img.height = 600;
+//			loading_img.onload = function () {
+//				$('#gamecanvas').append(loading_img);
+//			};
+//			loading_img.src = "/site_media/loading.gif";
+					
+			game = process_xml('{{ url }}');
+			process_game();
+{% endblock %}
+
+{% block content %}
+	<div class='maincontent' id='gamecanvas' style='background-color:white;'>
+	</div>
+{% endblock %}
+

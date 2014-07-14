@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% autoescape off %}
+	<div class="maincontent">
+		<center>
+		<div class="login">
+			<h3>Please sign in</h3>
+			<form method="post" action="/login/">
+				{% if message %}
+				<div class = "message">
+					{{ message }}
+				</div>
+				{% endif %}
+				<table>
+					<tr><td>Username:</td><td>{{ form.username }}</td></tr>
+					<tr><td>Password:</td><td>{{ form.password }}</td></tr>
+					<tr><td></td><td><input type="submit" value="Login"></td></tr>
+				</table>
+				<div class="lostpasswd">
+					Forgot password? <a href="/lostpasswd/">Click Here</a>
+				</div>
+			</form>
+		</div>
+		</center>
+	</div>
+{% endautoescape %}
+{% endblock %}
