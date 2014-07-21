@@ -24,7 +24,7 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 
 	move: function(touch) {
 		if(touch.dx) {
-			this.p.pos.x = touch.origX + touch.dx;
+			this.p.pos.x = touch.dx;
 		}
 		if(this.p.pos.x < -this.p.cx)
 			this.p.pos.x = -this.p.cx;
@@ -44,11 +44,8 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 		ctx.save();
 		ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
 		ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-
-		ctx.fillStyle = "rgb(255,255,255)";
 		ctx.fillRect(this.p.pos.x - 4, -this.p.cy - 5, 8, this.p.h + 10);
-
-		ctx.fillText(this.p.value + "", 0, this.p.h);	
+		ctx.fillText(this.p.value + "", -Math.floor(ctx.measureText(this.p.value).width)/2, this.p.h);	
 		ctx.restore();
 	},
 
@@ -111,6 +108,7 @@ Q.UI.Spinner = Q.UI.Container.extend("UI.Spinner", {
 
 	draw: function(ctx) {
 		ctx.save();
+		ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
 		ctx.beginPath();
 		ctx.lineWidth = "1";
 		var X0 =   0, Y0 = -40,
@@ -134,7 +132,7 @@ Q.UI.Spinner = Q.UI.Container.extend("UI.Spinner", {
 		var label = this.p.value + "";
 		var metrics = Q.ctx.measureText(label);
 		var fontsize = 24;
-		ctx.fillText(label, - (metrics.width / 2), - (fontsize * 1.2 / 2));
+		ctx.fillText(label, - (metrics.width / 2), - (fontsize * 1.0 / 2));
 		ctx.restore();
 	},
 

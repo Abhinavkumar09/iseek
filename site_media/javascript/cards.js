@@ -16,13 +16,13 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_next = this.p.callback_next;
 		var context = this.p.context;
 		if(this.p.button_type == Q.ControlButtons.DONE) {
-			var b = this.insert(new Q.UI.Button({label: "Done", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#9c9c9c"}));
+			var b = this.insert(new Q.UI.Button({label: "Done", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#E4EBEB"}));
 			b.on("click", function(){
 				context[callback_done]();
 			});
 		}
 		else if(this.p.button_type == Q.ControlButtons.NEXT) {
-			var b = this.insert(new Q.UI.Button({label: "Next", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#9c9c9c"}));
+			var b = this.insert(new Q.UI.Button({label: "Next", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#E4EBEB"}));
 			b.on("click", function(){
 				context[callback_next]();
 			});
@@ -156,6 +156,110 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 	},
 });
 
+//Range Question
+Q.UI.Layout.extend("RangeQuestion", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+//			x: 400, 
+//			y: 300,
+			w: 400,
+			h: 500,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN,
+
+			fill: "#E4EBEB",
+			radius: 0,
+
+			status: Q.Form.INCOMPLETE,
+			isSelectAll: false,
+			answers: [],
+			layout: Q.UI.Layout.VERTICAL,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.insert(this.p.question);
+		//for(var i = 0; i < this.p.choices.length; i++) {
+			this.insert(new Q.UI.Slider({},null));
+		//}
+		this.fit(100);
+	},
+});
+
+//Range Question
+Q.UI.Layout.extend("SpinQuestion", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+//			x: 400, 
+//			y: 300,
+			w: 400,
+			h: 500,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN,
+
+			fill: "#E4EBEB",
+			radius: 0,
+
+			status: Q.Form.INCOMPLETE,
+			isSelectAll: false,
+			answers: [],
+			layout: Q.UI.Layout.VERTICAL,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.insert(this.p.question);
+		//for(var i = 0; i < this.p.choices.length; i++) {
+			this.insert(new Q.UI.Spinner({},null));
+		//}
+		this.fit(100);
+	},
+});
+
+/** Info Card
+  * @param this.p.video - video object
+  * @param this.p.label - label object(text)
+  */
+Q.UI.Layout.extend("InfoQuestion", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+//			x: 400, 
+//			y: 300,
+			w: 400,
+			h: 500,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN,
+
+			fill: "#E4EBEB",
+			radius: 0,
+
+			status: Q.Form.INCOMPLETE,
+			isSelectAll: false,
+			answers: [],
+			layout: Q.UI.Layout.VERTICAL,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		if(this.p.video){
+			this.insert(this.p.video);
+		}
+		if(this.p.question){
+			this.insert(this.p.question);
+		}
+		this.fit(100);
+	},
+});
+
 /*
 	To be used when we want to ask a question that has a numeric answer
 	'exit_type' defines how the question will be considered answered. For example,
@@ -183,7 +287,7 @@ Q.UI.Layout.extend("Form", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separationType: 1,
-			align: Q.UI.Layout.LEFT_ALIGN | Q.UI.Layout.START_TOP,
+			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			status: Q.Form.INCOMPLETE,
 
 			fill: "rgba(255, 255, 255, 1)",
@@ -242,6 +346,18 @@ var testform = new Q.Form(
 				}
 			);
 
+var rangetestform = new Q.Form(
+				{
+					content: [
+						new Q.SpinQuestion({
+							question: new Q.ImageText({
+								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE})
+							}),
+						})
+					]
+				}
+			);
+
 Q.scene("test", function(stage) {
-	stage.insert(testform);
+	stage.insert(rangetestform);
 });
