@@ -49,7 +49,9 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 		ctx.save();
 		ctx.fillStyle = this.p.color ? this.p.color : "rgba(0, 0, 0, 0.8)";
 		ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+		ctx.fillStyle = "#F2ECE6";
 		ctx.fillRect(this.p.value - 50 - 4, -this.p.cy - 5, 8, this.p.h + 10);
+		ctx.fillStyle = this.p.color ? this.p.color : "rgba(0, 0, 0, 0.8)";
 		ctx.fillText(this.p.value + "", -Math.floor(ctx.measureText(this.p.value).width)/2, this.p.h);	
 		ctx.restore();
 	},

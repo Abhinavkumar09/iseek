@@ -414,7 +414,7 @@ var testform = new Q.Form(
 var rangetestform = new Q.Form(
 				{
 					content: [
-						new Q.SpinQuestion({
+						new Q.RangeQuestion({
 							question: new Q.ImageText({
 								label: new Q.UI.Text({label: "How much do you want to inverst?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
 								fill: null,
@@ -425,5 +425,5 @@ var rangetestform = new Q.Form(
 			);
 
 Q.scene("test", function(stage) {
-	stage.insert(testform);
+	stage.insert(rangetestform);
 });
