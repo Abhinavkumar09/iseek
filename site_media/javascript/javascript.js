@@ -23,7 +23,7 @@ function Game(name) {
 
 		"sahiya.png", "Mira.png", "desk.png", "chairback.png",
 		"chairseat.png", "blackboard.png", "pranav.png",
-		"mira_house.png", "market.png", "school.png", "workshop.png",
+		"mira_house.png", "market.png", "school.png", "workshop.png", "cards.jpg",
 
 		// Classroom
 		'emptyclassroom.png', 'classroom/blackboard.png', 'classroom/chairback.png', 'classroom/chairseat.png', 'classroom/desk.png',

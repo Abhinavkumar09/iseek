@@ -16,13 +16,13 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_next = this.p.callback_next;
 		var context = this.p.context;
 		if(this.p.button_type == Q.ControlButtons.DONE) {
-			var b = this.insert(new Q.UI.Button({label: "Done", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#E4EBEB"}));
+			var b = this.insert(new Q.UI.Button({label: "Done", radius: 5, font: "weigth: 200, size: 24, family: Courier New", fontColor: "#F2ECE6", outlineWidth: 2, outlineColor: "#EBC299", stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_done]();
 			});
 		}
 		else if(this.p.button_type == Q.ControlButtons.NEXT) {
-			var b = this.insert(new Q.UI.Button({label: "Next", radius: 0, outlineWidth: 1, outlineColor: "#D9D9D9", stroke: "#D9D9D9", border: 2, fill: "#E4EBEB"}));
+			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, font: "weigth: 200, size: 24, family: Courier New", fontColor: "#F2ECE6", outlineWidth: 2, outlineColor: "#EBC299", stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_next]();
 			});
@@ -134,9 +134,8 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 10,
-			align: Q.UI.Layout.LEFT_ALIGN,
+			align: Q.UI.Layout.CENTER_ALIGN,
 
-			fill: "grey",
 			radius: 0,
 
 			status: Q.Form.INCOMPLETE,
@@ -163,13 +162,12 @@ Q.UI.Layout.extend("RangeQuestion", {
 //			x: 400, 
 //			y: 300,
 			w: 400,
-			h: 500,
+			h: 300,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN,
 
-			fill: "#E4EBEB",
 			radius: 0,
 
 			status: Q.Form.INCOMPLETE,
@@ -181,11 +179,11 @@ Q.UI.Layout.extend("RangeQuestion", {
 	},
 
 	inserted: function() {
-		this.insert(this.p.question);
+		this.insert(this.p.question, this);
 		//for(var i = 0; i < this.p.choices.length; i++) {
-			this.insert(new Q.UI.Slider({},null));
+			this.insert(new Q.UI.Slider({color: "#8F4700",},null));
 		//}
-		this.fit(100);
+		this.fit(10);
 	},
 });
 
@@ -196,13 +194,12 @@ Q.UI.Layout.extend("SpinQuestion", {
 //			x: 400, 
 //			y: 300,
 			w: 400,
-			h: 500,
+			h: 300,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN,
 
-			fill: "#E4EBEB",
 			radius: 0,
 
 			status: Q.Form.INCOMPLETE,
@@ -213,12 +210,13 @@ Q.UI.Layout.extend("SpinQuestion", {
 		this.on("inserted");
 	},
 
-	inserted: function() {
-		this.insert(this.p.question);
+	inserted: function(ctx) {
+		//this.insert(new Q.Sprite({ asset: "cards.jpg", x:100, y:100,z:1}),this);
+		this.insert(this.p.question,this);
 		//for(var i = 0; i < this.p.choices.length; i++) {
-			this.insert(new Q.UI.Spinner({},null));
+			this.insert(new Q.UI.Spinner({color: "#8F4700",},null));
 		//}
-		this.fit(100);
+		this.fit(10);
 	},
 });
 
@@ -232,13 +230,12 @@ Q.UI.Layout.extend("InfoQuestion", {
 //			x: 400, 
 //			y: 300,
 			w: 400,
-			h: 500,
+			h: 300,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN,
 
-			fill: "#E4EBEB",
 			radius: 0,
 
 			status: Q.Form.INCOMPLETE,
@@ -256,7 +253,7 @@ Q.UI.Layout.extend("InfoQuestion", {
 		if(this.p.question){
 			this.insert(this.p.question);
 		}
-		this.fit(100);
+		this.fit(10);
 	},
 });
 
@@ -287,11 +284,14 @@ Q.UI.Layout.extend("Form", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separationType: 1,
+			separation_y: 100,
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			status: Q.Form.INCOMPLETE,
-
 			fill: "rgba(255, 255, 255, 1)",
-			radius: 0,
+			radius: 10,
+			shadow: 5,
+			stroke: "#B26B00",
+			border: 15,
 		}));
 		this.on("destroyed");
 		this.on("inserted");
@@ -317,7 +317,69 @@ Q.UI.Layout.extend("Form", {
 		if(this.next == null)
 			return null;
 		return this.p.next;
-	}
+	},
+
+	addShadow: function(ctx) {
+      if(this.p.shadow) {
+        var shadowAmount = Q._isNumber(this.p.shadow) ? this.p.shadow : 5;
+        ctx.shadowOffsetX=shadowAmount;
+        ctx.shadowOffsetY=shadowAmount;
+        ctx.shadowColor = this.p.shadowColor || "rgba(0,0,50,0.1)";
+      }
+    },
+
+    clearShadow: function(ctx) {
+      ctx.shadowColor = "transparent";
+    },
+
+    drawRadius: function(ctx) {
+      Q.UI.roundRect(ctx,this.p);
+      this.addShadow(ctx);
+      ctx.fillStyle = this.p.fill;
+      ctx.fill();
+      ctx.drawImage(Q.asset("cards.jpg"),-this.p.cx,-this.p.cy, 500, 400);
+      if(this.p.border) {
+        this.clearShadow(ctx);
+        ctx.lineWidth = this.p.border;
+        ctx.stroke();
+        ctx.strokeStyle = "#EBC299";
+        ctx.lineWidth -= 10;
+        ctx.stroke();
+      }
+    },
+
+    drawSquare: function(ctx) {
+      this.addShadow(ctx);
+      if(this.p.fill) { 
+        ctx.fillRect(-this.p.cx,-this.p.cy,
+                      this.p.w,this.p.h);
+      }
+
+      if(this.p.border) {
+        this.clearShadow(ctx);
+        ctx.lineWidth = this.p.border;
+        ctx.strokeRect(-this.p.cx,-this.p.cy,
+                        this.p.w,this.p.h);
+      }
+    },
+
+    draw: function(ctx) {
+      if(this.p.hidden) { return false; }
+      if(!this.p.border && !this.p.fill) { return; }
+
+      ctx.globalAlpha = this.p.opacity;
+      if(this.p.frame === 1 && this.p.highlight) {
+        ctx.fillStyle = this.p.highlight;
+      } else {
+        ctx.fillStyle = this.p.fill;
+      }
+      ctx.strokeStyle = this.p.stroke;
+      if(this.p.radius > 0) { 
+        this.drawRadius(ctx);
+      } else {
+        this.drawSquare(ctx);
+      }
+    }
 });
 
 Q.Form.INCOMPLETE = 1;
@@ -329,16 +391,19 @@ var testform = new Q.Form(
 					content: [
 						new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE})
+								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								fill: null,
 							}), 
 							choices: [
 								new Q.ImageText({
 									label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
 									isSelectable: true,
+									fill: null,
 								}), 
 								new Q.ImageText({
 									label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
 									isSelectable: true,
+									fill: null,
 								}), 
 							],
 						})
@@ -351,7 +416,8 @@ var rangetestform = new Q.Form(
 					content: [
 						new Q.SpinQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE})
+								label: new Q.UI.Text({label: "How much do you want to inverst?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								fill: null,
 							}),
 						})
 					]
@@ -359,5 +425,5 @@ var rangetestform = new Q.Form(
 			);
 
 Q.scene("test", function(stage) {
-	stage.insert(rangetestform);
+	stage.insert(testform);
 });

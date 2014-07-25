@@ -7,6 +7,7 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 			min_value: 0,
 			max_value: 100,
 			value: 50,
+			current_value: 0,
 			pos: {'x': 0, 'y': 0},
 		}));
 
@@ -14,8 +15,10 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 
 		this.p.cx = this.p.w/2;
 		this.p.cy = this.p.h/2;
+		this.p.current_value = this.p.cx;
 		this.add("Touch");
 		this.on('drag');
+		this.on('touchEnd');
 	},
 
 	drag: function(touch) {
@@ -24,27 +27,29 @@ Q.UI.Slider = Q.UI.Container.extend("UI.Slider", {
 
 	move: function(touch) {
 		if(touch.dx) {
-			this.p.pos.x = touch.dx;
+			this.p.pos.x = touch.origX + touch.dx;
 		}
-		if(this.p.pos.x < -this.p.cx)
-			this.p.pos.x = -this.p.cx;
-		if(this.p.pos.x > this.p.cx)
-			this.p.pos.x = this.p.cx;
-		this.p.value = Math.floor(this.p.min_value + (this.p.max_value - this.p.min_value) * (this.p.cx + this.p.pos.x) / this.p.w);
-
+		if(this.p.pos.x + this.p.current_value < -this.p.min_value)
+			this.p.pos.x = -this.p.current_value;
+		if(this.p.pos.x + this.p.current_value > this.p.max_value)
+			this.p.pos.x = this.p.max_value-this.p.current_value;
+		this.p.value = Math.floor(this.p.min_value + (this.p.max_value - this.p.min_value) * (this.p.current_value + this.p.pos.x) / this.p.w);
 		this.trigger('change');
-
 		if(this.callback) {
 			this.callback();
 		}
 	},
 
+	touchEnd: function(touch) {
+		this.p.current_value = this.p.value;
+	},
+
 
 	draw: function(ctx) {
 		ctx.save();
-		ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+		ctx.fillStyle = this.p.color ? this.p.color : "rgba(0, 0, 0, 0.8)";
 		ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-		ctx.fillRect(this.p.pos.x - 4, -this.p.cy - 5, 8, this.p.h + 10);
+		ctx.fillRect(this.p.value - 50 - 4, -this.p.cy - 5, 8, this.p.h + 10);
 		ctx.fillText(this.p.value + "", -Math.floor(ctx.measureText(this.p.value).width)/2, this.p.h);	
 		ctx.restore();
 	},
@@ -108,7 +113,7 @@ Q.UI.Spinner = Q.UI.Container.extend("UI.Spinner", {
 
 	draw: function(ctx) {
 		ctx.save();
-		ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+		ctx.fillStyle = this.p.color ? this.p.color : "rgba(0, 0, 0, 0.8)";
 		ctx.beginPath();
 		ctx.lineWidth = "1";
 		var X0 =   0, Y0 = -40,
@@ -298,17 +303,17 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			totalWidth += this.children[i].p.w;
 			totalHeight += this.children[i].p.h;
 		}
-
+		console.log(totalHeight);
 		 // separation between elements
 		var separation_x = this.p.separation_x || 0;
 		var separation_y = this.p.separation_y || 0;
 		if((this.p.separationType == 1) & (this.children.length > 1)) {
-			if(this.p.layout == Q.UI.Layout.VERTICAL)
-				separation_y = (this.p.h - totalHeight) / (this.children.length - 1);
-			else
+			if(this.p.layout == Q.UI.Layout.VERTICAL && !Q._isNumber(separation_y))
+				separation_y = (this.p.h - totalHeight) / (this.children.length + 1);
+			else if(this.p.layout != Q.UI.Layout.VERTICAL && !Q._isNumber(separation_x))
 				separation_x = (this.p.w - totalWidth) / (this.children.length - 1);
 		}
-
+		console.log("SY"+separation_y);
 		// Make sure all elements have the same space between them
 		totalWidth += separation_x * (this.children.length - 1);
 		totalHeight += separation_y * (this.children.length - 1);
@@ -316,8 +321,10 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 		var offset_y = -totalHeight/2;
 		for(var i = 0; i < this.children.length; i++) {
 			if(this.p.layout == Q.UI.Layout.VERTICAL) {
+				console.log("OY"+offset_y);
 				this.children[i].p.y = offset_y + this.children[i].p.h/2;
 				offset_y += separation_y + this.children[i].p.h;
+
 			} else {
 				this.children[i].p.x = offset_x + this.children[i].p.w/2;
 				offset_x += separation_x + this.children[i].p.w;
