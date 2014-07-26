@@ -155,7 +155,10 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 	},
 });
 
-//Range Question
+/** Range Question Card
+  * @param this.p.range - insert slider or spinner
+  * @param this.p.question - question to display
+  */
 Q.UI.Layout.extend("RangeQuestion", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
@@ -174,51 +177,24 @@ Q.UI.Layout.extend("RangeQuestion", {
 			isSelectAll: false,
 			answers: [],
 			layout: Q.UI.Layout.VERTICAL,
+			feature: Q.RangeQuestion.Slider,
 		}));
 		this.on("inserted");
 	},
 
 	inserted: function() {
 		this.insert(this.p.question, this);
-		//for(var i = 0; i < this.p.choices.length; i++) {
+		if(this.p.range==Q.RangeQuestion.Slider){
 			this.insert(new Q.UI.Slider({color: "#8F4700",},null));
-		//}
-		this.fit(10);
-	},
-});
-
-//Range Question
-Q.UI.Layout.extend("SpinQuestion", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-//			x: 400, 
-//			y: 300,
-			w: 400,
-			h: 300,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN,
-
-			radius: 0,
-
-			status: Q.Form.INCOMPLETE,
-			isSelectAll: false,
-			answers: [],
-			layout: Q.UI.Layout.VERTICAL,
-		}));
-		this.on("inserted");
-	},
-
-	inserted: function(ctx) {
-		//this.insert(new Q.Sprite({ asset: "cards.jpg", x:100, y:100,z:1}),this);
-		this.insert(this.p.question,this);
-		//for(var i = 0; i < this.p.choices.length; i++) {
+		}
+		else if(this.p.range==Q.RangeQuestion.Spinner){
 			this.insert(new Q.UI.Spinner({color: "#8F4700",},null));
-		//}
+		}
 		this.fit(10);
 	},
 });
+Q.RangeQuestion.Slider = 1;
+Q.RangeQuestion.Spinner = 2;
 
 /** Info Card
   * @param this.p.video - video object
@@ -292,7 +268,7 @@ Q.UI.Layout.extend("Form", {
 			shadow: 5,
 			stroke: "#B26B00",
 			border: 15,
-			next: null,
+			index: 0,
 		}));
 		this.on("destroyed");
 		this.on("inserted");
@@ -305,10 +281,12 @@ Q.UI.Layout.extend("Form", {
 	},
 
 	inserted: function() {
-		this.insert(this.p.content[0]);
-		if(this.p.next!=null){
-			console.log(this.p.next);
-			this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.NEXT, callback_next: "loadnext"}));
+		this.destroyed();
+		this.children = [];
+		this.insert(this.p.content[this.p.index]);
+		this.p.index++;
+		if(this.p.content[this.p.index]!=null){
+			this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.NEXT, callback_next: "inserted"}));
 		}
 		else{
 			this.insert(new Q.ControlButtons({context: this, callback_done: "done"}));
@@ -324,14 +302,6 @@ Q.UI.Layout.extend("Form", {
 		if(this.p.next == null)
 			return null;
 		return this.p.next;
-	},
-
-	loadnext: function(stage){
-		Q.clearStages();
-		Q.scene("next", function(stage) {
-			stage.insert(stage.options.next);
-		});
-		Q.stageScene('next',Q.STAGE_LEVEL_LEARNING_MODULE,{next: this.p.next});
 	},
 
 	addShadow: function(ctx) {
@@ -434,9 +404,34 @@ var rangetestform = new Q.Form(
 								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
 								fill: null,
 							}),
-						})
-					],
-					next: testform,
+							feature: Q.RangeQuestion.Slider,
+						}),
+						new Q.MultipleChoiceQuestion({
+							question: new Q.ImageText({
+								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								fill: null,
+							}), 
+							choices: [
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+							],
+						}),
+						new Q.RangeQuestion({
+							question: new Q.ImageText({
+								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								fill: null,
+							}),
+							feature: Q.RangeQuestion.Spinner,
+						}),
+					]
 				}
 			);
 
