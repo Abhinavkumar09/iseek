@@ -292,6 +292,7 @@ Q.UI.Layout.extend("Form", {
 			shadow: 5,
 			stroke: "#B26B00",
 			border: 15,
+			next: null,
 		}));
 		this.on("destroyed");
 		this.on("inserted");
@@ -305,7 +306,13 @@ Q.UI.Layout.extend("Form", {
 
 	inserted: function() {
 		this.insert(this.p.content[0]);
-		this.insert(new Q.ControlButtons({context: this, callback_done: "done"}));
+		if(this.p.next!=null){
+			console.log(this.p.next);
+			this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.NEXT, callback_next: "loadnext"}));
+		}
+		else{
+			this.insert(new Q.ControlButtons({context: this, callback_done: "done"}));
+		}
 	},
 
 
@@ -314,9 +321,17 @@ Q.UI.Layout.extend("Form", {
 	},
 
 	next: function() {
-		if(this.next == null)
+		if(this.p.next == null)
 			return null;
 		return this.p.next;
+	},
+
+	loadnext: function(stage){
+		Q.clearStages();
+		Q.scene("next", function(stage) {
+			stage.insert(stage.options.next);
+		});
+		Q.stageScene('next',Q.STAGE_LEVEL_LEARNING_MODULE,{next: this.p.next});
 	},
 
 	addShadow: function(ctx) {
@@ -416,11 +431,12 @@ var rangetestform = new Q.Form(
 					content: [
 						new Q.RangeQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "How much do you want to inverst?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
 								fill: null,
 							}),
 						})
-					]
+					],
+					next: testform,
 				}
 			);
 
