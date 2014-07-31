@@ -214,11 +214,38 @@ Q.scene("health_1_House", function(stage) {
 	};
 
 
-	setTimeout(function(){
-		if(Q.game.player.keys.length == 0) {
-			Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element["Arvind"], nextStage: Q.STAGE_LEVEL_LEARNING_MODULE, context: Mira, func: "onquestioncompletion"});
+	var form = new Q.Form(
+		{
+			content: [
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
+			],
+
+			context: Mira,
+			func: "onquestioncompletion",
 		}
-	}, 500);
+	);
+
+
+	if(Q.game.player.keys.length == 0) {
+		stage.insert(form);
+	}
 });
 
 

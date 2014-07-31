@@ -166,8 +166,10 @@ Q.Sprite.extend("MiniMapCursor", {
 	},
 
 	step: function(dt) {
-		this.p.x = Q("Player", Q.STAGE_LEVEL_PRIMARY).first().p.x * this.p.minimap_width / 80 / 32 - this.p.minimap_width / 2;
-		this.p.y = Q("Player", Q.STAGE_LEVEL_PRIMARY).first().p.y * this.p.minimap_height / 60 / 32 - this.p.minimap_height / 2;
+		try {
+			this.p.x = Q("Player", Q.STAGE_LEVEL_PRIMARY).first().p.x * this.p.minimap_width / 80 / 32 - this.p.minimap_width / 2;
+			this.p.y = Q("Player", Q.STAGE_LEVEL_PRIMARY).first().p.y * this.p.minimap_height / 60 / 32 - this.p.minimap_height / 2;
+		} catch(err) {}
 	},
 });
 

@@ -1,105 +1,3 @@
-// Wolf of the wall street
-// American Hustle
-
-function Video(content) {
-	this.filename = content;
-	this.status = -1;
-
-	this.nextElement = function() {
-		return this.next;
-	};
-}
-
-
-function Question(content) {
-	this.question = content[0];
-	this.choices = content[1];
-	this.answer_index = -1;
-	this.status = -1;
-
-	this.show = function() {
-		myhtml = this.question;
-		for(i = 0; i < this.choices.length; i++) {
-			myhtml += "<br />" + this.choices[i];
-		}
-		return myhtml
-	};
-
-	this.nextElement = function() {
-		if(this.next == null)
-			return null;
-		// TODO: Check that answer_index is not -1
-		return this.next[this.answer_index];
-	};
-}
-
-function VirtualWorldMOL(content) {
-	this.content = content;
-
-	this.activate = function(myQ) {
-		console.log("activating MOL");
-
-		for(i = 0; i < this.content.length; i++) {
-			j = 0;
-			while(Q(this.content[i][1]).at(j)) {
-				if(Q(this.content[i][1]).at(j).p.name == this.content[i][2]) {
-					Q(this.content[i][1]).at(j).setInteractable(true);
-					break;
-				}
-				j++;
-			}
-		}
-	};
-}
-
-// element_id: Unique string representing the stage level that will be activated when the element is activated
-function CertificateElement(element_id, name, isFinished, element, interactability) {
-	this.element_id = element_id;
-	this.name = name;
-	this.isFinished = isFinished;
-	this.element = element;
-	this.interactability = interactability;
-
-	this.activateElement = function(myQ) {
-		console.log("activating element MOL");
-		this.MOL.activate(myQ);
-	};
-}
-
-function CertificateBadge(name, image, isFinished, elements) {
-	this.name = name;
-	this.image = image;
-	this.isFinished = isFinished;
-	this.elements = elements;
-
-	this.activateElement = function(myQ) {
-		console.log("activating element MOL");
-		this.elements[0].activate(myQ);
-	};
-
-	this.countFinishedElements = function() {
-		var count = 0;
-		for(i in this.elements) {
-			if(this.elements[i].isFinished)
-				count++;
-		}
-		console.log("finished count: " + count);
-		return count;
-	};
-}
-
-function Certificate(name, isFinished, badges) {
-	this.name = name;
-	this.isFinished = isFinished;
-	this.badges = badges;
-
-	this.activateElement = function(myQ) {
-		console.log("activating certificate element");
-		this.badges[0].activateElement(myQ);
-
-	};
-}
-
 function Material(name, properties) {
 	this.name = name;
 	this.price = properties.price;
@@ -118,20 +16,14 @@ function Game(name) {
 		}
 	};	
 
-	this.production_speed = 10000;
-
-
-	this.activateElement = function() {
-		console.log("activating game certificate");
-		//this.certificates[0].activateElement(game.Q);
-	};
-
+	/* All resources to be loaded
+	*/
 	this.resources = [
 		"mira_1.png", 'tiles.png', 'tileSet.png', 'house_inside_new.png', 'house_tileset.png', 'cloud.png', 
 
 		"sahiya.png", "Mira.png", "desk.png", "chairback.png",
 		"chairseat.png", "blackboard.png", "pranav.png",
-		"mira_house.png", "market.png", "school.png", "workshop.png",
+		"mira_house.png", "market.png", "school.png", "workshop.png", "cards.jpg",
 
 		// Classroom
 		'emptyclassroom.png', 'classroom/blackboard.png', 'classroom/chairback.png', 'classroom/chairseat.png', 'classroom/desk.png',
@@ -160,11 +52,9 @@ function Game(name) {
 		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'healthcenter.tmx',
 
 		// Audio
-		'sell_buy_item.wav', 'put_pick_item.wav', 'Lazy_Day.wav', 'Tavern.wav',
+//		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
 	];
 
-
-//	this.speed = content.speed;
 
 	this.material_names = {
 		basket_01: {sheet: "basket_01_sheet", frame: 0, price: 20},
@@ -205,12 +95,6 @@ function Game(name) {
 		},
 
 		Player: {
-//			basket_01: [
-//				new Material('basket_01', {price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 100}),
-//			],
-//			basket_02: [
-//				new Material('basket_02', {price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 10}),
-//			],
 		},
 
 		Market: {
@@ -259,81 +143,13 @@ function Game(name) {
 	this.player = {
 		money: 100,
 		health: 100,
-//		keys: ["mind", "health", "blah"],
 		keys: [],
 		change_money: function(price) {
 			this.money += price;
 			game.Q.state.trigger("change.money", this.money);
 		},
 	};
-
-	this.start_production = function() {
-		game = this;
-		var product = "Basket";
-		var interval = setInterval(function(){game.produce(product);}, game.formula_list[product].production_speed * 1000);
-		return interval;
-	};
-
-	this.produce = function(product) {
-		console.log("producing");
-		// Assumed product is Basket
-		var product = "Basket";
-		var hasRawMaterial = true;
-		for(rawmaterial in this.formula_list[product]) {
-			var count = 0;
-			for(var i = 0; i < this.stocks["Workshop"].length; i++)
-				if(this.stocks["Workshop"][i].name == rawmaterial)
-					count++;
-
-			if(count < this.formula_list[product][rawmaterial])
-				hasRawMaterial = false;
-		}
-
-		if(hasRawMaterial) {
-			console.log("produced");
-			this.stocks["Workshop"].push({name: product, price:0, commission:0, ifClickable:true});
-
-			for(rawmaterial in this.formula_list[product]) {
-				var count = 0;
-				var i = 0;
-				while(count != this.formula_list[product][rawmaterial]) {
-					if(this.stocks["Workshop"][i].name == rawmaterial) {
-						count++;
-						this.stocks["Workshop"].splice(i, 1);
-					}
-					else
-						i++;
-
-					if(count == this.formula_list[product][rawmaterial])
-						break;
-				}
-			}
-		}
-	};
-
-	this.refresh_debug = function() {
-		board = document.getElementById('debug_board');
-		board.innerHTML = '';
-
-		for(stock_name in this.stocks) {
-			board.innerHTML += "<strong>" + stock_name + "</strong><br />";
-			for (material_name in this.stocks[stock_name]) {
-				board.innerHTML += material_name + ": " + this.stocks[stock_name][material_name].length + "<br />";				
-			}
-		}
-	};
-
-
-//	this.production_interval = this.start_production();
-
 }
-
-
-
-
-
-
-//Should be stored in a persistent storage
 
 
 
@@ -341,6 +157,7 @@ var game = new Game("Test Game");
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -596,6 +413,8 @@ var game = new Game("Test Game");
 
 
 
+=======
+>>>>>>> master
 var Q = Quintus({
 			development: true,
 			audioPath: "/site_media/assets/new_game/audio/",
@@ -655,6 +474,7 @@ Q.game = game;
 game.Q = Q;
 
 
+<<<<<<< HEAD
 Q.Sprite.extend("Aakashvani",{ 
 	init: function(p) {
 		this._super(p, {
@@ -804,4 +624,6 @@ function timeoutLoop(fn, reps, delay) {
 
 
 
+=======
+>>>>>>> master
 

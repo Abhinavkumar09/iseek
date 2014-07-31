@@ -186,6 +186,7 @@ Q.Sprite.extend("QuestionChoices", {
 			h: 30,
 		});
 
+		console.log(this.p.label);
 		if(this.p.isClickable) {
 			this.p.size = 12;
 		}
@@ -280,18 +281,16 @@ Q.Sprite.extend("MyQuestion", {
 		this.p.box = new Q.UI.Container({
 			w: this.p.w,
 			h: this.p.h,
-//			x: this.p.x, 
-//			y: this.p.y, 
 			fill: "rgba(255,255,255,0.7)"
 		});
 		box = this.stage.insert(this.p.box, this);
 
 		max_height = text_height + 2 * (question.choices.length + 1.5) * text_height;
-		questionSprite = new Q.QuestionChoices({label: question.question, y: - max_height / 2 + text_height, w: this.p.w, question: question, listener: this.p.listener});
+		questionSprite = new Q.QuestionChoices({label: question.question.text, y: - max_height / 2 + text_height, w: this.p.w, question: question, listener: this.p.listener});
 		box.insert(questionSprite);
 		for(i = 0; i < question.choices.length; i++) {
 			choice = question.choices[i];
-			questionSprite = new Q.QuestionChoices({index: i, label: choice, y: questionSprite.p.y + questionSprite.p.h / 2 + 2 * text_height, w: this.p.w, isClickable:true, question: question, listener: this.p.listener});
+			questionSprite = new Q.QuestionChoices({index: i, label: choice.text, y: questionSprite.p.y + questionSprite.p.h / 2 + 2 * text_height, w: this.p.w, isClickable:true, question: question, listener: this.p.listener});
 			box.insert(questionSprite);
 		}
 		box.fit(20);
@@ -331,11 +330,6 @@ Q.Sprite.extend("Questionnaire", {
 			collisionMask: Q.SPRITE_NONE,
 		}));
 		this.add("Question, Video");
-//		if(this.p.speaker) {
-//			this.p.x = this.p.speaker.p.x;
-//			this.p.y = this.p.speaker.p.y;
-//			console.log("x: " + this.p.speaker.p.x);
-//		}
 	},
 
 	show: function(wait) {
@@ -359,7 +353,7 @@ Q.Sprite.extend("Questionnaire", {
 			return;
 		}
 
-		if(this.p.questions instanceof Question) {
+		if(this.p.questions instanceof MultipleChoiceQuestion) {
 			console.log("instanceof Question");
 			this.show_question(this.p.questions);
 		}
