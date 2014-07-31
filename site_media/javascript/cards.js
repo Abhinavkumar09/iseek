@@ -16,13 +16,13 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_next = this.p.callback_next;
 		var context = this.p.context;
 		if(this.p.button_type == Q.ControlButtons.DONE) {
-			var b = this.insert(new Q.UI.Button({label: "Done", radius: 5, font: "weigth: 200, size: 24, family: Courier New", fontColor: "#F2ECE6", outlineWidth: 2, outlineColor: "#EBC299", stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			var b = this.insert(new Q.UI.Button({label: "Done", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_done]();
 			});
 		}
 		else if(this.p.button_type == Q.ControlButtons.NEXT) {
-			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, font: "weigth: 200, size: 24, family: Courier New", fontColor: "#F2ECE6", outlineWidth: 2, outlineColor: "#EBC299", stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_next]();
 			});
@@ -184,12 +184,7 @@ Q.UI.Layout.extend("RangeQuestion", {
 
 	inserted: function() {
 		this.insert(this.p.question, this);
-		if(this.p.range==Q.RangeQuestion.Slider){
-			this.insert(new Q.UI.Slider({color: "#8F4700",},null));
-		}
-		else if(this.p.range==Q.RangeQuestion.Spinner){
-			this.insert(new Q.UI.Spinner({color: "#8F4700",},null));
-		}
+		this.insert(this.p.answer, this);
 		this.fit(10);
 	},
 });
@@ -233,16 +228,6 @@ Q.UI.Layout.extend("InfoQuestion", {
 	},
 });
 
-/*
-	To be used when we want to ask a question that has a numeric answer
-	'exit_type' defines how the question will be considered answered. For example,
-	should there is "Ok" and "Cancel" button, or just "Continue" button.
-*/
-function NumericQuestion(question, input) {
-	this.question = question;
-	this.choices = input;
-}
-
 
 /**
 	Important variables to be passed:
@@ -264,12 +249,13 @@ Q.UI.Layout.extend("Form", {
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			status: Q.Form.INCOMPLETE,
 			fill: "rgba(255, 255, 255, 1)",
-			radius: 10,
+			radius: 0,
 			shadow: 5,
 			stroke: "#B26B00",
-			border: 15,
+			border: 5,
 			index: 0,
 		}));
+		//, context: Mira, func: "onquestioncompletion"
 		this.on("destroyed");
 		this.on("inserted");
 	},
@@ -295,7 +281,8 @@ Q.UI.Layout.extend("Form", {
 
 
 	done: function() {
-		alert("done");
+		this.destroy();
+		this.p.context[this.p.func]();
 	},
 
 	next: function() {
@@ -317,98 +304,25 @@ Q.UI.Layout.extend("Form", {
       ctx.shadowColor = "transparent";
     },
 
-    drawRadius: function(ctx) {
-      Q.UI.roundRect(ctx,this.p);
-      this.addShadow(ctx);
-      ctx.fillStyle = this.p.fill;
-      ctx.fill();
-      ctx.drawImage(Q.asset("cards.jpg"),-this.p.cx,-this.p.cy, 500, 400);
-      if(this.p.border) {
-        this.clearShadow(ctx);
-        ctx.lineWidth = this.p.border;
-        ctx.stroke();
-        ctx.strokeStyle = "#EBC299";
-        ctx.lineWidth -= 10;
-        ctx.stroke();
-      }
-    },
-
-    drawSquare: function(ctx) {
-      this.addShadow(ctx);
-      if(this.p.fill) { 
-        ctx.fillRect(-this.p.cx,-this.p.cy,
-                      this.p.w,this.p.h);
-      }
-
-      if(this.p.border) {
-        this.clearShadow(ctx);
-        ctx.lineWidth = this.p.border;
-        ctx.strokeRect(-this.p.cx,-this.p.cy,
-                        this.p.w,this.p.h);
-      }
-    },
-
-    draw: function(ctx) {
-      if(this.p.hidden) { return false; }
-      if(!this.p.border && !this.p.fill) { return; }
-
-      ctx.globalAlpha = this.p.opacity;
-      if(this.p.frame === 1 && this.p.highlight) {
-        ctx.fillStyle = this.p.highlight;
-      } else {
-        ctx.fillStyle = this.p.fill;
-      }
-      ctx.strokeStyle = this.p.stroke;
-      if(this.p.radius > 0) { 
-        this.drawRadius(ctx);
-      } else {
-        this.drawSquare(ctx);
-      }
-    }
 });
 
 Q.Form.INCOMPLETE = 1;
 Q.Form.COMPLETE = 2;
 
 
-var testform = new Q.Form(
-				{
-					content: [
-						new Q.MultipleChoiceQuestion({
-							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
-								fill: null,
-							}), 
-							choices: [
-								new Q.ImageText({
-									label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
-									isSelectable: true,
-									fill: null,
-								}), 
-								new Q.ImageText({
-									label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
-									isSelectable: true,
-									fill: null,
-								}), 
-							],
-						})
-					]
-				}
-			);
-
 var rangetestform = new Q.Form(
 				{
 					content: [
 						new Q.RangeQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
 								fill: null,
 							}),
-							feature: Q.RangeQuestion.Slider,
+							answer: new Q.UI.Slider({color: "#8F4700",},null),
 						}),
 						new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, }),
 								fill: null,
 							}), 
 							choices: [
@@ -426,10 +340,10 @@ var rangetestform = new Q.Form(
 						}),
 						new Q.RangeQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, color: "#8F4700", outlineColor: "#F2ECE6", outlineWidth: 4, family: "Courier New", weight: 800,}),
+								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
 								fill: null,
 							}),
-							feature: Q.RangeQuestion.Spinner,
+							answer: new Q.UI.Spinner({color: "#8F4700",},null),
 						}),
 					]
 				}
