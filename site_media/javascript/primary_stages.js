@@ -522,5 +522,5 @@ Q.scene("LevelSelector", function(stage) {
 	stage.insert(stage.gamestats);
 
 	Q.audio.stop();
-	Q.audio.play("Lazy_Day.wav", {loop: true});
+	//Q.audio.play("Lazy_Day.wav", {loop: true});
 });

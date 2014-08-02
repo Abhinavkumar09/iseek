@@ -217,6 +217,20 @@ game.certificates = [
 				]
 
 			),
+			new CertificateBadge(
+				"Loan", 
+				"Objects/Medal/badge01.png",
+				false, 
+				[
+					new CertificateElement(
+						"loan_1",
+						"Loan",
+						false,
+						{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
+						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+				]
+			),
 		]
 	),
 ];

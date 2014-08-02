@@ -923,7 +923,7 @@ Q.scene("market_research_1_SeemaWorkshop", function(stage) {
 	Q.stageTMX("VirtualWorld.tmx", stage);
 
 	Q.audio.stop();
-	Q.audio.play("Tavern.wav", {loop: true});
+	//Q.audio.play("Tavern.wav", {loop: true});
 
 	var Mira = Q("Player").first();
 	Mira.add("KeyCarrier");
@@ -982,6 +982,176 @@ Q.scene("loan_1_Market", function(stage) {
 
 		var Hari = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 180, name:"Vendor"});
 
+		var form = new Q.Form(
+		{
+			content: [
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "5", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "6", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "7", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "8", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "9", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "10", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How many people are in your SHG?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "1", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "2", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "3", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "4", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "5", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How much would you like to price each basket for selling?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "1", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "5", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "10", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "20", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "50", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How much would your SHG take loan from the bank?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "10000", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "12500", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "15000", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}),
+					],
+				}),
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How much would you like to price each basket for selling?", type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "50", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "75", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "100", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "125", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "150", type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
+			],
+			context: Shyam,
+			func: "onquestioncompletion",
+		});
+		Q.stage().insert(form);
+
+		/*
 		Mira.oncompletion = function() {
 			switch(counter){
 				case 1:{
@@ -1133,7 +1303,7 @@ Q.scene("loan_1_Market", function(stage) {
 			}
 			counter++;
 		};
-
+		
 		var counter = 0;
 		Mira.p.labels = new Array();
 		Shyam.p.labels = new Array();
@@ -1249,7 +1419,7 @@ Q.scene("loan_1_Market", function(stage) {
 		
 		Shyam.p.labels[10] = "So you saw Mira if the SHG does not plan properly and take a loan from bank then it can\n"+
 			"get into trouble. So, while there are benefits of bank loan, you must also understand the risks\n"+
-			"involved. Here is a small exercise for you.";
+			"involved. Here is a small exercise for you.";*/
 	};
 	Shyam.on("hit", Shyam, "collision");
 	
