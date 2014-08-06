@@ -1156,6 +1156,13 @@ Q.scene("loan_1_Market", function(stage) {
 		});
 		Q.stage().insert(form);
 
+		Shyam.onquestioncompletion = function() {
+			setTimeout(function(){
+				Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+				stage.pause();
+			}, 500);
+		};
+
 		/*
 		Mira.oncompletion = function() {
 			switch(counter){
