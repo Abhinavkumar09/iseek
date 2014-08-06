@@ -1,9 +1,10 @@
 /*
 	element_id: Unique string representing the stage level that will be activated when the element is activated
 */
-function CertificateElement(element_id, name, isFinished, element, interactability) {
+function CertificateElement(element_id, name, file, isFinished, element, interactability) {
 	this.element_id = element_id;
 	this.name = name;
+	this.file = file;
 	this.isFinished = isFinished;
 	this.element = element;
 	this.interactability = interactability;
@@ -14,8 +15,9 @@ function CertificateElement(element_id, name, isFinished, element, interactabili
 	};
 }
 
-function CertificateBadge(name, image, isFinished, elements) {
+function CertificateBadge(name, folder, image, isFinished, elements) {
 	this.name = name;
+	this.folder = folder;
 	this.image = image;
 	this.isFinished = isFinished;
 	this.elements = elements;
@@ -36,8 +38,9 @@ function CertificateBadge(name, image, isFinished, elements) {
 	};
 }
 
-function Certificate(name, isFinished, badges) {
+function Certificate(name, folder, isFinished, badges) {
 	this.name = name;
+	this.folder = folder;
 	this.isFinished = isFinished;
 	this.badges = badges;
 
@@ -172,16 +175,19 @@ for(i = 0; i < health_test.length - 1; i++)
 game.certificates = [
 	new Certificate(
 		"Level One", 
+		"One",
 		false,
 		[
 			new CertificateBadge(
 				"Market Research", 
+				"Market_Research",
 				"Objects/Medal/badge01.png",
 				false, 
 				[
 					new CertificateElement(
 						"market_research_1",
 						"Lecture",
+						"Lecture.js",
 						false,
 						q2,
 						{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
@@ -189,6 +195,7 @@ game.certificates = [
 					new CertificateElement(
 						"market_research_2",
 						"007",
+						"007.js",
 						false,
 						null,
 						{House: true, Market: true, Workshop: true, School:false, SeemaWorkshop: true, HealthCenter: false}
@@ -197,12 +204,14 @@ game.certificates = [
 			),
 			new CertificateBadge(
 				"Mind, Body, and ...", 
+				"Mind_Body_Relations",
 				"Objects/Medal/badge01.png",
 				false, 
 				[
 					new CertificateElement(
 						"health_1",
 						"Health",
+						"Health.js",
 						false,
 						{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
 						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
@@ -210,6 +219,7 @@ game.certificates = [
 					new CertificateElement(
 						"health_2",
 						"Test",
+						"Test.js",
 						false,
 						health_test[0],
 						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
@@ -218,13 +228,15 @@ game.certificates = [
 
 			),
 			new CertificateBadge(
-				"Loan", 
+				"Finance", 
+				"Finance",
 				"Objects/Medal/badge01.png",
 				false, 
 				[
 					new CertificateElement(
 						"loan_1",
 						"Loan",
+						"Loan.js",
 						false,
 						{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
 						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
@@ -236,5 +248,16 @@ game.certificates = [
 ];
 
 
-
+for(var i = 0; i < game.certificates.length; i++) {
+	var certificate = game.certificates[i];
+	for(var j = 0; j < certificate.badges.length; j++) {
+		var badge = certificate.badges[j];
+		for(var k = 0; k < badge.elements.length; k++) {
+			var element = badge.elements[k];
+			var f = "/site_media/javascript/certificates/" + certificate.folder + "/"  + badge.folder + "/" + element.file;
+			console.log(f);
+			loadjscssfile(f, "js");
+		}
+	}
+}
 
