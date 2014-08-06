@@ -133,7 +133,7 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			h: 500,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
-			separation_y: 10,
+			separation_y: 0,
 			align: Q.UI.Layout.CENTER_ALIGN,
 
 			radius: 0,
@@ -245,7 +245,7 @@ Q.UI.Layout.extend("Form", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separationType: 1,
-			separation_y: 100,
+			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			status: Q.Form.INCOMPLETE,
 			fill: "rgba(255, 255, 255, 1)",

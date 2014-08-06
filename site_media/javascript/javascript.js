@@ -157,6 +157,8 @@ var game = new Game("Test Game");
 
 
 
+
+
 var Q = Quintus({
 			development: true,
 			audioPath: "/site_media/assets/new_game/audio/",
@@ -216,4 +218,65 @@ Q.game = game;
 game.Q = Q;
 
 
+
+/**
+ * Storage Function
+ * Store the Value
+ * @param dataSet the name of the entry
+ * @param dataValue the value of the entry
+ * @return the result of operation
+ */
+function storeValue(dataSet, dataValue){
+	if(typeof(Storage) !== "undefined") {
+	    localStorage.setItem(dataSet,dataValue);
+	    if(String(fetchValue(dataSet))===String(dataValue)){
+	    	return true;
+	    }
+	} else {
+	    console.log("Browser doesn't support local storage.")
+	}
+	return false;
+}
+
+/**
+ * Storage Function
+ * Fetch the Value
+ * @param dataSet the name of the entry
+ * @return the value of given name in local storage
+ */
+function fetchValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+		console.log(localStorage.getItem(dataSet));
+	    return localStorage.getItem(dataSet);
+	} else {
+	    console.log("Browser doesn't support local storage.");
+	}
+	return false;
+}
+
+/**
+ * Storage Function
+ * Remove the Value
+ * @param dataSet the name of the entry
+ * @return the result of operation
+ */
+function removeValue(dataSet){
+	if(typeof(Storage) !== "undefined") {
+	    localStorage.removeItem(dataSet);
+	    if(fetchValue(dataSet)===null){
+	    	return true;
+	    }
+	} else {
+	    console.log("Browser doesn't support local storage.");
+	}
+	return false;
+}
+
+function timeoutLoop(fn, reps, delay) {
+  if (reps > 0)
+    setTimeout(function() {
+                 fn;
+                 timeoutLoop(fn, reps-1, delay);
+               }, delay);
+}
 
