@@ -1,3 +1,6 @@
+console.log("loaded loan element");
+
+
 /**
   * Finance Badge
   * Loan Element Scene
@@ -11,11 +14,11 @@ Q.scene("loan_1", function(stage) {
 	//Q.audio.play("Tavern.wav", {loop: true});
 
 	var Mira = Q("Player").first();
-	Mira.add("KeyCarrier");
+	//Mira.add("KeyCarrier");
 	stage.add("viewport").follow(Mira);
 	//Mira.addMaterialContainer("Player");
 
-	Mira.addKeyContainer();
+	//Mira.addKeyContainer();
 
 
 	var i = 0;
@@ -63,9 +66,9 @@ Q.scene("loan_1_Market", function(stage) {
 
 	Shyam.collision = function(col) {
 
-		var Ram = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 150, name:"Vendor"});
+//		var Ram = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 150, name:"Vendor"});
 
-		var Hari = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 180, name:"Vendor"});
+//		var Hari = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 180, name:"Vendor"});
 
 		var form = new Q.Form(
 		{

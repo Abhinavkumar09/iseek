@@ -70,6 +70,9 @@ function Game(name) {
 
 		// Audio
 //		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
+
+		// Video
+//		"output1.mp4",
 	];
 
 
@@ -180,6 +183,7 @@ var Q = Quintus({
 			development: true,
 			audioPath: "/site_media/assets/new_game/audio/",
 			imagePath: "/site_media/assets/new_game/figs/",
+			videoPath: "/site_media/assets/new_game/video/",
 			dataPath: "/site_media/assets/new_game/data/",
 			resources: game.resources,
 			audioSupported: [ 'wav','mp3' ],

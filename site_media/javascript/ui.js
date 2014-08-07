@@ -305,7 +305,7 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			totalWidth += this.children[i].p.w;
 			totalHeight += this.children[i].p.h;
 		}
-		console.log(totalHeight);
+		//console.log(totalHeight);
 		 // separation between elements
 		var separation_x = this.p.separation_x || 0;
 		var separation_y = this.p.separation_y || 0;
@@ -315,7 +315,6 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			else if(this.p.layout != Q.UI.Layout.VERTICAL && !Q._isNumber(separation_x))
 				separation_x = (this.p.w - totalWidth) / (this.children.length - 1);
 		}
-		console.log("SY"+separation_y);
 		// Make sure all elements have the same space between them
 		totalWidth += separation_x * (this.children.length - 1);
 		totalHeight += separation_y * (this.children.length - 1);
@@ -323,7 +322,6 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 		var offset_y = -totalHeight/2;
 		for(var i = 0; i < this.children.length; i++) {
 			if(this.p.layout == Q.UI.Layout.VERTICAL) {
-				console.log("OY"+offset_y);
 				this.children[i].p.y = offset_y + this.children[i].p.h/2;
 				offset_y += separation_y + this.children[i].p.h;
 

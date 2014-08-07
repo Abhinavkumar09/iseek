@@ -6,49 +6,93 @@ Q.UI.Layout.extend("ControlButtons", {
 			x: 0,
 			y: 0,
 			button_type: Q.ControlButtons.DONE, 
-			layout: Q.UI.Layout.HORIZONTAL
+			layout: Q.UI.Layout.HORIZONTAL,
+			separation_x: 10,
+
+			callback_done: "done",
+			callback_next: "next",
+			callback_prev: "prev",
 		}));
 		this.on("inserted");
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
 	},
 
 	inserted: function() {
 		var callback_done = this.p.callback_done;
 		var callback_next = this.p.callback_next;
+		var callback_prev = this.p.callback_prev;
 		var context = this.p.context;
-		if(this.p.button_type == Q.ControlButtons.DONE) {
-			var b = this.insert(new Q.UI.Button({label: "Done", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+		if(this.p.button_type & Q.ControlButtons.PREV) {
+			var b = this.insert(new Q.UI.Button({label: "Prev", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
-				context[callback_done]();
+				context[callback_prev]();
 			});
 		}
-		else if(this.p.button_type == Q.ControlButtons.NEXT) {
+		if(this.p.button_type & Q.ControlButtons.NEXT) {
 			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_next]();
 			});
 		}
+		if(this.p.button_type & Q.ControlButtons.DONE) {
+			var b = this.insert(new Q.UI.Button({label: "Done", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_done]();
+			});
+		}
 		this.fit(0);
 	},
 });
-Q.ControlButtons.OK = 0;
-Q.ControlButtons.OK_CANCEL = 1;
-Q.ControlButtons.NEXT = 2;
-Q.ControlButtons.DONE = 3;
-Q.ControlButtons.YES_NO = 4;
+Q.ControlButtons.OK = 1;
+Q.ControlButtons.CANCEL = 2;
+Q.ControlButtons.NEXT = 4;
+Q.ControlButtons.PREV = 8;
+Q.ControlButtons.DONE = 16;
 
 
 
 /*
 	To display the video
 */
-function Video(content) {
-	this.filename = content;
-	this.status = -1;
+Q.UI.Layout.extend("Video", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			w: 400,
+			h: 300,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN,
+			radius: 0,
 
-	this.nextElement = function() {
-		return this.next;
-	};
-}
+			status: Q.Form.INCOMPLETE,
+			layout: Q.UI.Layout.VERTICAL,
+			filename: "",
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.p.video = document.getElementById('myvideo');
+		this.p.video.src = this.p.filename;
+		this.p.video.load();
+		this.p.video.play();
+		this.p.video.onended = function(e) {
+		};
+	},
+
+	draw: function(ctx) {
+		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
+	},
+});
+
+
 
 
 /*
@@ -87,11 +131,18 @@ Q.UI.Layout.extend("ImageText", {
 			this.add("Touch");
 			this.on("touch");
 		}
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
 	},
 
 	inserted: function() {
 		if(this.p.isSelectable) {
-			this.p.bullet = new Q.Rectangle({radius: 10, type: Q.SPRITE_NONE});
+			this.p.bullet = new Q.Rectangle({radius: 10, type: Q.SPRITE_NONE, isSelected: this.p.isSelected});
 			this.insert(this.p.bullet);
 		}
 
@@ -103,24 +154,18 @@ Q.UI.Layout.extend("ImageText", {
 
 	touch: function() {
 		console.log("touch");
-		this.p.isSelected = !this.p.isSelected;
-		if(this.p.isSelectable) {
-			this.p.bullet.p.isSelected = !this.p.bullet.p.isSelected;
-		}
+		this.select(!this.p.isSelected);
+		this.p.parent.onselect(this);
 	},
+
+	select: function(isSelected) {
+		this.p.isSelected = isSelected;
+		this.p.bullet.p.isSelected = isSelected;
+	}
 });
 Q.ImageText.LEFT_POSITION = 1;
 Q.ImageText.TOP_POSITION = 2;
 
-
-function NumericInput(type, initial_value, min_value, max_value) {
-	this.type = NumericInput.SPINNER;
-	this.min_value = min_value;
-	this.max_value = max_value;
-	this.value = initial_value;
-}
-NumericInput.SPINNER = 1;
-NumericInput.SLIDER = 1;
 
 
 //question, choices, isSelectALL
@@ -134,7 +179,7 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 0,
-			align: Q.UI.Layout.CENTER_ALIGN,
+			align: Q.UI.Layout.LEFT_ALIGN,
 
 			radius: 0,
 
@@ -144,14 +189,32 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			layout: Q.UI.Layout.VERTICAL,
 		}));
 		this.on("inserted");
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
 	},
 
 	inserted: function() {
 		this.insert(this.p.question);
 		for(var i = 0; i < this.p.choices.length; i++) {
+			this.p.choices[i].p.parent = this;
 			this.insert(this.p.choices[i]);
 		}
 		this.fit(10);
+	},
+
+	onselect: function(choice) {
+		if(this.p.isSelectAll == false) {
+			for(var i = 0; i < this.p.choices.length; i++) {
+				if(choice != this.p.choices[i]) {
+					this.p.choices[i].select(false);
+				}
+			}
+		}		
 	},
 });
 
@@ -162,8 +225,6 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 Q.UI.Layout.extend("RangeQuestion", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-//			x: 400, 
-//			y: 300,
 			w: 400,
 			h: 300,
 			type: Q.SPRITE_NONE,
@@ -174,12 +235,16 @@ Q.UI.Layout.extend("RangeQuestion", {
 			radius: 0,
 
 			status: Q.Form.INCOMPLETE,
-			isSelectAll: false,
-			answers: [],
 			layout: Q.UI.Layout.VERTICAL,
-			feature: Q.RangeQuestion.Slider,
 		}));
 		this.on("inserted");
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
 	},
 
 	inserted: function() {
@@ -188,8 +253,7 @@ Q.UI.Layout.extend("RangeQuestion", {
 		this.fit(10);
 	},
 });
-Q.RangeQuestion.Slider = 1;
-Q.RangeQuestion.Spinner = 2;
+
 
 /** Info Card
   * @param this.p.video - video object
@@ -198,8 +262,6 @@ Q.RangeQuestion.Spinner = 2;
 Q.UI.Layout.extend("InfoQuestion", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-//			x: 400, 
-//			y: 300,
 			w: 400,
 			h: 300,
 			type: Q.SPRITE_NONE,
@@ -240,7 +302,7 @@ Q.UI.Layout.extend("Form", {
 		this._super(Q._defaults(p, {
 			x: 400,
 			y: 300,
-			w: 500,
+			w: 600,
 			h: 400,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
@@ -252,7 +314,7 @@ Q.UI.Layout.extend("Form", {
 			radius: 0,
 			shadow: 5,
 			stroke: "#B26B00",
-			border: 5,
+			border: 2,
 			index: 0,
 		}));
 		//, context: Mira, func: "onquestioncompletion"
@@ -267,28 +329,40 @@ Q.UI.Layout.extend("Form", {
 	},
 
 	inserted: function() {
-		this.destroyed();
-		this.children = [];
 		this.insert(this.p.content[this.p.index]);
-		this.p.index++;
-		if(this.p.content[this.p.index]!=null){
-			this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.NEXT, callback_next: "inserted"}));
-		}
-		else{
-			this.insert(new Q.ControlButtons({context: this, callback_done: "done"}));
-		}
+		var type = 0;
+		if(this.p.content[this.p.index+1]!=null)
+			type = type | Q.ControlButtons.NEXT;
+		else
+			type = type | Q.ControlButtons.DONE;
+
+		if(this.p.content[this.p.index-1]!=null)
+			type = type | Q.ControlButtons.PREV;
+
+		this.insert(new Q.ControlButtons({context: this, button_type: type}));
 	},
 
 
 	done: function() {
 		this.destroy();
-		this.p.context[this.p.func]();
+		if(this.p.context)
+			this.p.context[this.p.func]();
 	},
 
+	// Assumes that there is a next content to show
 	next: function() {
-		if(this.p.next == null)
-			return null;
-		return this.p.next;
+		this.p.index++;
+		this.destroyed();
+		this.children = [];
+		this.inserted();
+	},
+
+	// Assumes that there is a prev content to show
+	prev: function() {
+		this.p.index--;
+		this.destroyed();
+		this.children = [];
+		this.inserted();
 	},
 
 	addShadow: function(ctx) {
@@ -313,21 +387,68 @@ Q.Form.COMPLETE = 2;
 var rangetestform = new Q.Form(
 				{
 					content: [
-						new Q.RangeQuestion({
-							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
-								fill: null,
-							}),
-							answer: new Q.UI.Slider({color: "#8F4700",},null),
-						}),
+//						new Q.Video({
+//								filename: '/site_media/assets/new_game/video/output1.ogg',
+//						}),
+
+//						new Q.RangeQuestion({
+//							question: new Q.ImageText({
+//								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
+//								fill: null,
+//							}),
+//							answer: new Q.UI.Slider({color: "#8F4700",},null),
+//						}),
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "6", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "7", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "8", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "9", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "10", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "11", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+				}),
 						new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did you?", type: Q.SPRITE_NONE, }),
+								label: new Q.UI.Text({label: "Did fda fdas fdas fda fdas fdas\n fdas fdas fdasf  fdsafs you?", type: Q.SPRITE_NONE, }),
 								fill: null,
 							}), 
 							choices: [
 								new Q.ImageText({
-									label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
+									label: new Q.UI.Text({label: "Yes fdasf fdsaf fdas fdas fdas fdas\n fdasfew fdasfw ffdafwe fdafwe ", type: Q.SPRITE_NONE}),
 									isSelectable: true,
 									fill: null,
 								}), 

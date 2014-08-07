@@ -72,8 +72,60 @@ Q.scene("market_research_1_School",function(stage) {
 		stage.pause();
 	};
 
-	Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element, nextStage: Q.STAGE_LEVEL_PRIMARY, context: Mira, func: "onquestioncompletion"});
+	var lecture = new Q.Form({
+		content: [
+			new Q.Video({
+				filename: '/site_media/assets/new_game/video/output1.ogg',
+			}),
+			new Q.MultipleChoiceQuestion({
+				question: new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "Why do you think the vendor was not able to make a sale?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					fill: null,
+				}), 
+				choices: [
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "The seller didn't understand customer needs", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "The seller brought too many baskets to the market", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+				],
+			}),
+			new Q.MultipleChoiceQuestion({
+				question: new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "Did the seller perform better this time?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					fill: null,
+				}), 
+				choices: [
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "Yes, he sold two of baskets", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "No, he was left with three unsold baskets", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+				],
+			}),
+		],
+		context: Mira,
+		func: "onquestioncompletion",
 
+	});
+
+	stage.insert(lecture);
 
 	stage.accept_material = function(material_name) {
 		console.log("cannot accept the material");
