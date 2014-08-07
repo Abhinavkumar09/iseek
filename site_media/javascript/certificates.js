@@ -54,27 +54,6 @@ function Certificate(name, folder, isFinished, badges) {
 
 
 
-// Elements
-v1 = new Video("output1");
-q1 = new Q.MultipleChoiceQuestion(
-	new Q.ImageText("Why do you think the vendor was not able to make a sale?"), 
-	[
-		new Q.ImageText("The seller didn't understand customer needs"), 
-		new Q.ImageText("The seller brought too many baskets to the market"), 
-	]
-);
-v2 = new Video("output1");
-q2 = new Q.MultipleChoiceQuestion(
-	new Q.ImageText("Did the seller perform better this time?"), 
-	[
-		new Q.ImageText("Yes, he sold two of baskets"),
-		new Q.ImageText("No, he was left with three unsold baskets"), 
-	]
-);
-v1.next = q1;
-q1.next = [v2,v2];
-v2.next = q2;
-
 
 //	var body_activities = ["eat nutritional food", "take supplements", "keep up hygiene", "rest", "do physical activity", "maintain proper urination sanitation"];
 var body_activities = ["eat nutritional food", "take supplements"];
@@ -189,7 +168,7 @@ game.certificates = [
 						"Lecture",
 						"Lecture.js",
 						false,
-						q2,
+						null,
 						{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
 					),
 					new CertificateElement(
@@ -236,7 +215,7 @@ game.certificates = [
 					new CertificateElement(
 						"loan_1",
 						"Loan",
-						"Loan.js",
+						"loan.js",
 						false,
 						{'Ram': a[0], 'Alam': b[0], 'Arvind': c[0]},
 						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
