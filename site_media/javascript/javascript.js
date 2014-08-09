@@ -6,6 +6,23 @@ function Material(name, properties) {
 	this.commission = properties.commission;
 }
 
+function loadjscssfile(filename, filetype){
+	if (filetype=="js"){ //if filename is a external JavaScript file
+		var fileref=document.createElement('script')
+		fileref.setAttribute("type","text/javascript")
+		fileref.setAttribute("src", filename)
+	}
+	else if (filetype=="css"){ //if filename is an external CSS file
+		var fileref=document.createElement("link")
+		fileref.setAttribute("rel", "stylesheet")
+		fileref.setAttribute("type", "text/css")
+		fileref.setAttribute("href", filename)
+	}
+	if (typeof fileref!="undefined")
+		document.getElementsByTagName("head")[0].appendChild(fileref)
+}
+
+
 function Game(name) {
 	this.name = name;
 
@@ -53,6 +70,9 @@ function Game(name) {
 
 		// Audio
 //		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
+
+		// Video
+//		"output1.mp4",
 	];
 
 
@@ -163,6 +183,7 @@ var Q = Quintus({
 			development: true,
 			audioPath: "/site_media/assets/new_game/audio/",
 			imagePath: "/site_media/assets/new_game/figs/",
+			videoPath: "/site_media/assets/new_game/video/",
 			dataPath: "/site_media/assets/new_game/data/",
 			resources: game.resources,
 			audioSupported: [ 'wav','mp3' ],
