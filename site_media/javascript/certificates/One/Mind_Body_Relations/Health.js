@@ -156,7 +156,7 @@ Q.scene("health_1",function(stage) {
 
 					var mindQuestion = new Q.MultipleChoiceQuestion({
 											question: new Q.ImageText({
-												label: new Q.UI.Text({label: "What time of the day are you most happy ?", type: Q.SPRITE_NONE, }),
+												label: new Q.UI.Text({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
 												fill: null,
 											}), 
 											choices: [
@@ -298,7 +298,7 @@ Q.scene("health_1_House", function(stage) {
 		Mira.resetKeyContainer();
 	};
 
-	var bodyActivities = ["eat nutritional food", "take supplements", "keep up hygiene", "rest", "do physical activity", "maintain proper urination sanitation"];
+	var bodyActivities = ["eat nutritional food", "take supplements", "keep up hygiene", "rest", "do physical activity", "maintain proper urination \nsanitation"];
 	var bodyQuestions = Array(bodyActivities.length);
 	for(i = 0; i < bodyQuestions.length; i++){
 		bodyQuestions[i] = new Q.MultipleChoiceQuestion({

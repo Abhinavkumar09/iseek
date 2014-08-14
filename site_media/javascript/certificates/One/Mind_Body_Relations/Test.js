@@ -40,12 +40,12 @@ Q.scene("health_2",function(stage) {
 
 	var countAnswered = 0;
 	
-	var Amar = new Q.Person({asset: "People/pranav.png", x:800, y:600, isInteractable:true, name:"Amar"});
+	var Amar = new Q.Person({asset: "People/pranav.png", x:1000, y:600, isInteractable:true, name:"Amar"});
 	stage.insert(Amar);
 	
-	var testQuestions = ["Oh, hello! How are you? I’m still fit (frown face, lonely) and better than everyone else! I wish I had more friends though and that I was more motivated to finish my work for my business. Can you help me?",
-						 "Hello! I am still feeling motivated and pretty good. I just wish I didn’t get sick all the time and had more friends. Can you help me?",
-						 "Hello! I still have lots of friends and family to spend time with. I just wish I didn’t get sick all the time and felt more motivated and energized to do work. Can you help me?"];
+	var testQuestions = ["Oh, hello! How are you? I’m still fit \n and better than everyone else! I wish \nI had more friends though and that I was \nmore motivated to finish my work for \nmy business. Can you help me?",
+						 "Hello! I am still feeling motivated \nand pretty good. I just wish I didn’t \nget sick all the time and had more friends. \nCan you help me?",
+						 "Hello! I still have lots of friends \nand family to spend time with. I just \nwish I didn’t get sick all the time and \nfelt more motivated and energized to do \nwork. Can you help me?"];
 
 	var testSurvey = Array(testQuestions.length);
 	var forms = Array(testQuestions.length);
@@ -131,7 +131,7 @@ Q.scene("health_2",function(stage) {
 		}
 	};
 
-	var Anthony = new Q.Person({asset: "People/pranav.png", x:800, y:800, isInteractable:true, name:"Anthony"});
+	var Anthony = new Q.Person({asset: "People/pranav.png", x:900, y:900, isInteractable:true, name:"Anthony"});
 	stage.insert(Anthony);
 
 	Anthony.off("hit", Anthony, "collision");
