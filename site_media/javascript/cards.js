@@ -290,6 +290,120 @@ Q.UI.Layout.extend("InfoQuestion", {
 	},
 });
 
+Q.UI.Layout.extend("Tile", {
+	init: function(p) {
+		var adjustedP= Q._defaults(p, {
+			w: 50,
+			h: 50,
+			type: Q.SPRITE_PURE_UI,
+			collisionMask: Q.SPRITE_NONE,
+			separation_x: 5,
+			separation_y: 5,
+			isSelected: false,
+			layoutType: Q.ImageText.LEFT_POSITION,
+			isSelectable: false,
+			fill: "rgba(17, 255, 128, 1)",
+			radius: 5,
+			label: null,
+			description: null,
+			box: null,
+		});
+
+		var layout = Q.UI.Layout.VERTICAL;
+		if(adjustedP.layoutType == Q.ImageText.LEFT_POSITION)
+			layout = Q.UI.Layout.HORIZONTAL;
+
+		this._super(Q._defaults(adjustedP, {layout: layout, }));
+
+		this.on("inserted");
+		if(this.p.isSelectable) {
+			this.add("Touch");
+			this.on("touch");
+			this.on("touchEnd");
+		}
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+	inserted: function() {
+		console.log(this.p.x);
+		//this.p.label.p.x = this.p.x;
+		//this.p.label.p.y = this.p.y;
+		this.p.name = new Q.UI.Text({label: this.p.label.p.label, size: 18, type: Q.SPRITE_NONE, x:this.p.label.p.x, y:this.p.label.p.y, }),
+		this.insert(this.p.label);
+		//this.fit(10);
+	},
+
+	touch: function() {
+		console.log("touch");
+		this.select(!this.p.isSelected);
+		//this.p.parent.onselect(this);
+	},
+
+	touchEnd: function() {
+		if(this.p.isSelectable && this.p.isSelected) {
+			this.p.box = this.insert(new Q.UI.Container({
+	    		x: this.p.x, y: this.p.y, w: 300, h: 100, fill: "rgba(0,0,0,0.8)"
+		  	}));
+		  	this.p.name.p.label = "BBB";
+			this.p.box.insert(this.p.name, this.p.box);
+			this.p.box.insert(this.p.description, this.p.box);
+			//this.p.box.fit(10);
+		}
+		else{
+			console.log("no box");
+			if(this.p.box!=null){
+				this.p.box.destroy(this.p.box);
+				this.p.box=null;
+			}
+		}
+	},
+
+	select: function(isSelected) {
+		this.p.isSelected = isSelected;
+		//this.p.bullet.p.isSelected = isSelected;
+	}
+});
+
+/** Tiled Card
+  * @param this.p.video - video object
+  * @param this.p.label - label object(text)
+  */
+Q.UI.Layout.extend("TiledQuestion", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			w: 400,
+			h: 300,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separation_x: 10,
+			separation_y: 5,
+			align: Q.UI.Layout.CENTER_ALIGN,
+
+			radius: 0,
+
+			status: Q.Form.INCOMPLETE,
+			isSelectAll: false,
+			answers: [],
+			layout: Q.UI.Layout.HORIZONTAL,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		for(var i = 0; i < this.p.question.length; i++) {
+			this.p.question[i].p.parent = this;
+			this.insert(this.p.question[i]);
+		}
+		//this.fit(10);
+	},
+});
+
 
 /**
 	Important variables to be passed:
@@ -398,49 +512,49 @@ var rangetestform = new Q.Form(
 //							}),
 //							answer: new Q.UI.Slider({color: "#8F4700",},null),
 //						}),
-				new Q.MultipleChoiceQuestion({
-					question: new Q.ImageText({
-						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
-						fill: null,
-					}), 
-					choices: [
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "6", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "7", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "8", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "9", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "10", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "11", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-					],
-				}),
+						new Q.MultipleChoiceQuestion({
+							question: new Q.ImageText({
+								label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
+								fill: null,
+							}), 
+							choices: [
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "6", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "7", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "8", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "9", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "10", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "11", size: 16, type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+							],
+						}),
 						new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
 								label: new Q.UI.Text({label: "Did fda fdas fdas fda fdas fdas\n fdas fdas fdasf  fdsafs you?", type: Q.SPRITE_NONE, }),

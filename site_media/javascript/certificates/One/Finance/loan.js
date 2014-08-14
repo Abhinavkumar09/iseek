@@ -73,6 +73,21 @@ Q.scene("loan_1_Market", function(stage) {
 		var form = new Q.Form(
 		{
 			content: [
+				new Q.TiledQuestion({
+					question: [
+						new Q.Tile({
+							label: new Q.UI.Text({label: "How?", size: 18, type: Q.SPRITE_NONE}),
+							description: new Q.UI.Text({label: "AAAAAAAAAAAAAAAA", type: Q.SPRITE_NONE, }),
+							isSelectable: true,
+						}),
+						new Q.Tile({
+							label: new Q.UI.Text({label: "How?", size: 18, type: Q.SPRITE_NONE, }),
+							description: new Q.UI.Text({label: "AAAAAAAAAAAAAAAA", type: Q.SPRITE_NONE, }),
+							isSelectable: true,
+						}),
+					],
+					answer: new Q.UI.Spinner({color: "#8F4700",},null),
+				}),/*
 				new Q.MultipleChoiceQuestion({
 					question: new Q.ImageText({
 						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
@@ -115,7 +130,7 @@ Q.scene("loan_1_Market", function(stage) {
 							fill: null,
 						}), 
 					],
-				}),
+				}),*/
 				new Q.MultipleChoiceQuestion({
 					question: new Q.ImageText({
 						label: new Q.UI.Text({label: "How many people are in your SHG?", size: 18, type: Q.SPRITE_NONE, }),
