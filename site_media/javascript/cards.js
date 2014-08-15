@@ -54,6 +54,7 @@ Q.ControlButtons.CANCEL = 2;
 Q.ControlButtons.NEXT = 4;
 Q.ControlButtons.PREV = 8;
 Q.ControlButtons.DONE = 16;
+Q.ControlButtons.BUY = 32;
 
 
 
@@ -115,6 +116,7 @@ Q.UI.Layout.extend("ImageText", {
 			separation_y: 10,
 			isSelected: false,
 			layoutType: Q.ImageText.LEFT_POSITION,
+			align: Q.UI.Layout.CENTER_ALIGN,
 			isSelectable: false,
 			fill: "rgba(255, 255, 255, 1)",
 			radius: 0,
@@ -148,12 +150,16 @@ Q.UI.Layout.extend("ImageText", {
 
 		if(this.p.label)
 			this.insert(this.p.label);
+		if(this.p.photo) {
+			this.insert(this.p.photo);
+			console.log(this.p.photo.sheet().tileW + ", " + this.p.photo.p.w);
+		}
 
 		this.fit(10);
 	},
 
 	touch: function() {
-		console.log("touch");
+//		console.log("touch");
 		this.select(!this.p.isSelected);
 		this.p.parent.onselect(this);
 	},
@@ -172,8 +178,6 @@ Q.ImageText.TOP_POSITION = 2;
 Q.UI.Layout.extend("MultipleChoiceQuestion", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-//			x: 400, 
-//			y: 300,
 			w: 400,
 			h: 500,
 			type: Q.SPRITE_NONE,
@@ -203,6 +207,7 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 		for(var i = 0; i < this.p.choices.length; i++) {
 			this.p.choices[i].p.parent = this;
 			this.insert(this.p.choices[i]);
+			console.log("choice x:" + this.p.choices[i].p.x + ", y:" + this.p.choices[i].p.y + ", cx:" + this.p.choices[i].p.cx + ", cy:" + this.p.choices[i].p.cy + ", w:" + this.p.choices[i].p.w + ", h:" + this.p.choices[i].p.h);
 		}
 		this.fit(10);
 	},
@@ -311,11 +316,9 @@ Q.UI.Layout.extend("Form", {
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			status: Q.Form.INCOMPLETE,
 			fill: "rgba(255, 255, 255, 1)",
-			radius: 0,
-			shadow: 5,
-			stroke: "#B26B00",
-			border: 2,
 			index: 0,
+			radius: 0,
+			border: 0,
 		}));
 		//, context: Mira, func: "onquestioncompletion"
 		this.on("destroyed");
@@ -344,7 +347,7 @@ Q.UI.Layout.extend("Form", {
 
 
 	done: function() {
-		this.destroy();
+		this.p.card.destroy();
 		if(this.p.context)
 			this.p.context[this.p.func]();
 	},
@@ -364,25 +367,117 @@ Q.UI.Layout.extend("Form", {
 		this.children = [];
 		this.inserted();
 	},
-
-	addShadow: function(ctx) {
-      if(this.p.shadow) {
-        var shadowAmount = Q._isNumber(this.p.shadow) ? this.p.shadow : 5;
-        ctx.shadowOffsetX=shadowAmount;
-        ctx.shadowOffsetY=shadowAmount;
-        ctx.shadowColor = this.p.shadowColor || "rgba(0,0,50,0.1)";
-      }
-    },
-
-    clearShadow: function(ctx) {
-      ctx.shadowColor = "transparent";
-    },
-
 });
 
 Q.Form.INCOMPLETE = 1;
 Q.Form.COMPLETE = 2;
 
+
+/*
+	Product card will be used to show information for a product. Using this card, a player will be able to buy a product/raw material as well.
+
+	Requires, the product following product information:
+		* Product Name
+		* Product Image
+		* Product Description
+		* If buyable by the player
+			-- Price
+			-- Limit on how much can be bought
+		* If sellable by the player
+			-- Initial price
+			-- Quantity
+
+	*/
+Q.UI.Layout.extend("Product", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+//			x: 400,
+//			y: 300,
+			w: 600,
+			h: 400,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separationType: 1,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			fill: "rgba(255, 255, 255, 1)",
+		}));
+		this.on("destroyed");
+		this.on("inserted");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+	inserted: function() {
+		this.insert(this.p.image);
+		this.insert(this.p.name);
+		this.insert(this.p.description);
+		if(this.p.buyable) {
+			this.insert(this.p.price);
+			this.p.quantity = new Q.UI.Spinner({color: "#8F4700",},null);
+			this.insert(this.p.quantity);
+			var type = Q.ControlButtons.BUY;
+			this.insert(new Q.ControlButtons({context: this, button_type: type}));
+		}
+	},
+
+	buy: function() {
+	}
+});
+
+
+Q.UI.Layout.extend("Card", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			x: 400,
+			y: 300,
+			w: 600,
+			h: 400,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			separationType: 1,
+			separation_y: 10,
+			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			fill: "rgba(255, 255, 255, 1)",
+			radius: 0,
+			shadow: 5,
+			border: 2,
+		}));
+		this.on("destroyed");
+		this.on("inserted");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+	inserted: function() {
+		this.insert(this.p.content);
+		this.p.content.p.card = this;
+	},
+
+
+	addShadow: function(ctx) {
+		if(this.p.shadow) {
+			var shadowAmount = Q._isNumber(this.p.shadow) ? this.p.shadow : 5;
+			ctx.shadowOffsetX=shadowAmount;
+			ctx.shadowOffsetY=shadowAmount;
+			ctx.shadowColor = this.p.shadowColor || "rgba(0,0,50,0.1)";
+		}
+	},
+
+	clearShadow: function(ctx) {
+		ctx.shadowColor = "transparent";
+	},
+
+
+});
 
 var rangetestform = new Q.Form(
 				{
@@ -405,6 +500,7 @@ var rangetestform = new Q.Form(
 					}), 
 					choices: [
 						new Q.ImageText({
+							photo: new Q.Medal({sheet: "basket_01_sheet", frame:0}),
 							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
 							isSelectable: true,
 							fill: null,
@@ -470,6 +566,49 @@ var rangetestform = new Q.Form(
 				}
 			);
 
-Q.scene("test", function(stage) {
-	stage.insert(rangetestform);
+var product = new Q.Product({
+	image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+	name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+	description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+});
+
+var card = new Q.Card({content: new Q.Medal({x: 400, y:300, sheet: "basket_01_sheet", frame:2})});
+//var card = new Q.Card({content: rangetestform});
+//var card = new Q.Card({content: product});
+
+var multichoiceQ = new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							photo: new Q.Sprite({sheet: "basket_01_sheet", frame:1}),
+							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
+							//photo: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+					],
+					x: 400,
+					y: 300,
+				});
+var temp = new Q.Sprite({sheet: "basket_01_sheet", frame:1});
+console.log("w: " + temp.p.w);
+console.log(temp.sheet().tileW);
+
+Q.scene("test_cards", function(stage) {
+	stage.insert(
+						multichoiceQ
+//						rangetestform
+//						new Q.ImageText({
+//							photo: new Q.Medal({sheet: "basket_01_sheet", frame:0}),
+//							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
+//							isSelectable: true,
+//							fill: null,
+//							x: 400,
+//							y: 300,
+//						})
+	);
+//	stage.insert(new Q.Medal({x: 400, y:300, sheet: "basket_01_sheet", frame:2}));
 });
