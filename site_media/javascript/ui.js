@@ -268,7 +268,10 @@ Q.Sprite.extend("Rectangle", {
 });
 
 /*
-	type: 0 means no separation, 1 means compute the separation based on the layout size
+	separationType: 0 means no separation, 1 means compute the separation based on the layout size
+	layout: Vertically equally distant or Horizontally equally distant
+	align: For veritical layout, align could be left aligned, right aligned, or center aligned. 
+			For horizontal, it could be center aligned.
 */
 Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 	init: function(p) {
@@ -292,8 +295,10 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 
 	insert: function(sprite) {
 		this.stage.insert(sprite, this);
-		this.relayout();
-		this.realign();
+		if(this.p.layout != Q.UI.Layout.NONE)
+			this.relayout();
+		if(this.p.align != 0)
+			this.realign();
 		// Bind to destroy
 		return sprite;
 	},
@@ -312,7 +317,7 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 		if((this.p.separationType == 1) & (this.children.length > 1)) {
 			if(this.p.layout == Q.UI.Layout.VERTICAL && !Q._isNumber(separation_y))
 				separation_y = (this.p.h - totalHeight) / (this.children.length + 1);
-			else if(this.p.layout != Q.UI.Layout.VERTICAL && !Q._isNumber(separation_x))
+			else if(this.p.layout == Q.UI.Layout.HORIZONTAL && !Q._isNumber(separation_x))
 				separation_x = (this.p.w - totalWidth) / (this.children.length - 1);
 		}
 		// Make sure all elements have the same space between them
@@ -325,7 +330,7 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 				this.children[i].p.y = offset_y + this.children[i].p.h/2;
 				offset_y += separation_y + this.children[i].p.h;
 
-			} else {
+			} else if(this.p.layout == Q.UI.Layout.HORIZONTAL) {
 				this.children[i].p.x = offset_x + this.children[i].p.w/2;
 				offset_x += separation_x + this.children[i].p.w;
 			}
@@ -333,21 +338,35 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 	},
 
 	realign: function() {
-		var top_offset = - this.p.cy;
-		var separation_y = this.p.separation_y || 0;
 		for(var i = 0; i < this.children.length; i++) {
-			if((this.p.align & Q.UI.Layout.LEFT_ALIGN) & (this.p.layout == Q.UI.Layout.VERTICAL)){
+			if(((this.p.align & Q.UI.Layout.LEFT_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
 				this.children[i].p.x = - this.p.cx + this.children[i].p.cx;
 			}
-			if(this.p.align & Q.UI.Layout.START_TOP) {
-		//		this.children[i].p.y = top_offset + this.children[i].p.cy;
-				top_offset += this.children[i].p.h + separation_y;
+			if(((this.p.align & Q.UI.Layout.RIGHT_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
+				this.children[i].p.x =  this.p.cx - this.children[i].p.cx;
+			}
+			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
+				this.children[i].p.x =  0;
+			}
+			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+				this.children[i].p.y =  0;
+			}
+			if(((this.p.align & Q.UI.Layout.TOP_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+				this.children[i].p.y =  - this.p.cy + this.children[i].p.cy;
+			}
+			if(((this.p.align & Q.UI.Layout.BOTTOM_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+				this.children[i].p.y =  this.p.cy - this.children[i].p.cy;
 			}
 		}
 	},
 });
 Q.UI.Layout.VERTICAL = 1;
 Q.UI.Layout.HORIZONTAL = 2;
+Q.UI.Layout.NONE = 4;
 
 Q.UI.Layout.LEFT_ALIGN = 1;
-Q.UI.Layout.START_TOP = 2;
+Q.UI.Layout.RIGHT_ALIGN = 2;
+Q.UI.Layout.CENTER_ALIGN = 4;
+Q.UI.Layout.TOP_ALIGN = 8;
+Q.UI.Layout.BOTTOM_ALIGN = 16;
+
