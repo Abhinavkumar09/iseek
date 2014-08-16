@@ -1,4 +1,5 @@
 Q.loadTMX(Q.options.resources,function() {
+	console.log("loading resources");
 	Q.sheet("nav_icons",
 		"nav_icons.png",
 		{

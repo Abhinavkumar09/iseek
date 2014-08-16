@@ -27,7 +27,11 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_done = this.p.callback_done;
 		var callback_next = this.p.callback_next;
 		var callback_prev = this.p.callback_prev;
+		var callback_buy = this.p.callback_buy;
+		var callback_sell = this.p.callback_sell;
+
 		var context = this.p.context;
+
 		if(this.p.button_type & Q.ControlButtons.PREV) {
 			var b = this.insert(new Q.UI.Button({label: "Prev", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
@@ -46,6 +50,18 @@ Q.UI.Layout.extend("ControlButtons", {
 				context[callback_done]();
 			});
 		}
+		if(this.p.button_type & Q.ControlButtons.BUY) {
+			var b = this.insert(new Q.UI.Button({label: "Buy", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_buy]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.SELL) {
+			var b = this.insert(new Q.UI.Button({label: "Sell", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_sell]();
+			});
+		}
 		this.fit(0);
 	},
 });
@@ -55,6 +71,7 @@ Q.ControlButtons.NEXT = 4;
 Q.ControlButtons.PREV = 8;
 Q.ControlButtons.DONE = 16;
 Q.ControlButtons.BUY = 32;
+Q.ControlButtons.SELL = 64;
 
 
 
@@ -150,9 +167,8 @@ Q.UI.Layout.extend("ImageText", {
 
 		if(this.p.label)
 			this.insert(this.p.label);
-		if(this.p.photo) {
-			this.insert(this.p.photo);
-			console.log(this.p.photo.sheet().tileW + ", " + this.p.photo.p.w);
+		if(this.p.image) {
+			this.insert(this.p.image);
 		}
 
 		this.fit(10);
@@ -382,24 +398,27 @@ Q.Form.COMPLETE = 2;
 		* Product Description
 		* If buyable by the player
 			-- Price
-			-- Limit on how much can be bought
 		* If sellable by the player
 			-- Initial price
-			-- Quantity
 
+	Design:
+		The card is 600x400
+			The top left 100x100 is for the image
+			the top right 100x500 is for the name
+			the bottom 50x600 is for the buttons
+			the 50x600 before bottom is for the price/quantity
+			the middle part is for description
 	*/
 Q.UI.Layout.extend("Product", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-//			x: 400,
-//			y: 300,
 			w: 600,
 			h: 400,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separationType: 1,
 			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			layout: Q.UI.Layout.NONE,
 			fill: "rgba(255, 255, 255, 1)",
 		}));
 		this.on("destroyed");
@@ -413,15 +432,37 @@ Q.UI.Layout.extend("Product", {
 	},
 
 	inserted: function() {
+		this.p.image.p.x = -this.p.cx + 50;
+		this.p.image.p.y = -this.p.cy + 50;
+
+		this.p.name.p.x = this.p.cx - 250;
+		this.p.name.p.y = -this.p.cy + 50;
+
+		this.p.description.p.x = 0;
+		this.p.description.p.y = 0;
+
 		this.insert(this.p.image);
 		this.insert(this.p.name);
 		this.insert(this.p.description);
+
 		if(this.p.buyable) {
-			this.insert(this.p.price);
-			this.p.quantity = new Q.UI.Spinner({color: "#8F4700",},null);
+			this.p.price_text = new Q.UI.Text({label: "Price: " + this.p.price, x: -this.p.cx + 150, y: this.p.cy - 100});
+			this.insert(this.p.price_text);
+
+			this.p.quantity_text = new Q.UI.Text({label: "Quantity", x: this.p.cx - 200, y: this.p.cy - 100});
+			this.p.quantity = new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
+			this.insert(this.p.quantity_text);
 			this.insert(this.p.quantity);
 			var type = Q.ControlButtons.BUY;
-			this.insert(new Q.ControlButtons({context: this, button_type: type}));
+			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+		}
+		else if(this.p.sellable) {
+			this.p.price_text = new Q.UI.Text({label: "Price", x: -this.p.cx + 50, y: this.p.cy - 100});
+			this.p.price = new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
+			this.insert(this.p.price_text);
+			this.insert(this.p.price);
+			var type = Q.ControlButtons.SET;
+			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 		}
 	},
 
@@ -479,136 +520,15 @@ Q.UI.Layout.extend("Card", {
 
 });
 
-var rangetestform = new Q.Form(
-				{
-					content: [
-//						new Q.Video({
-//								filename: '/site_media/assets/new_game/video/output1.ogg',
-//						}),
-
-//						new Q.RangeQuestion({
-//							question: new Q.ImageText({
-//								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
-//								fill: null,
-//							}),
-//							answer: new Q.UI.Slider({color: "#8F4700",},null),
-//						}),
-				new Q.MultipleChoiceQuestion({
-					question: new Q.ImageText({
-						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
-						fill: null,
-					}), 
-					choices: [
-						new Q.ImageText({
-							photo: new Q.Medal({sheet: "basket_01_sheet", frame:0}),
-							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "6", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "7", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "8", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "9", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "10", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-						new Q.ImageText({
-							label: new Q.UI.Text({label: "11", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-					],
-				}),
-						new Q.MultipleChoiceQuestion({
-							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "Did fda fdas fdas fda fdas fdas\n fdas fdas fdasf  fdsafs you?", type: Q.SPRITE_NONE, }),
-								fill: null,
-							}), 
-							choices: [
-								new Q.ImageText({
-									label: new Q.UI.Text({label: "Yes fdasf fdsaf fdas fdas fdas fdas\n fdasfew fdasfw ffdafwe fdafwe ", type: Q.SPRITE_NONE}),
-									isSelectable: true,
-									fill: null,
-								}), 
-								new Q.ImageText({
-									label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
-									isSelectable: true,
-									fill: null,
-								}), 
-							],
-						}),
-						new Q.RangeQuestion({
-							question: new Q.ImageText({
-								label: new Q.UI.Text({label: "How much do you want to invest?", type: Q.SPRITE_NONE, }),
-								fill: null,
-							}),
-							answer: new Q.UI.Spinner({color: "#8F4700",},null),
-						}),
-					]
-				}
-			);
-
-var product = new Q.Product({
-	image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
-	name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
-	description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
-});
-
-var card = new Q.Card({content: new Q.Medal({x: 400, y:300, sheet: "basket_01_sheet", frame:2})});
-//var card = new Q.Card({content: rangetestform});
-//var card = new Q.Card({content: product});
-
-var multichoiceQ = new Q.MultipleChoiceQuestion({
-					question: new Q.ImageText({
-						label: new Q.UI.Text({label: "How many baskets can 1 person prepare in 1 day?", size: 18, type: Q.SPRITE_NONE, }),
-						fill: null,
-					}), 
-					choices: [
-						new Q.ImageText({
-							photo: new Q.Sprite({sheet: "basket_01_sheet", frame:1}),
-							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
-							//photo: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
-							isSelectable: true,
-							fill: null,
-						}), 
-					],
-					x: 400,
-					y: 300,
-				});
-var temp = new Q.Sprite({sheet: "basket_01_sheet", frame:1});
-console.log("w: " + temp.p.w);
-console.log(temp.sheet().tileW);
 
 Q.scene("test_cards", function(stage) {
-	stage.insert(
-						multichoiceQ
-//						rangetestform
-//						new Q.ImageText({
-//							photo: new Q.Medal({sheet: "basket_01_sheet", frame:0}),
-//							label: new Q.UI.Text({label: "5", size: 16, type: Q.SPRITE_NONE}),
-//							isSelectable: true,
-//							fill: null,
-//							x: 400,
-//							y: 300,
-//						})
-	);
-//	stage.insert(new Q.Medal({x: 400, y:300, sheet: "basket_01_sheet", frame:2}));
+	var product = new Q.Product({
+		image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+		name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+		description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+		sellable: true,
+	});
+
+	var card = new Q.Card({content: product});
+	stage.insert(card);
 });
