@@ -335,6 +335,7 @@ Q.UI.Layout.extend("Form", {
 			index: 0,
 			radius: 0,
 			border: 0,
+			hold: false,
 		}));
 		//, context: Mira, func: "onquestioncompletion"
 		this.on("destroyed");
@@ -348,6 +349,7 @@ Q.UI.Layout.extend("Form", {
 	},
 
 	inserted: function() {
+		this.p.content[this.p.index].p.parent = this;
 		this.insert(this.p.content[this.p.index]);
 		var type = 0;
 		if(this.p.content[this.p.index+1]!=null)
@@ -363,25 +365,29 @@ Q.UI.Layout.extend("Form", {
 
 
 	done: function() {
-		this.p.card.destroy();
+		this.destroyed();
 		if(this.p.context)
 			this.p.context[this.p.func]();
 	},
 
 	// Assumes that there is a next content to show
 	next: function() {
-		this.p.index++;
-		this.destroyed();
-		this.children = [];
-		this.inserted();
+		if(!this.p.hold){
+			this.p.index++;
+			this.destroyed();
+			this.children = [];
+			this.inserted();
+		}
 	},
 
 	// Assumes that there is a prev content to show
 	prev: function() {
-		this.p.index--;
-		this.destroyed();
-		this.children = [];
-		this.inserted();
+		if(!this.p.hold){
+			this.p.index--;
+			this.destroyed();
+			this.children = [];
+			this.inserted();
+		}
 	},
 });
 
@@ -450,7 +456,7 @@ Q.UI.Layout.extend("Product", {
 			this.insert(this.p.price_text);
 
 			this.p.quantity_text = new Q.UI.Text({label: "Quantity", x: this.p.cx - 200, y: this.p.cy - 100});
-			this.p.quantity = new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
+			this.p.quantity = this.p.quantity ? this.p.quantity : new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
 			this.insert(this.p.quantity_text);
 			this.insert(this.p.quantity);
 			var type = Q.ControlButtons.BUY;
@@ -458,12 +464,18 @@ Q.UI.Layout.extend("Product", {
 		}
 		else if(this.p.sellable) {
 			this.p.price_text = new Q.UI.Text({label: "Price", x: -this.p.cx + 50, y: this.p.cy - 100});
-			this.p.price = new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
+			this.p.price = this.p.price ? this.p.price : new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
 			this.insert(this.p.price_text);
 			this.insert(this.p.price);
 			var type = Q.ControlButtons.SET;
 			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 		}
+	},
+
+	done: function() {
+		this.p.card.destroy();
+		if(this.p.context)
+			this.p.context[this.p.func]();
 	},
 
 	buy: function() {
@@ -477,7 +489,7 @@ Q.UI.Layout.extend("Card", {
 			x: 400,
 			y: 300,
 			w: 600,
-			h: 400,
+			h: 300,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 			separationType: 1,
@@ -485,22 +497,27 @@ Q.UI.Layout.extend("Card", {
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			fill: "rgba(255, 255, 255, 1)",
 			radius: 0,
-			shadow: 5,
-			border: 2,
+			shadow: 0,
+			border: 0,
 		}));
 		this.on("destroyed");
 		this.on("inserted");
 	},
 
 	destroyed: function() {
+		console.log(this.p.parent);
+		this.p.parent.p.hold = false;
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
 	},
 
 	inserted: function() {
-		this.insert(this.p.content);
-		this.p.content.p.card = this;
+		for(var i = 0; i < this.p.content.length; i++) {
+			this.insert(this.p.content[i]);
+			this.p.content[i].p.card = this;
+			this.p.content[i].p.parent = this;
+		}
 	},
 
 
@@ -517,18 +534,19 @@ Q.UI.Layout.extend("Card", {
 		ctx.shadowColor = "transparent";
 	},
 
+	onselect: function(choice) {
+		console.log(this.p.parent);
+		this.p.parent.p.hold = true;
+		Q.stageScene("test_cards",2, { 
+		  product: choice.p.product,
+		  parent: this.p.parent,
+		});	
+	},
 
 });
 
 
 Q.scene("test_cards", function(stage) {
-	var product = new Q.Product({
-		image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
-		name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
-		description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
-		sellable: true,
-	});
-
-	var card = new Q.Card({content: product});
+	var card = new Q.Card({content: [stage.options.product,],parent: stage.options.parent});
 	stage.insert(card);
 });
