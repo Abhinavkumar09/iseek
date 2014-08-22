@@ -101,6 +101,45 @@ Q.scene("loan_1_Market", function(stage) {
 								sellable: true,
 							}),
 						}),
+						new Q.Tile({
+							image: new Q.Sprite({
+									sheet: "basket_01_sheet", 
+									frame:2
+							}),
+							disabled: false,
+							action_card: new Q.Product({
+								image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+								name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+								description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+								sellable: true,
+							}),
+						}),
+						new Q.Tile({
+							image: new Q.Sprite({
+									sheet: "basket_01_sheet", 
+									frame:2
+							}),
+							disabled: false,
+							action_card: new Q.Product({
+								image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+								name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+								description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+								sellable: true,
+							}),
+						}),
+						new Q.Tile({
+							image: new Q.Sprite({
+									sheet: "basket_01_sheet", 
+									frame:2
+							}),
+							disabled: false,
+							action_card: new Q.Product({
+								image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+								name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+								description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+								sellable: true,
+							}),
+						}),
 					]
 				}),
 				new Q.MultipleChoiceQuestion({

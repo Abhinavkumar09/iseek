@@ -330,7 +330,9 @@ Q.UI.Layout.extend("InfoQuestion", {
 */
 Q.ImageText.extend("Tile", {
 	init: function(p) {
-		this._super(p);
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
 		Q.debug = true;
 		this.add("Touch");
 		this.on("touch");
@@ -349,7 +351,7 @@ Q.ImageText.extend("Tile", {
 			// display the next card
 			this.p.action_card.p.back_card = this.p.card;
 			this.stage.insert(this.p.action_card);
-			this.p.card.destroy();
+			this.p.card.p.parent.destroyed();
 		}
 	},
 
@@ -431,12 +433,15 @@ Q.Card.extend("Product", {
 	inserted: function() {
 		this.p.image.p.x = -this.p.cx + 50;
 		this.p.image.p.y = -this.p.cy + 50;
+		this.p.image.p.layout = Q.UI.Layout.NONE;
 
 		this.p.name.p.x = this.p.cx - 250;
 		this.p.name.p.y = -this.p.cy + 50;
+		this.p.name.p.layout = Q.UI.Layout.NONE;
 
 		this.p.description.p.x = 0;
 		this.p.description.p.y = 0;
+		this.p.description.p.layout = Q.UI.Layout.NONE;
 
 		this.insert(this.p.image);
 		this.insert(this.p.name);
@@ -466,13 +471,14 @@ Q.Card.extend("Product", {
 			type += Q.ControlButtons.SELL;
 			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 		}
-
 	},
 
 	back: function() {
 		console.log("go back");
-		this.stage.insert(this.p.back_card);
-		this.p.card.destroy();
+		this.stage.remove(this);
+		this.p.back_card.p.parent.children = [];
+		this.p.back_card.p.parent.inserted();
+		this.destroy();
 	},
 
 	done: function() {
@@ -509,6 +515,7 @@ Q.Card.extend("Form", {
 	},
 
 	inserted: function() {
+		this.p.content[this.p.index].p.parent = this;
 		this.insert(this.p.content[this.p.index]);
 		var type = 0;
 		if(this.p.content[this.p.index+1]!=null)
@@ -554,6 +561,7 @@ Q.Form.COMPLETE = 2;
 Q.Card.extend("TileCard", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
 		}));
 		this.on("inserted");
 	},
@@ -561,32 +569,37 @@ Q.Card.extend("TileCard", {
 	inserted: function() {
 		var i;
 		for(i = 0; i < this.p.tiles.length; i++) {
-			if((this.p.tiles.length+1)/2-1 == 0){
+			if(Math.floor((this.p.tiles.length+1)/2-1) < 2){
 				if(this.p.tiles.length <= 2){
-					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_1[0][(i+1)%2-1];
-					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_1[1][(i+2)/2-1];
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_1[0][i%2];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_1[1][Math.floor((i+2)/2-1)];
 					console.log(this.p.tiles[i].p.x);
 					console.log(this.p.tiles[i].p.y);
 				}
 				else{
-					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_2[0][(i+1)%2-1];
-					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_2[1][(i+2)/2-1];
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_2[0][i%2];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_2[1][Math.floor((i+2)/2-1)];
 				}
 			}
-			else if((this.p.tiles.length+2)/3 - 1 == 0){
+			else if(Math.floor((this.p.tiles.length+2)/3 - 1) < 3){
 				if(this.p.tiles.length <= 6){
-					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_2[0][(i+1)%3-1];
-					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_2[1][(i+3)/3-1];
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_2[0][i%3];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_2[1][Math.floor((i+3)/3-1)];
 				}
 				else{
-					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_3[0][(i+1)%3-1];
-					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_3[1][(i+3)/3-1];
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_3[0][i%3];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_3[1][Math.floor((i+3)/3-1)];
 				}
 			}
-			this.p.tiles[i].p.action_card.p.card = this;
 			this.p.tiles[i].p.card = this;
+			this.p.tiles[i].p.action_card.p.card = this;
+			try {
+				this.stage.remove(this.p.tiles[i].p.action_card);
+			}
+			catch(err){
+
+			}
 			this.insert(this.p.tiles[i]);
-			console.log(this.p.tiles[i]);
 		}
 	},
 });
