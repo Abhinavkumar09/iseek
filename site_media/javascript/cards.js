@@ -476,9 +476,9 @@ Q.Card.extend("Product", {
 	back: function() {
 		console.log("go back");
 		this.stage.remove(this);
+		this.destroyed();
 		this.p.back_card.p.parent.children = [];
 		this.p.back_card.p.parent.inserted();
-		this.destroy();
 	},
 
 	done: function() {
@@ -592,13 +592,6 @@ Q.Card.extend("TileCard", {
 				}
 			}
 			this.p.tiles[i].p.card = this;
-			this.p.tiles[i].p.action_card.p.card = this;
-			try {
-				this.stage.remove(this.p.tiles[i].p.action_card);
-			}
-			catch(err){
-
-			}
 			this.insert(this.p.tiles[i]);
 		}
 	},
