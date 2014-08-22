@@ -325,13 +325,13 @@ Q.UI.Layout.extend("InfoQuestion", {
 
 
 /*
-	disabled: is It disabled right now?
+	disabled: Is it disabled right now?
 	action_card: Expects as input a card that should be displayed if the tile is clicked
 */
 Q.ImageText.extend("Tile", {
 	init: function(p) {
 		this._super(p);
-
+		Q.debug = true;
 		this.add("Touch");
 		this.on("touch");
 		this.on("destroyed");
@@ -561,11 +561,40 @@ Q.Card.extend("TileCard", {
 	inserted: function() {
 		var i;
 		for(i = 0; i < this.p.tiles.length; i++) {
+			if((this.p.tiles.length+1)/2-1 == 0){
+				if(this.p.tiles.length <= 2){
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_1[0][(i+1)%2-1];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_1[1][(i+2)/2-1];
+					console.log(this.p.tiles[i].p.x);
+					console.log(this.p.tiles[i].p.y);
+				}
+				else{
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_2_2[0][(i+1)%2-1];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_2_2[1][(i+2)/2-1];
+				}
+			}
+			else if((this.p.tiles.length+2)/3 - 1 == 0){
+				if(this.p.tiles.length <= 6){
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_2[0][(i+1)%3-1];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_2[1][(i+3)/3-1];
+				}
+				else{
+					this.p.tiles[i].p.x = Q.TileCard.LAYOUT_3_3[0][(i+1)%3-1];
+					this.p.tiles[i].p.y = Q.TileCard.LAYOUT_3_3[1][(i+3)/3-1];
+				}
+			}
+			this.p.tiles[i].p.action_card.p.card = this;
 			this.p.tiles[i].p.card = this;
 			this.insert(this.p.tiles[i]);
+			console.log(this.p.tiles[i]);
 		}
 	},
 });
+
+Q.TileCard.LAYOUT_2_1 = [[-50, 50], [0,]];
+Q.TileCard.LAYOUT_2_2 = [[-50, 50], [-50, 50]];
+Q.TileCard.LAYOUT_3_2 = [[-75, 0, 75], [-50, 50]];
+Q.TileCard.LAYOUT_3_3 = [[-75, 0, 75], [-75, 0, 75]];
 
 
 
