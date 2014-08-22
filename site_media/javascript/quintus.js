@@ -1113,7 +1113,7 @@ var Quintus = function Quintus(opts) {
      @return {Object} returns this for chaining purposes
     */
     destroy: function() {
-      if(this.isDestroyed) { return; }
+//      if(this.isDestroyed) { return; }
       this.trigger('destroyed');
       this.debind();
       if(this.stage && this.stage.remove) {

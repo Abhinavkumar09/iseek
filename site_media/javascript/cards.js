@@ -165,6 +165,7 @@ Q.UI.Layout.extend("ImageText", {
 	},
 
 	destroyed: function() {
+		console.log("destroying imagetext");
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
@@ -334,13 +335,6 @@ Q.ImageText.extend("Tile", {
 
 		this.add("Touch");
 		this.on("touch");
-		this.on("destroyed");
-	},
-
-	destroyed: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
 	},
 
 	touch: function() {
@@ -348,8 +342,8 @@ Q.ImageText.extend("Tile", {
 		if(this.p.disabled == false) {
 			// display the next card
 			this.p.action_card.p.back_card = this.p.card;
-			this.stage.insert(this.p.action_card);
 			this.p.card.destroy();
+			this.stage.insert(this.p.action_card);
 		}
 	},
 
@@ -379,7 +373,9 @@ Q.UI.Layout.extend("Card", {
 	},
 
 	destroyed: function() {
+		console.log("destroying card");
 		this.children.forEach(function(child) {
+			console.log("\tchild");
 			child.destroy();
 		});
 	},
@@ -473,8 +469,8 @@ Q.Card.extend("Product", {
 
 	back: function() {
 		console.log("go back");
+		this.destroy();
 		this.stage.insert(this.p.back_card);
-		this.p.card.destroy();
 	},
 
 	buy: function() {
@@ -550,18 +546,45 @@ Q.Form.COMPLETE = 2;
 Q.Card.extend("TileCard", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
 		}));
 		this.on("inserted");
 	},
 
 	inserted: function() {
-		var i;
-		for(i = 0; i < this.p.tiles.length; i++) {
+		console.log("inserting tilecard");
+		if(this.p.grid == Q.TileCard.GRID_2_1) {
+			count_r = 1;
+			count_c = 2;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_2_2) {
+			count_r = 2;
+			count_c = 2;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_3_2) {
+			count_r = 2;
+			count_c = 3;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_3_3) {
+			count_r = 3;
+			count_c = 3;
+		}
+		for(var i = 0; i < this.p.tiles.length; i++) {
+			var r = i / count_c;
+			var c = i % count_c;
+			this.p.tiles[i].p.x = -this.p.cx + (c + 0.5) * this.p.w / count_c;
+			this.p.tiles[i].p.y = -this.p.cy + (r + 0.5) * this.p.h / count_r;
+
 			this.p.tiles[i].p.card = this;
 			this.insert(this.p.tiles[i]);
 		}
 	},
 });
+
+Q.TileCard.GRID_2_1 = 1;
+Q.TileCard.GRID_2_2 = 2;
+Q.TileCard.GRID_3_2 = 4;
+Q.TileCard.GRID_3_3 = 8;
 
 
 
@@ -582,6 +605,6 @@ Q.scene("test_cards", function(stage) {
 			disabled: false,
 			action_card: product,
 	});
-	var tcard = new Q.TileCard({tiles: [tile]});
+	var tcard = new Q.TileCard({tiles: [tile], grid: Q.TileCard.GRID_2_1});
 	stage.insert(tcard);
 });
