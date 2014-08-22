@@ -77,7 +77,6 @@ Q.scene("loan_1_Market", function(stage) {
 					content: [
 						new Q.ImageText({
 							label: new Q.UI.Text({label: "How?", size: 18, type: Q.SPRITE_NONE, }),
-							description: new Q.UI.Text({label: "AAAAAAAAAAAAAAAA", type: Q.SPRITE_NONE, }),
 							isSelectable: true,
 							product: new Q.Product({
 								image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
@@ -88,7 +87,6 @@ Q.scene("loan_1_Market", function(stage) {
 						}),
 						new Q.ImageText({
 							label: new Q.UI.Text({label: "How?", size: 18, type: Q.SPRITE_NONE, }),
-							description: new Q.UI.Text({label: "AAAAAAAAAAAAAAAA", type: Q.SPRITE_NONE, }),
 							isSelectable: true,
 							product: new Q.Product({
 								image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
