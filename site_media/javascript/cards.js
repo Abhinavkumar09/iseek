@@ -12,6 +12,9 @@ Q.UI.Layout.extend("ControlButtons", {
 			callback_done: "done",
 			callback_next: "next",
 			callback_prev: "prev",
+			callback_back: "back",
+			callback_sell: "sell",
+			callback_buy: "buy",
 		}));
 		this.on("inserted");
 		this.on("destroyed");
@@ -29,6 +32,7 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_prev = this.p.callback_prev;
 		var callback_buy = this.p.callback_buy;
 		var callback_sell = this.p.callback_sell;
+		var callback_back = this.p.callback_back;
 
 		var context = this.p.context;
 
@@ -62,6 +66,12 @@ Q.UI.Layout.extend("ControlButtons", {
 				context[callback_sell]();
 			});
 		}
+		if(this.p.button_type & Q.ControlButtons.BACK) {
+			var b = this.insert(new Q.UI.Button({label: "Back", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_back]();
+			});
+		}
 		this.fit(0);
 	},
 });
@@ -72,6 +82,7 @@ Q.ControlButtons.PREV = 8;
 Q.ControlButtons.DONE = 16;
 Q.ControlButtons.BUY = 32;
 Q.ControlButtons.SELL = 64;
+Q.ControlButtons.BACK = 128;
 
 
 
@@ -312,13 +323,41 @@ Q.UI.Layout.extend("InfoQuestion", {
 });
 
 
-/**
-	Important variables to be passed:
-		content: an array of all the questions/videos/text to be shown in this form
-		exit_type: defines how the question will be considered answered. For example,
-			should there is "Ok" and "Cancel" button, or just "Continue" button.
+
+/*
+	disabled: is It disabled right now?
+	action_card: Expects as input a card that should be displayed if the tile is clicked
 */
-Q.UI.Layout.extend("Form", {
+Q.ImageText.extend("Tile", {
+	init: function(p) {
+		this._super(p);
+
+		this.add("Touch");
+		this.on("touch");
+		this.on("destroyed");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+	touch: function() {
+		console.log("tile touch");
+		if(this.p.disabled == false) {
+			// display the next card
+			this.p.action_card.p.back_card = this.p.card;
+			this.stage.insert(this.p.action_card);
+			this.p.card.destroy();
+		}
+	},
+
+});
+
+
+
+Q.UI.Layout.extend("Card", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
 			x: 400,
@@ -330,16 +369,13 @@ Q.UI.Layout.extend("Form", {
 			separationType: 1,
 			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
-			status: Q.Form.INCOMPLETE,
 			fill: "rgba(255, 255, 255, 1)",
-			index: 0,
 			radius: 0,
-			border: 0,
-			hold: false,
+			shadow: 5,
+			border: 2,
 		}));
-		//, context: Mira, func: "onquestioncompletion"
 		this.on("destroyed");
-		this.on("inserted");
+//		this.on("inserted");
 	},
 
 	destroyed: function() {
@@ -349,50 +385,17 @@ Q.UI.Layout.extend("Form", {
 	},
 
 	inserted: function() {
-		this.p.content[this.p.index].p.parent = this;
-		this.insert(this.p.content[this.p.index]);
-		var type = 0;
-		if(this.p.content[this.p.index+1]!=null)
-			type = type | Q.ControlButtons.NEXT;
-		else
-			type = type | Q.ControlButtons.DONE;
-
-		if(this.p.content[this.p.index-1]!=null)
-			type = type | Q.ControlButtons.PREV;
-
-		this.insert(new Q.ControlButtons({context: this, button_type: type}));
+		this.insert(this.p.content);
+		this.p.content.p.card = this;
 	},
 
-
-	done: function() {
+	show: function(content) {
+		this.p.content = content;
 		this.destroyed();
-		if(this.p.context)
-			this.p.context[this.p.func]();
-	},
-
-	// Assumes that there is a next content to show
-	next: function() {
-		if(!this.p.hold){
-			this.p.index++;
-			this.destroyed();
-			this.children = [];
-			this.inserted();
-		}
-	},
-
-	// Assumes that there is a prev content to show
-	prev: function() {
-		if(!this.p.hold){
-			this.p.index--;
-			this.destroyed();
-			this.children = [];
-			this.inserted();
-		}
+		this.inserted();
 	},
 });
 
-Q.Form.INCOMPLETE = 1;
-Q.Form.COMPLETE = 2;
 
 
 /*
@@ -407,6 +410,8 @@ Q.Form.COMPLETE = 2;
 		* If sellable by the player
 			-- Initial price
 
+		* back_card: If this card is shown as a result of a tile card, then we want a button to go back
+
 	Design:
 		The card is 600x400
 			The top left 100x100 is for the image
@@ -415,26 +420,12 @@ Q.Form.COMPLETE = 2;
 			the 50x600 before bottom is for the price/quantity
 			the middle part is for description
 	*/
-Q.UI.Layout.extend("Product", {
+Q.Card.extend("Product", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 600,
-			h: 400,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separationType: 1,
-			separation_y: 10,
 			layout: Q.UI.Layout.NONE,
-			fill: "rgba(255, 255, 255, 1)",
 		}));
-		this.on("destroyed");
 		this.on("inserted");
-	},
-
-	destroyed: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
 	},
 
 	inserted: function() {
@@ -451,6 +442,11 @@ Q.UI.Layout.extend("Product", {
 		this.insert(this.p.name);
 		this.insert(this.p.description);
 
+		var type = 0;
+
+		if(this.p.back_card)
+			type += Q.ControlButtons.BACK;
+
 		if(this.p.buyable) {
 			this.p.price_text = new Q.UI.Text({label: "Price: " + this.p.price, x: -this.p.cx + 150, y: this.p.cy - 100});
 			this.insert(this.p.price_text);
@@ -459,7 +455,7 @@ Q.UI.Layout.extend("Product", {
 			this.p.quantity = this.p.quantity ? this.p.quantity : new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
 			this.insert(this.p.quantity_text);
 			this.insert(this.p.quantity);
-			var type = Q.ControlButtons.BUY;
+			type += Q.ControlButtons.BUY;
 			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 		}
 		else if(this.p.sellable) {
@@ -467,9 +463,16 @@ Q.UI.Layout.extend("Product", {
 			this.p.price = this.p.price ? this.p.price : new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
 			this.insert(this.p.price_text);
 			this.insert(this.p.price);
-			var type = Q.ControlButtons.SET;
+			type += Q.ControlButtons.SELL;
 			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 		}
+
+	},
+
+	back: function() {
+		console.log("go back");
+		this.stage.insert(this.p.back_card);
+		this.p.card.destroy();
 	},
 
 	done: function() {
@@ -479,74 +482,110 @@ Q.UI.Layout.extend("Product", {
 	},
 
 	buy: function() {
-	}
+		console.log("buy");
+	},
+
+	sell: function() {
+		console.log("sell");
+	},
 });
 
 
-Q.UI.Layout.extend("Card", {
+/**
+	Important variables to be passed:
+		content: an array of all the questions/videos/text to be shown in this form
+		exit_type: defines how the question will be considered answered. For example,
+			should there is "Ok" and "Cancel" button, or just "Continue" button.
+*/
+Q.Card.extend("Form", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			x: 400,
-			y: 300,
-			w: 600,
-			h: 300,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separationType: 1,
-			separation_y: 10,
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
-			fill: "rgba(255, 255, 255, 1)",
-			radius: 0,
-			shadow: 0,
-			border: 0,
+			status: Q.Form.INCOMPLETE,
+			index: 0,
 		}));
-		this.on("destroyed");
+		//, context: Mira, func: "onquestioncompletion"
 		this.on("inserted");
 	},
 
-	destroyed: function() {
-		console.log(this.p.parent);
-		this.p.parent.p.hold = false;
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
+	inserted: function() {
+		this.insert(this.p.content[this.p.index]);
+		var type = 0;
+		if(this.p.content[this.p.index+1]!=null)
+			type = type | Q.ControlButtons.NEXT;
+		else
+			type = type | Q.ControlButtons.DONE;
+
+		if(this.p.content[this.p.index-1]!=null)
+			type = type | Q.ControlButtons.PREV;
+
+		this.insert(new Q.ControlButtons({context: this, button_type: type}));
+	},
+
+
+	done: function() {
+		this.destroy();
+		if(this.p.context)
+			this.p.context[this.p.func]();
+	},
+
+	// Assumes that there is a next content to show
+	next: function() {
+		this.p.index++;
+		this.destroyed();
+		this.children = [];
+		this.inserted();
+	},
+
+	// Assumes that there is a prev content to show
+	prev: function() {
+		this.p.index--;
+		this.destroyed();
+		this.children = [];
+		this.inserted();
+	},
+});
+
+Q.Form.INCOMPLETE = 1;
+Q.Form.COMPLETE = 2;
+
+
+
+Q.Card.extend("TileCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+		}));
+		this.on("inserted");
 	},
 
 	inserted: function() {
-		for(var i = 0; i < this.p.content.length; i++) {
-			this.insert(this.p.content[i]);
-			this.p.content[i].p.card = this;
-			this.p.content[i].p.parent = this;
+		var i;
+		for(i = 0; i < this.p.tiles.length; i++) {
+			this.p.tiles[i].p.card = this;
+			this.insert(this.p.tiles[i]);
 		}
 	},
-
-
-	addShadow: function(ctx) {
-		if(this.p.shadow) {
-			var shadowAmount = Q._isNumber(this.p.shadow) ? this.p.shadow : 5;
-			ctx.shadowOffsetX=shadowAmount;
-			ctx.shadowOffsetY=shadowAmount;
-			ctx.shadowColor = this.p.shadowColor || "rgba(0,0,50,0.1)";
-		}
-	},
-
-	clearShadow: function(ctx) {
-		ctx.shadowColor = "transparent";
-	},
-
-	onselect: function(choice) {
-		console.log(this.p.parent);
-		this.p.parent.p.hold = true;
-		Q.stageScene("test_cards",2, { 
-		  product: choice.p.product,
-		  parent: this.p.parent,
-		});	
-	},
-
 });
 
 
+
 Q.scene("test_cards", function(stage) {
-	var card = new Q.Card({content: [stage.options.product,],parent: stage.options.parent});
-	stage.insert(card);
+	var product = new Q.Product({
+		image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
+		name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
+		description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
+		sellable: true,
+	});
+
+//	var card = new Q.Card({content: product});
+	var tile = new Q.Tile({
+			image: new Q.Sprite({
+					sheet: "basket_01_sheet", 
+					frame:2
+			}),
+			disabled: false,
+			action_card: product,
+	});
+	var tcard = new Q.TileCard({tiles: [tile]});
+	stage.insert(tcard);
 });
