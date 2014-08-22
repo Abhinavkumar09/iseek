@@ -62,3 +62,17 @@ Add random events like baskets were stolen. Then make the player spend some mone
 
 Check if we can skip openERP UI to update data
 
+
+
+Add health points
+	-- If the health points cross a threshold, increase the health bar length
+
+
+Trigger health events based on what events they have already handled, so that there is a balanced approach in how we make them do certain health tasks.
+
+Talk to Alethia to decide how to represent the symptoms (voice/visual)
+
+Create https certificate, 
+
+
+In TileCard, when you click it looks flip
