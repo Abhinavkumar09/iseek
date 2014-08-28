@@ -17,14 +17,14 @@ sock = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/object')
 
 #load categories first
 #Function to add products to the OpenERP system
-def importProducts(file):
-    reader = csv.reader(open(file,'rb'))
-    for row in reader:
+def addProduct(name,std_price,listPrice):
+    #reader = csv.reader(open(file,'rb'))
+    #for row in reader:
         #print row[1]
         product_template = {
-            'name': row[1],
-            'standard_price':row[2],
-            'list_price':row[2],
+            'name': name,
+            'standard_price':std_price,
+            'list_price':listPrice,
             'mes_type':'fixed',
             'uom_id':1,
             'uom_po_id':1,
@@ -91,7 +91,7 @@ def getInvoice(expr=None):
         return data
         
         
-#importProducts('categories.csv')
+#addProduct('name',6.73,4.41)
 #expression =[('name', '=', 'FOL 100% CTTN JRSY')]
 #data = getProducts(expression)
 #print data
