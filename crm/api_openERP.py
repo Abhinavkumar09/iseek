@@ -3,6 +3,8 @@
 
 import xmlrpclib
 import csv
+import datetime
+from datetime import date
 
 username = 'admin'  #the user
 pwd = 'test1'  #the password of the user
@@ -89,11 +91,45 @@ def getInvoice(expr=None):
         fields = ['origin','currency_id']
         data = sock.execute(dbname,uid,pwd,'account.invoice','read',temp,fields)
         return data
+
+#Function to create invoice on openERP system        
+def createInvoice(state,account_id,name,partner_id):
+    invoice  = {
+    'type': 'out_invoice',
+    'state': state,
+    'origin': 'import xmlrpc',
+    'account_id': account_id,          #balance sheet id
+    'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
+
+    # Change the following each time:
+    'name' : name,   # TBD
+    'partner_id': partner_id,          # Customer
+    'address_invoice_id': partner_id,  # Address
+    'amount_total': 0.00     
+    }
+    invoice_id = sock.execute(dbname, uid, pwd, 'account.invoice', 'create', invoice)
+    print 'Invoice id=', invoice_id, 'added'
+    return invoice_id
+
+#Function to add lines to invoice 
+def addLine(invoice_id,account_id,prod_name,prod_id,prod_price,prod_quantity):
+    line1 = {
+    'invoice_id': invoice_id,
+    'account_id': account_id,     #Balance sheet id
+    'name': prod_name,
+    'product_id': prod_id,     # Product id     
+    'price_unit': prod_price,  
+    'quantity': prod_quantity
+    }
+    line_id = sock.execute(dbname, uid, pwd, 'account.invoice.line', 'create', line1)
+    print 'Invoice line id=', line_id, 'added'
+
         
-        
-#addProduct('name',6.73,4.41)
+#importProducts('categories.csv')
 #expression =[('name', '=', 'FOL 100% CTTN JRSY')]
 #data = getProducts(expression)
 #print data
 #addCustomer('testFunction')
 #getCustomer('testFunction')
+#invoice_id = createInvoice('paid',2,'SAJ/2014/0008',12)
+#addLine(invoice_id,2,'FOL 100% CTTN JRSY',4,6.73,100)
