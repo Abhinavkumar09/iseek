@@ -3755,7 +3755,11 @@
     <property name="name" value="Mira"/>
    </properties>
   </object>
-  <object gid="295" x="105" y="427"/>
+  <object gid="295" x="105" y="427">
+   <properties>
+    <property name="isInteractable" value="true"/>
+   </properties>
+  </object>
   <object gid="297" x="65" y="161"/>
   <object gid="297" x="128" y="160"/>
   <object gid="297" x="194" y="160"/>

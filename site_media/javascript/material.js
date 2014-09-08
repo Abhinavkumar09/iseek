@@ -143,10 +143,12 @@ Q.Sprite.extend("MaterialContainer", {
 		if(!this.p.isInteractable)
 			return;
 
-		var desc = this._material_desc();
-		if(desc) {
-			console.log("desc: " + desc);
-			this.quote(desc);
+		if(col.obj.isA("Player")) {
+			var desc = this._material_desc();
+			if(desc) {
+				console.log("desc: " + desc);
+				this.quote(desc);
+			}
 		}
 	}
 });
@@ -215,35 +217,26 @@ Q.component("MaterialCarrier", {
 	},
 
 	extend: {
-		addMaterialContainer: function(stock_name) {
-			stocks = {};
-			for(material_name in Q.game.material_names) {
-				if(Q.game.stocks[stock_name][material_name]) {
-					stocks[material_name] = [];
-					for(i in Q.game.stocks[stock_name][material_name]) {
-						m = Q.game.stocks[stock_name][material_name][i];
-						stocks[material_name].push(m);
-					}
-				}
-			}
-			this.p.materialcontainer = new Q.NewMaterialContainer({sheet: 'basket_01_sheet', frame: 0, x: 0, y: 0, stocks: stocks, isInteractable:false, type: Q.SPRITE_PICKED_MATERIAL, stock_name:stock_name,});
+		addMaterialContainer: function() {
+			this.p.materialcontainer = new Q.NewMaterialContainer({sheet: 'basket_01_sheet', frame: 0, x: 0, y: 0, isInteractable:false, type: Q.SPRITE_PICKED_MATERIAL});
 			this.stage.insert(this.p.materialcontainer, this);
 			this.p.materialcontainer.p.y = - this.p.materialcontainer.p.cy -this.p.cy;
 		},
 
-		reStock: function(stock_name) {
+		reStock: function(stocks) {
 			console.log("reStock");
-			stocks = {};
+			// Copy the stock. 
+			// It is important to copy, otherwise when materialcontainer.p.stocks is changed, the original stocks would change as well.
+			var newstocks = {};
 			for(material_name in Q.game.material_names) {
-				if(Q.game.stocks[stock_name][material_name]) {
-					stocks[material_name] = [];
-					for(i in Q.game.stocks[stock_name][material_name]) {
-						m = Q.game.stocks[stock_name][material_name][i];
-						stocks[material_name].push(m);
-					}
+				if(stocks[material_name])
+					newstocks[material_name] = [];
+				for(i in stocks[material_name]) {
+					m = stocks[material_name][i];
+					newstocks[material_name].push(m);
 				}
 			}
-			this.p.materialcontainer.p.stocks = stocks;
+			this.p.materialcontainer.p.stocks = newstocks;
 			this.p.materialcontainer.reset();
 		},
 
@@ -281,7 +274,7 @@ Q.Sprite.extend("NewMaterialContainer", {
 		});
 
 
-		this.add("Talk, Touch");
+		this.add("Talk, PriceTag, Touch");
 		this.on("touch");
 		if(this.p.isInteractable)
 			this.on("hit", this, "collision");
@@ -289,7 +282,7 @@ Q.Sprite.extend("NewMaterialContainer", {
 		this.reset();
 	},
 
-	reset_unexpanded: function(stocks) {
+	reset_unexpanded: function() {
 		console.log("reset_unexpanded");
 		if(Object.keys(this.p.stocks).length == 0) {
 			this.p.sheet = null;
@@ -299,9 +292,7 @@ Q.Sprite.extend("NewMaterialContainer", {
 		else if(Object.keys(this.p.stocks).length == 1) {
 			for (material_name in this.p.stocks) {
 				this.p.sheet = Q.game.material_names[material_name].sheet;
-				if(!this.p.stocks[material_name]) {
-				}
-				else if (this.p.stocks[material_name].length == 1)
+				if (this.p.stocks[material_name].length == 1)
 					this.p.frame = 0;
 				else if (this.p.stocks[material_name].length == 2)
 					this.p.frame = 1;
@@ -316,33 +307,42 @@ Q.Sprite.extend("NewMaterialContainer", {
 		}
 	},
 
-	reset_expanded: function(stocks) {
+	reset_expanded: function() {
 		console.log("reset_expanded");
-		var x = 0;
-		var y = -100;
-		container = new Q.UI.Container({x: 0, y: -100, w: 100, h: 100, radius: 10, border: 1, fill: 'white'});
-		this.stage.insert(container, this);
+		this.p.isExpanded = true;
+		this.tiles = [];
 		for (material_name in this.p.stocks) {
-			var stocks = {};
-			stocks[material_name] = this.p.stocks[material_name];
-			var container = new Q.NewMaterialContainer({sheet: 'basket_01_sheet', frame: 0, x: x, y: y, stocks: stocks, stock_name: this.p.stock_name, type: this.p.type, isInteractable:false, parent:this});
-			this.stage.insert(container, this);
-			x += 50;
+			console.log("name: " + this.p.stocks[material_name][0].name + ", sheet: " + this.p.stocks[material_name][0].sheet + ", frame: " + this.p.stocks[material_name][0].frame);
+			var context = this;
+			var tile = new Q.Tile({
+					image: new Q.Sprite({
+						sheet: this.p.stocks[material_name][0]["sheet"], 
+						frame: this.p.stocks[material_name][0]["frame"],
+					}),
+					disabled: false,
+					context: context,
+					action: "give_material",
+					action_params: material_name,
+			});
+			var index = this.tiles.length;
+			this.tiles[index] = tile;
 		}
+		this.tcard = new Q.TileCard({tiles: this.tiles, grid: Q.TileCard.GRID_2_1});
+		this.stage.insert(this.tcard);
 	},
 
-	reset: function(stocks) {
+	reset: function() {
 		console.log("reset");
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
-		if(Object.keys(this.p.stocks).length == 1) {
-			this.p.ifExpanded = false;
+		if(Object.keys(this.p.stocks).length < 2) {
+			this.p.isExpanded = false;
 		}
-		if(this.p.ifExpanded) {
-			this.reset_expanded(stocks);
-		}
-		this.reset_unexpanded(stocks);
+		if(this.tcard)
+			this.tcard.destroy();
+
+		if(this.p.isExpanded)
+			this.reset_expanded();
+		else
+			this.reset_unexpanded();
 	},
 
 	addMaterial: function(material_name, material_details) {
@@ -360,69 +360,15 @@ Q.Sprite.extend("NewMaterialContainer", {
 			return;
 
 		var ifPicked = false;
-		if(this.p.type == Q.SPRITE_MATERIAL) { // The material is NOT held by the player right now
-			// Ask Stage to give it and the player to accept it
-			if(Object.keys(this.p.stocks).length == 1) {
-				for (material_name in this.p.stocks) {
-					//Try to take the material from the stage
-					var material_details = this.stage.give_material(material_name);
-					if(!material_details) { // Stage did not give the material
-						return;
-					}
-
-					// Stage returned the material, so remove it from the container
-					material_details = this.p.stocks[material_name].pop();
-					console.log(material_details.ifBelongsToPlayer);
-
-					if(this.p.stocks[material_name].length == 0) {
-						delete this.p.stocks[material_name];
-					}
-
-
-					// Ask the player to pick it
-					ifPicked = this.stage.player.accept_material(material_name, material_details);
-					this.reset();
-				}
+		// Ask Stage to give it and the player to accept it
+		if(Object.keys(this.p.stocks).length == 1) {
+			for (material_name in this.p.stocks) {
+				this.give_material(material_name);
 			}
 		}
-		else if(this.p.type == Q.SPRITE_PICKED_MATERIAL) { // Material is held by the player right now
-			// Ask the stage to accept the material and ask the player to give the material
-			if(Object.keys(this.p.stocks).length == 1) {
-				for (material_name in this.p.stocks) {
-					stocks = this.p.stocks;
-					if(this.p.parent)
-						stocks = this.p.parent.p.stocks;
-					material_details = stocks[material_name].pop();
-
-					// Try to give the material to the stage
-					var returned = this.stage.accept_material(material_name, material_details);
-					if(!returned) {
-						// If not accepted by the stage, put it back in the container and return
-						stocks[material_name].push(material_details)
-						return;
-					}
-
-
-					if(stocks[material_name].length == 0)
-						delete stocks[material_name];
-
-					this.stage.player.give_material(material_name, material_details);
-					this.reset();
-					if(this.p.parent) {
-						console.log("resetting parent");
-						this.p.parent.reset();
-					}
-
-				}
-			}
-			else {
-				console.log("more than two types");
-				this.p.ifExpanded = !this.p.ifExpanded;
-				this.reset();
-			}
-
-
-//			ifPicked = this.p.player.give_material(this);
+		else {
+			console.log("more than two types");
+			this.reset_expanded();
 		}
 	},
 
