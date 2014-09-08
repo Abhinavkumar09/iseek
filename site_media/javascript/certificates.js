@@ -80,7 +80,7 @@ game.certificates = [
 						"007.js",
 						false,
 						null,
-						{House: true, Market: true, Workshop: true, School:false, SeemaWorkshop: true, HealthCenter: false}
+						{House: true, Market: true, Workshop: false, School:false, SeemaWorkshop: true, HealthCenter: false}
 					),
 				]
 			),

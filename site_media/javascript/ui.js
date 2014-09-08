@@ -282,8 +282,6 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			align: 0, 
 			separationType: 0
 		}));
-
-		this.on("destroyed");
 	},
 
 	destroyed: function() {

@@ -3,8 +3,8 @@ Q.scene("health_2",function(stage) {
 	stage.name = "health_2";
 	Q.stageTMX("VirtualWorld.tmx", stage);
 
-	Q.audio.stop();
-	Q.audio.play("Tavern.wav", {loop: true});
+//	Q.audio.stop();
+//	Q.audio.play("Tavern.wav", {loop: true});
 
 	var Mira = Q("Player").first();
 	stage.add("viewport").follow(Mira);

@@ -165,6 +165,8 @@ Q.loadTMX(Q.options.resources,function() {
 	Q.state.reset({ material_names: game.material_names, Player_stock: game.Player_stock, House_stock: game.House_stock, Market_stock: game.Market_stock, Workshop_stock: game.Workshop_stock, Health:100, money:100});
 
 	Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
+//	Q.stageScene("market_research_2", Q.STAGE_LEVEL_PRIMARY, {element: Q.game.certificates[0].badges[0].elements[1]});
+//	Q.stageScene("market_research_2_SeemaWorkshop", Q.STAGE_LEVEL_LEARNING_MODULE, {});
 //	Q.stageScene("test_cards", Q.STAGE_LEVEL_LEARNING_MODULE, {});
 }, {
 	progressCallback: function(loaded,total) {

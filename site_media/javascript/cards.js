@@ -17,7 +17,6 @@ Q.UI.Layout.extend("ControlButtons", {
 			callback_buy: "buy",
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -70,6 +69,12 @@ Q.UI.Layout.extend("ControlButtons", {
 			var b = this.insert(new Q.UI.Button({label: "Back", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_back]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.CANCEL) {
+			var b = this.insert(new Q.UI.Button({label: "Cancel", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_cancel]();
 			});
 		}
 		this.fit(0);
@@ -161,11 +166,9 @@ Q.UI.Layout.extend("ImageText", {
 			this.add("Touch");
 			this.on("touch");
 		}
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
-		console.log("destroying imagetext");
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
@@ -221,7 +224,6 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			layout: Q.UI.Layout.VERTICAL,
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -271,7 +273,6 @@ Q.UI.Layout.extend("RangeQuestion", {
 			layout: Q.UI.Layout.VERTICAL,
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -341,12 +342,20 @@ Q.ImageText.extend("Tile", {
 		console.log("tile touch");
 		if(this.p.disabled == false) {
 			// display the next card
-			this.p.action_card.p.back_card = this.p.card;
-			this.p.card.destroy();
-			this.stage.insert(this.p.action_card);
+			if(this.p.action_card) {
+				this.p.action_card.p.back_card = this.p.card;
+				var stage = this.stage;
+				this.p.card.destroy();
+				stage.insert(this.p.action_card);
+			}
+			else if (this.p.action){
+				if(this.p.context) 
+					this.p.context[this.p["action"]](this.p.action_params);
+				else
+					this[this.p["action"]](this.p.action_params);
+			}
 		}
 	},
-
 });
 
 
@@ -368,8 +377,6 @@ Q.UI.Layout.extend("Card", {
 			shadow: 5,
 			border: 2,
 		}));
-		this.on("destroyed");
-//		this.on("inserted");
 	},
 
 	destroyed: function() {
@@ -570,7 +577,8 @@ Q.Card.extend("TileCard", {
 			count_c = 3;
 		}
 		for(var i = 0; i < this.p.tiles.length; i++) {
-			var r = i / count_c;
+			console.log("tile: " + i);
+			var r = Math.floor(i / count_c);
 			var c = i % count_c;
 			this.p.tiles[i].p.x = -this.p.cx + (c + 0.5) * this.p.w / count_c;
 			this.p.tiles[i].p.y = -this.p.cy + (r + 0.5) * this.p.h / count_r;
@@ -578,6 +586,10 @@ Q.Card.extend("TileCard", {
 			this.p.tiles[i].p.card = this;
 			this.insert(this.p.tiles[i]);
 		}
+
+		var type = Q.ControlButtons.CANCEL;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
 	},
 });
 
@@ -605,6 +617,14 @@ Q.scene("test_cards", function(stage) {
 			disabled: false,
 			action_card: product,
 	});
-	var tcard = new Q.TileCard({tiles: [tile], grid: Q.TileCard.GRID_2_1});
+	var tile2 = new Q.Tile({
+			image: new Q.Sprite({
+					sheet: "basket_01_sheet", 
+					frame:2
+			}),
+			disabled: false,
+			action_card: product,
+	});
+	var tcard = new Q.TileCard({tiles: [tile,tile2], grid: Q.TileCard.GRID_2_1});
 	stage.insert(tcard);
 });

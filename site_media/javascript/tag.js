@@ -4,15 +4,14 @@ Q.component("PriceTag", {
 
 	extend: {
 		tag: function(opts) {
-			this.children.forEach(function(child) {
-				if(child.isA("Tag"))
-					child.destroy();
-			});
+			if(this.mytag)
+				this.mytag.destroy();
+
 			if(!opts)
 				opts = {};
 			opts.material = this;
-			tag = new Q.Tag(opts);
-			this.stage.insert(tag, this);
+			this.mytag = new Q.Tag(opts);
+			this.stage.insert(this.mytag, this);
 		}      
 	}
 });
@@ -65,6 +64,7 @@ Q.Sprite.extend("Tag", {
 		}
 		var label = "" + this.p.material.p[this.p.variable];
 		ctx.font = "14px Arial";
+		ctx.fillStyle = this.p.textColor;
 		var metrics = ctx.measureText(label);
 		ctx.fillText(label, -metrics.width/2, -7);
 	},

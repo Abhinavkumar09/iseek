@@ -4,8 +4,8 @@ Q.scene("health_1",function(stage) {
 	stage.name = "health_1";
 	Q.stageTMX("VirtualWorld.tmx", stage);
 
-	Q.audio.stop();
-	Q.audio.play("Tavern.wav", {loop: true});
+//	Q.audio.stop();
+//	Q.audio.play("Tavern.wav", {loop: true});
 
 	var Mira = Q("Player").first();
 	Mira.add("KeyCarrier");

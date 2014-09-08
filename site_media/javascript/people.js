@@ -377,3 +377,4 @@ Q.Person.extend("Player", {
 	},
 
 });
+

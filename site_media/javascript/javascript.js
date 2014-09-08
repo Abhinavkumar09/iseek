@@ -4,6 +4,14 @@ function Material(name, properties) {
 	this.isClickable = properties.isClickable;
 	this.ifBelongsToPlayer = properties.ifBelongsToPlayer;
 	this.commission = properties.commission;
+	this.sheet = properties.sheet;
+	if(!properties.sheet) {
+		this.sheet = name + "_sheet";
+	}
+	this.frame = properties.frame;
+	if(!properties.frame) {
+		this.frame = 0;
+	}
 }
 
 function loadjscssfile(filename, filetype){
@@ -102,15 +110,15 @@ function Game(name) {
 
 		SeemaWorkshop: {
 			basket_01: [
-				new Material('basket_01', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
 			],
 			basket_02: [
-				new Material('basket_02', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_02', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_02', {price: 0, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
 			]
 		},
 
@@ -197,14 +205,6 @@ var Q = Quintus({
 		})
 		.enableSound()
 		.controls(true);
-
-
-Q.input.touchControls({
-  controls:  [ ['left','<' ],
-               ['up','a'],
-               ['down','b'],
-               ['right','>' ]]
-});
 
 
 

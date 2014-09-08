@@ -3871,12 +3871,16 @@ Quintus.Input = function(Q) {
    * @method Q.controls
    * @param {Boolean} joypad - enable 4-way joypad (true) or just left, right controls (false, undefined)
    */
-  Q.controls = function(joypad) {
+  Q.controls = function(joypad, controls) {
     Q.input.keyboardControls();
 
     if(joypad) {
+      var controls = controls;
+      if(controls == null) {
+        controls = [ [],[],[],['action','b'],['fire','a']]
+      }
       Q.input.touchControls({
-        controls: [ [],[],[],['action','b'],['fire','a']]
+        controls: controls
       });
       Q.input.joypadControls();
     } else {
