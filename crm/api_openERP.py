@@ -128,7 +128,7 @@ def addLine(invoice_id,account_id,prod_name,prod_id,prod_price,prod_quantity):
 def addEmployee(ename,workPhone):
     partner = {
         'name' : ename,
-	    'work_phone' : workPhone
+	'work_phone' : workPhone
     }
     parent_id = sock.execute(dbname, uid, pwd, 'hr.employee', 'create', employee)
 
