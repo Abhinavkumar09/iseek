@@ -123,6 +123,14 @@ def addLine(invoice_id,account_id,prod_name,prod_id,prod_price,prod_quantity):
     }
     line_id = sock.execute(dbname, uid, pwd, 'account.invoice.line', 'create', line1)
     print 'Invoice line id=', line_id, 'added'
+    
+#Function to add a employee with a particular name and work phone number to the OpenERP system
+def addEmployee(ename,workPhone):
+    partner = {
+        'name' : ename,
+	    'work_phone' : workPhone
+    }
+    parent_id = sock.execute(dbname, uid, pwd, 'hr.employee', 'create', employee)
 
         
 #importProducts('categories.csv')
@@ -133,3 +141,4 @@ def addLine(invoice_id,account_id,prod_name,prod_id,prod_price,prod_quantity):
 #getCustomer('testFunction')
 #invoice_id = createInvoice('paid',2,'SAJ/2014/0008',12)
 #addLine(invoice_id,2,'FOL 100% CTTN JRSY',4,6.73,100)
+#addEmployee('testFunction','9812983219')
