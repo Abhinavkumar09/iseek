@@ -67,6 +67,14 @@ game.certificates = [
 				false, 
 				[
 					new CertificateElement(
+						"setup",
+						"Setup",
+						"setup.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School:false, SeemaWorkshop: false, HealthCenter: false}
+					),
+					new CertificateElement(
 						"market_research_1",
 						"Lecture",
 						"Lecture.js",
