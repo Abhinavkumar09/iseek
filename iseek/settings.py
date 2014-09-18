@@ -2,6 +2,12 @@
 import os
 from mysettings import *
 
+OPENERP = {
+	'username': 'admin',
+	'password': 'rohitj',
+	'database': 'iseek',
+	'url': 'http://iseek.etal.in:8069',
+}
 LOGIN_URL='/login/'
 LOGIN_EXEMPT_URLS = (
     r'^site_media/(.*)',
