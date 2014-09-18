@@ -125,6 +125,22 @@ game.certificates = [
 					),
 				]
 			),
+			new CertificateBadge(
+				"Planning", 
+				"Planning",
+				"Objects/Medal/badge01.png",
+				false, 
+				[
+					new CertificateElement(
+						"planning_1",
+						"Planning",
+						"planning.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: true, SeemaWorkshop: false, HealthCenter: false}
+					),
+				]
+			),
 		]
 	),
 ];
