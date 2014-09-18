@@ -344,21 +344,26 @@ var Quintus = function Quintus(opts) {
    @for Quintus
   */
   Q._detect = function(obj,iterator,context,arg1,arg2) {
-    var result;
+    var result, lastresult;
     if (obj == null) { return; }
     if (obj.length === +obj.length) {
       for (var i = 0, l = obj.length; i < l; i++) {
-        result = iterator.call(context, obj[i], i, arg1,arg2);
-        if(result) { return result; }
+        lastresult = iterator.call(context, obj[i], i, arg1,arg2);
+//        if(result) { return result; }
+        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
       }
-      return false;
+//      return false;
     } else {
       for (var key in obj) {
-        result = iterator.call(context, obj[key], key, arg1,arg2);
-        if(result) { return result; }
+        lastresult = iterator.call(context, obj[key], key, arg1,arg2);
+//        if(result) { return result; }
+        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
       }
-      return false;
+//      return false;
     }
+    if(result)
+      return result;
+    return false;
   };
 
   /**
@@ -6673,31 +6678,65 @@ Quintus.UI = function(Q) {
 
       Q.wrapper.style.overflow = "hidden";
 
-      this.el = document.createElement("div");
-      this.el.innerHTML = this.p.html;
+      this.on("inserted");
+    },
 
-      Q.wrapper.appendChild(this.el);
-      this.on("inserted",function(parent) {
+    inserted: function() {
+        this.el = document.createElement("div");
+        this.el.innerHTML = this.p.html;
+
+        Q.wrapper.appendChild(this.el);
         this.position();
-        parent.on("destroyed",this,"remove");
-        parent.on("clear",this,"remove");
-      });
-    },
+	},
 
-    position: function() {
-    },
-
-    step: function(dt) {
-      this._super(dt);
-      this.position();
-    },
-
-    remove: function() {
+    destroyed: function() {
       if(this.el) { 
         Q.wrapper.removeChild(this.el);
         this.el= null;
       }
-    }
+    },
+
+    position: function() {
+        if(! this.el)
+          return;
+		var x = this.p.x;
+		var y = this.p.y;
+
+        if (window.getComputedStyle) {
+	      var computedStyle = getComputedStyle(this.el, null)
+	    } else {
+	      computedStyle = this.el.currentStyle;
+	    }
+
+
+		if(this.container) {
+			var cords = this.container.matrix.transform(x, y); 
+			x = cords[0];
+			y = cords[1];
+		}
+
+        x -= parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2)) / 2;
+        y -= parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2)) / 2;
+
+		this.p.w = parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2));
+		this.p.h = parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2));
+		this.p.cx = parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2))/2;
+		this.p.cy = parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2))/2;
+
+		// Adjust it according to the current view of the stage
+		if(this.stage.viewport) {
+			x -= this.stage.viewport.x;
+			y -= this.stage.viewport.y;
+		}
+
+		this.el.style.left = x + "px";
+		this.el.style.top = y + "px";
+    },
+
+    step: function(dt) {
+	//	console.log("step");
+      this.position();
+    },
   });
 
   Q.UI.VerticalLayout = Q.Sprite.extend("UI.VerticalLayout",{

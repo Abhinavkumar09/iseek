@@ -146,7 +146,7 @@ Q.Sprite.extend("Quote",{
 
 		ctx.beginPath();
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = "2";
+//		ctx.lineWidth = "2";
 		ctx.moveTo(newx + mirror * this.p.radius, newy);
 		ctx.lineTo(newx + mirror * this.p.radius/2, newy + this.p.radius/2);
 		ctx.lineTo(newx + mirror * this.p.radius * 2, newy);

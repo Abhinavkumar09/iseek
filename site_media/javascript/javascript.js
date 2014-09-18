@@ -1,5 +1,5 @@
-function Material(name, properties) {
-	this.name = name;
+function Material(properties) {
+	this.name = properties.name;
 	this.price = properties.price;
 	this.isClickable = properties.isClickable;
 	this.ifBelongsToPlayer = properties.ifBelongsToPlayer;
@@ -12,6 +12,21 @@ function Material(name, properties) {
 	if(!properties.frame) {
 		this.frame = 0;
 	}
+}
+
+function SHG(properties) {
+	this.name = properties.name;
+	this.people = properties.people;
+	this.address = properties.address;
+}
+
+function Person(properties) {
+	this.id = properties.id;
+	this.name = properties.name;
+	this.sheet = properties.sheet;
+	this.frame = properties.frame;
+	this.address = properties.address;
+	this.phone = properties.phone;
 }
 
 function loadjscssfile(filename, filetype){
@@ -103,26 +118,29 @@ function Game(name) {
 
 		Workshop: {
 			basket_01: [
-				new Material('basket_01', {price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 100}),
-				new Material('basket_01', {price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 100}),
+				new Material({name: 'basket_01', price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 100}),
+				new Material({name: 'basket_01', price: 0, isClickable: true, ifBelongsToPlayer: true, commission: 100}),
 			]
 		},
 
 		SeemaWorkshop: {
 			basket_01: [
-				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_01', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
 			],
 			basket_02: [
-				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-				new Material('basket_02', {price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_02', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_02', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+				new Material({name: 'basket_02', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
 			]
 		},
 
 		Player: {
+			basket_01: [
+				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
+			],
 		},
 
 		Market: {
@@ -169,6 +187,12 @@ function Game(name) {
 
 
 	this.player = {
+		id: -1,
+		name: "Mira",
+		sheet: "mira_sheet",
+		frame: 1,
+		address: "Address",
+		phone: "Phone",
 		money: 100,
 		health: 100,
 		keys: [],
@@ -177,6 +201,18 @@ function Game(name) {
 			game.Q.state.trigger("change.money", this.money);
 		},
 	};
+
+	var properties = {};
+	properties["name"] = "SHG";
+	properties["people"] = [
+		new Person({"id": -1, "name": "Sheela", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+		new Person({"id": -1, "name": "Rama", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+		new Person({"id": -1, "name": "Swati", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+	]
+	properties.address = "SHG Address";
+	this.SHG = new SHG(properties);
+
+	this.sync_data = {};
 }
 
 
@@ -199,7 +235,7 @@ var Q = Quintus({
 		.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch, Audio, TMX")
 		.setup("game_canvas", {
 			maximize: "touch",
-//			maximize: true,
+			maximize: true,
 			width:   800,
 			height:  600,
 		})
@@ -237,67 +273,4 @@ Q.touch(Q.SPRITE_UI, [Q.STAGE_LEVEL_LEARNING_MODULE, Q.STAGE_LEVEL_SCORECARD, Q.
 
 Q.game = game;
 game.Q = Q;
-
-
-
-/**
- * Storage Function
- * Store the Value
- * @param dataSet the name of the entry
- * @param dataValue the value of the entry
- * @return the result of operation
- */
-function storeValue(dataSet, dataValue){
-	if(typeof(Storage) !== "undefined") {
-	    localStorage.setItem(dataSet,dataValue);
-	    if(String(fetchValue(dataSet))===String(dataValue)){
-	    	return true;
-	    }
-	} else {
-	    console.log("Browser doesn't support local storage.")
-	}
-	return false;
-}
-
-/**
- * Storage Function
- * Fetch the Value
- * @param dataSet the name of the entry
- * @return the value of given name in local storage
- */
-function fetchValue(dataSet){
-	if(typeof(Storage) !== "undefined") {
-		console.log(localStorage.getItem(dataSet));
-	    return localStorage.getItem(dataSet);
-	} else {
-	    console.log("Browser doesn't support local storage.");
-	}
-	return false;
-}
-
-/**
- * Storage Function
- * Remove the Value
- * @param dataSet the name of the entry
- * @return the result of operation
- */
-function removeValue(dataSet){
-	if(typeof(Storage) !== "undefined") {
-	    localStorage.removeItem(dataSet);
-	    if(fetchValue(dataSet)===null){
-	    	return true;
-	    }
-	} else {
-	    console.log("Browser doesn't support local storage.");
-	}
-	return false;
-}
-
-function timeoutLoop(fn, reps, delay) {
-  if (reps > 0)
-    setTimeout(function() {
-                 fn;
-                 timeoutLoop(fn, reps-1, delay);
-               }, delay);
-}
 

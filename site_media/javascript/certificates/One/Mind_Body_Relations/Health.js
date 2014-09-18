@@ -8,6 +8,7 @@ Q.scene("health_1",function(stage) {
 //	Q.audio.play("Tavern.wav", {loop: true});
 
 	var Mira = Q("Player").first();
+	stage.player = Mira;
 	Mira.add("KeyCarrier");
 	stage.add("viewport").follow(Mira);
 	//Mira.addMaterialContainer("Player");
@@ -274,9 +275,9 @@ Q.scene("health_1",function(stage) {
 
 Q.scene("health_1_House", function(stage) {
 	stage.stock_name = "House";
-	stage.acceptable_materials = [];
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("house.tmx", stage);
 
 
@@ -327,6 +328,8 @@ Q.scene("health_1_House", function(stage) {
 			context: Mira,
 			button_type: Q.ControlButtons.NEXT,
 			func: "onquestioncompletion",
+			x: 400,
+			y: 300
 		}
 	);
 	
@@ -336,7 +339,9 @@ Q.scene("health_1_House", function(stage) {
 
 	
 	if(Q.game.player.keys.length == 0) {
-		stage.insert(form);
+		setTimeout(function(){
+			stage.insert(form);
+		}, 1000);		
 	}
 });
 

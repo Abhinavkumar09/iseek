@@ -1,5 +1,4 @@
 Q.scene("LevelFinished",function(stage) {
-	console.log("finish element: " + Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.name);
 	Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.isFinished = true;
 	//Store finished element into local storage
 	if(storeValue(Q.stage(Q.STAGE_LEVEL_PRIMARY).options.element.element_id,true)!==true){
@@ -69,12 +68,10 @@ Q.Sprite.extend("Transition", {
 							Q.stageScene(this.stage.options.nextStage[i][1], this.stage.options.nextStage[i][2], this.stage.options.nextStage[i][3]);
 						}
 						else if(this.stage.options.nextStage[i][0] == "unpause") {
-							console.log("i: " + i + ", unpause");
 							// start the scene related to this building
 							Q.stage(this.stage.options.nextStage[i][1]).unpause();
 						}
 						else if(this.stage.options.nextStage[i][0] == "clearStage") {
-							console.log("i: " + i + ", clearStage");
 							// start the scene related to this building
 							Q.clearStage(this.stage.options.nextStage[i][1]);
 						}
@@ -107,7 +104,6 @@ Q.scene("Dialog", function(stage) {
 	if(stage.options.dialog) {
 		var label = box.insert(new Q.UI.Text({x:10, y: 0, label: stage.options.dialog, align: "center", color: "white", size: 12, lineHeight: 1.2 }));
 		var button = box.insert(new Q.UI.Button({ x: 0, y: label.p.h/2+50, fill: "#CCCCCC", label: "Continue" }));
-		console.log(label.p.h);
 		button.on("click",function() {
 			Q.stage(stage.options.nextStage).unpause();
 			Q.clearStage(Q.STAGE_LEVEL_DIALOG);	
@@ -512,8 +508,6 @@ Q.Sprite.extend("GameStats", {
 
 
 Q.scene("LevelSelector", function(stage) {
-	console.log("certificates" + stage.options.certificates.length);
-
 	stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, certificates: stage.options.certificates});
 	stage.insert(stage.certificateselector);
 

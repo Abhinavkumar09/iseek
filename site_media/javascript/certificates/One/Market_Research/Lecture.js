@@ -9,10 +9,8 @@ Q.scene("market_research_1",function(stage) {
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
-		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
 		b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = stage.name + "_" + b.p.name;
-		console.log("nextScene: " + b.p.nextScene);
 		i += 1;
 	}
 
@@ -31,6 +29,7 @@ Q.scene("market_research_1_House", function(stage) {
 	stage.acceptable_materials = [];
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("house.tmx", stage);
 
 
@@ -50,8 +49,8 @@ Q.scene("market_research_1_House", function(stage) {
 
 
 Q.scene("market_research_1_School",function(stage) {
-//	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
-
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("school.tmx", stage);
 
 
@@ -67,7 +66,6 @@ Q.scene("market_research_1_School",function(stage) {
 
 
 	Mira.onquestioncompletion = function () {
-		console.log("Done");
 		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 		stage.pause();
 	};
@@ -122,10 +120,11 @@ Q.scene("market_research_1_School",function(stage) {
 		],
 		context: Mira,
 		func: "onquestioncompletion",
-
 	});
 
-	stage.insert(lecture);
+	setTimeout(function(){
+		stage.insert(lecture);
+	}, 1000);		
 
 	stage.accept_material = function(material_name) {
 		console.log("cannot accept the material");

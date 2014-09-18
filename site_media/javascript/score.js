@@ -29,11 +29,11 @@ Q.scene("navigation",function(stage) {
 
 
 Q.scene("scorecard",function(stage) {
-	var score = new Q.Score({sheet: "coin", sprite: "coin_animation", frame:0});
+	var score = new Q.Score({sheet: "coin", sprite: "coin_animation", frame:0, x: Q.width - 50});
 	stage.insert(score);
 	score.tag({position:"center", variable:"score", backgroundColor: null, borderColor: null, textColor: "black", radius:20});
 
-	stage.insert(new Q.ScoreBar());
+	stage.insert(new Q.ScoreBar({x: Q.width - 125}));
 //	stage.insert(new Q.Board());
 });
 
@@ -221,7 +221,6 @@ Q.Sprite.extend("Score", {
 		this.p.score = Q.game.player[this.p.parameter];
 		this.p.label = this.p.parameter + ": " + this.p.score;
 
-//		this.p.x = Q.width - 200 - this.p.w;
 		Q.state.on("change." + this.p.parameter, this, "score");
 	},
 

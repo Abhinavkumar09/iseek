@@ -1,6 +1,7 @@
 Q.scene("market_research_2",function(stage) {
 	stage.name = "market_research_2";
 	Q.stageTMX("VirtualWorld.tmx", stage);
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 
 //	Q.audio.stop();
 //	Q.audio.play("Tavern.wav", {loop: true});
@@ -20,18 +21,14 @@ Q.scene("market_research_2",function(stage) {
 //	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
 //	guru.trigger("newconcept", "Start");
 
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
-	};
 });
 
 
 Q.scene("market_research_2_House", function(stage) {
 	stage.stock_name = "House";
-	stage.acceptable_materials = [];
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("house.tmx", stage);
 
 
@@ -51,6 +48,9 @@ Q.scene("market_research_2_House", function(stage) {
 Q.scene("market_research_2_Market", function(stage) {
 	stage.acceptable_materials = ["basket_01", "basket_02"];
 	stage.stock_name = "Market";
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 
 	var market_tables = [
 		{
@@ -128,7 +128,7 @@ Q.scene("market_research_2_Market", function(stage) {
 									stock_name: stage.stock_name,
 								});
 				stage.insert(material, stage.tables[i]);
-				//material.tag();
+				material.tag();
 				j +=1;
 			}
 		}
@@ -200,34 +200,47 @@ Q.scene("market_research_2_Market", function(stage) {
 	stage.redistribute_buyers();
 
 	stage.player.p.materialcontainer.give_material = function(material_name) {
-		var material_details = this.p.stocks[material_name].pop();
-		if(this.p.stocks[material_name].length == 0) {
-			delete this.p.stocks[material_name];
-		}
-		if(material_details) {
-			if (! Q.game.stocks["Market"][material_name])
-				Q.game.stocks["Market"][material_name] = [];
+		if(this.product)
+			this.product.destroy();
 
-			Q.game.stocks["Market"][material_name].push(Q.game.stocks["Player"][material_name].pop());
-			if(Q.game.stocks["Player"][material_name].length == 0)
-				delete Q.game.stocks["Player"][material_name];
+		this.product = new Q.Product({
+			image: new Q.ImageText({image: new Q.Sprite({sheet: Q.game.material_names[material_name].sheet, frame:0})}),
+			name: new Q.ImageText({label: new Q.UI.Text({label: material_name})}),
+			description: new Q.ImageText({label: new Q.UI.Text({label: material_name})}),
+			sellable: true,
+		});
 
-			console.log("popped from the player material container");
-			this.reset();
-			// Step 1: Identify which container will accept the material
-			var container = stage.containers[material_name];
+		var material_container = stage.player.p.materialcontainer;
+		this.product.sell = function() {
+			var material_details = material_container.p.stocks[material_name].pop();
+			if(material_container.p.stocks[material_name].length == 0) {
+				delete material_container.p.stocks[material_name];
+			}
+			if(material_details) {
+				if (! Q.game.stocks["Market"][material_name])
+					Q.game.stocks["Market"][material_name] = [];
 
-			// Step 2: Ask the container to accept the material
-			container.addMaterial(material_name, material_details);
-			container.p.price = material_details.price;
+				Q.game.stocks["Market"][material_name].push(Q.game.stocks["Player"][material_name].pop());
+				if(Q.game.stocks["Player"][material_name].length == 0)
+					delete Q.game.stocks["Player"][material_name];
 
-			container.tag();
-		}
+				material_container.reset();
+				// Step 1: Identify which container will accept the material
+				var container = stage.containers[material_name];
 
-		stage.redistribute_buyers();
-		return true;
+				// Step 2: Ask the container to accept the material
+				container.addMaterial(material_name, material_details);
+				container.p.price = this.p.price.p.value;
+
+				container.tag();
+			}
+
+			stage.redistribute_buyers();
+			this.destroy();
+		};
+
+		this.stage.insert(this.product);
 	};
-
 });
 
 
@@ -235,7 +248,9 @@ Q.scene("market_research_2_Market", function(stage) {
 Q.scene("market_research_2_SeemaWorkshop", function(stage) {
 	stage.stock_name = "SeemaWorkshop";
 	stage.acceptable_materials = ["Basket", "Sticks"];
+
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("seemaworkshop.tmx", stage);
 
 	// Map Exit Door

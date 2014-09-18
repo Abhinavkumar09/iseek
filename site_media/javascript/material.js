@@ -11,7 +11,7 @@ Q.Sprite.extend("MaterialContainer", {
 			stock_name: "",
 		});
 		this.add("Talk");
-		this.on("hit", this, "collision");
+//		this.on("hit", this, "collision");
 	},
 
 	buyer_count: function() {
@@ -47,7 +47,7 @@ Q.Sprite.extend("MaterialContainer", {
 
 	},
 
-	give_material: function(material_name) {
+	temp_give_material: function(material_name) {
 		for(var i = 0; i < this.children.length; i++){
 			var child = this.children[i];
 
@@ -138,7 +138,7 @@ Q.Sprite.extend("MaterialContainer", {
 		return null;
 	},
 
-	collision: function(col) {
+	temp_collision: function(col) {
 		console.log("collision with: " + col.obj.p.name);
 		if(!this.p.isInteractable)
 			return;

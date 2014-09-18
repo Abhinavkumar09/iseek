@@ -41,7 +41,7 @@ Q.Sprite.extend("Door", {
 
 			var door = this;
 			Q("Player", Q.STAGE_LEVEL_PRIMARY).each(function() {
-				if(this.reStock) {
+				if(this.reStock & door.stage.player.p.materialcontainer) {
 					console.log("restocking");
 					this.reStock(door.stage.player.p.materialcontainer.p.stocks);
 				}

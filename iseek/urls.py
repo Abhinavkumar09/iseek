@@ -7,6 +7,9 @@ urlpatterns = patterns('',
     url(r'^$', 'crm.views.index', name='index'),
 
     url(r'^new_game/$', 'crm.views.new_game', name='new_game'),
+    url(r'^readEmployee/$', 'crm.openERP.read_employee', name='read_employee'),
+    url(r'^addEmployee/$', 'crm.openERP.add_employee', name='add_employee'),
+    url(r'^editEmployee/$', 'crm.openERP.edit_employee', name='edit_employee'),
 
 
     url(r'^game/(?P<name>.*)/$', 'crm.views.game', name='game'),
