@@ -200,7 +200,6 @@ Q.Sprite.extend("Circle", {
 			fillStyle: null,
 			strokeStyle: "black",
 		}));
-		console.log("Circle");
 	},
 
 	draw: function(ctx) {
@@ -280,7 +279,8 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			type: Q.SPRITE_NONE, 
 			layout: Q.UI.Layout.VERTICAL, 
 			align: 0, 
-			separationType: 0
+			separationType: 0,
+			ifFit: false,
 		}));
 	},
 
@@ -308,8 +308,7 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 			totalWidth += this.children[i].p.w;
 			totalHeight += this.children[i].p.h;
 		}
-		//console.log(totalHeight);
-		 // separation between elements
+		// separation between elements
 		var separation_x = this.p.separation_x || 0;
 		var separation_y = this.p.separation_y || 0;
 		if((this.p.separationType == 1) & (this.children.length > 1)) {
@@ -336,24 +335,43 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 	},
 
 	realign: function() {
+		var left_most, right_most, top_most, bottom_most;
 		for(var i = 0; i < this.children.length; i++) {
-			if(((this.p.align & Q.UI.Layout.LEFT_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
-				this.children[i].p.x = - this.p.cx + this.children[i].p.cx;
+			if(! left_most) {
+				left_most = this.children[i].p.x - this.children[i].p.cx;
+				right_most = this.children[i].p.x + this.children[i].p.w - this.children[i].p.cx;
+				top_most = this.children[i].p.y - this.children[i].p.cy;
+				bottom_most = this.children[i].p.y + this.children[i].p.h - this.children[i].p.cy;
 			}
-			if(((this.p.align & Q.UI.Layout.RIGHT_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
-				this.children[i].p.x =  this.p.cx - this.children[i].p.cx;
+
+			if( left_most   > this.children[i].p.x - this.children[i].p.cx)
+				left_most   = this.children[i].p.x - this.children[i].p.cx;
+			if( right_most  < this.children[i].p.x + this.children[i].p.w - this.children[i].p.cx)
+				right_most  = this.children[i].p.x + this.children[i].p.w - this.children[i].p.cx;
+			if( top_most    > this.children[i].p.y - this.children[i].p.cy)
+				top_most    = this.children[i].p.y - this.children[i].p.cy;
+			if( bottom_most < this.children[i].p.y + this.children[i].p.h - this.children[i].p.cy)
+				bottom_most = this.children[i].p.y + this.children[i].p.h - this.children[i].p.cy;
+		}
+
+		for(var i = 0; i < this.children.length; i++) {
+			if(((this.p.align & Q.UI.Layout.LEFT_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.VERTICAL)){
+				this.children[i].p.x = left_most + this.children[i].p.cx;
 			}
-			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.VERTICAL)){
+			if(((this.p.align & Q.UI.Layout.RIGHT_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.VERTICAL)){
+				this.children[i].p.x =  right_most - this.children[i].p.w + this.children[i].p.cx;
+			}
+			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.VERTICAL)){
 				this.children[i].p.x =  0;
 			}
-			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+			if(((this.p.align & Q.UI.Layout.CENTER_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.HORIZONTAL)){
 				this.children[i].p.y =  0;
 			}
-			if(((this.p.align & Q.UI.Layout.TOP_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
-				this.children[i].p.y =  - this.p.cy + this.children[i].p.cy;
+			if(((this.p.align & Q.UI.Layout.TOP_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+				this.children[i].p.y =  top_most - this.children[i].p.cy;
 			}
-			if(((this.p.align & Q.UI.Layout.BOTTOM_ALIGN) != 0) & (this.p.layout == Q.UI.Layout.HORIZONTAL)){
-				this.children[i].p.y =  this.p.cy - this.children[i].p.cy;
+			if(((this.p.align & Q.UI.Layout.BOTTOM_ALIGN) != 0) && (this.p.layout == Q.UI.Layout.HORIZONTAL)){
+				this.children[i].p.y =  bottom_most - this.children[i].p.h + this.children[i].p.cy;
 			}
 		}
 	},
@@ -367,4 +385,93 @@ Q.UI.Layout.RIGHT_ALIGN = 2;
 Q.UI.Layout.CENTER_ALIGN = 4;
 Q.UI.Layout.TOP_ALIGN = 8;
 Q.UI.Layout.BOTTOM_ALIGN = 16;
+
+
+
+Q.UI.TableLayout = Q.UI.Container.extend("UI.TableLayout", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			type: Q.SPRITE_NONE, 
+		}));
+		this.on("inserted");
+	},
+
+	destroyed: function() {
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+
+	inserted: function() {
+		if(! this.p.colwidths) {
+			
+		}
+
+		for(var i=0; i < this.p.rows.length; i++) {
+			for(var j=0; j < this.p.rows[i].length; j++) {
+				this.insert(this.p.rows[i][j]);
+			}
+		}
+		if(this.p.align)
+			this.realign();
+	},
+
+	realign: function() {
+		var current_top = - this.p.cy;
+		for(var i=0; i < this.p.rows.length; i++) {
+			var current_left = - this.p.cx;
+			var max_height = 0;
+			for(var j=0; j < this.p.rows[i].length; j++) {
+				if( this.p.align && (this.p.align[j] & Q.UI.TableLayout.LEFT_ALIGN != 0) ){
+					this.p.rows[i][j].p.x = current_left + this.p.rows[i][j].p.cx;
+				}
+				if( (this.p.align) && ((this.p.align[j] & Q.UI.TableLayout.RIGHT_ALIGN) != 0) ){
+					this.p.rows[i][j].p.x = current_left + this.p.colwidths[j] * this.p.w - this.p.rows[i][j].p.w + this.p.rows[i][j].p.cx;
+				}
+				if( (this.p.align) && ((this.p.align[j] & Q.UI.TableLayout.CENTER_ALIGN) != 0) ){
+					this.p.rows[i][j].p.x = current_left + this.p.colwidths[j] * this.p.w/2;
+				}
+				current_left += this.p.colwidths[j] * this.p.w;
+
+				if(max_height < this.p.rows[i][j].p.h)
+					max_height = this.p.rows[i][j].p.h;
+			}
+			for(var j=0; j < this.p.rows[i].length; j++) {
+				if( (this.p.align) && ((this.p.align[j] & Q.UI.TableLayout.TOP_ALIGN) != 0) ){
+					this.p.rows[i][j].p.y = current_top + this.p.rows[i][j].p.cy;
+				}
+				if( (this.p.align) && ((this.p.align[j] & Q.UI.TableLayout.BOTTOM_ALIGN) != 0) ){
+					this.p.rows[i][j].p.y = current_top + max_height - this.p.rows[i][j].p.h + this.p.rows[i][j].p.cy;
+				}
+				if( (this.p.align) && ((this.p.align[j] & Q.UI.TableLayout.CENTER_VERTICAL_ALIGN) != 0) ){
+					this.p.rows[i][j].p.y = current_top + max_height/2;
+				}
+			}
+			current_top += max_height;
+		}
+	},
+
+	reddraw: function(ctx) {
+		ctx.save();
+		ctx.beginPath();
+		ctx.moveTo(-this.p.cx, -this.p.cy);
+		ctx.lineTo(this.p.cx, -this.p.cy);
+		ctx.lineTo(this.p.cx, this.p.cy);
+		ctx.lineTo(-this.p.cx, this.p.cy);
+		ctx.lineTo(-this.p.cx, -this.p.cy);
+
+		ctx.strokeStyle = this.p.stokeStyle;
+		ctx.stroke();
+
+		ctx.restore();
+	},
+
+});
+Q.UI.TableLayout.LEFT_ALIGN = 1;
+Q.UI.TableLayout.RIGHT_ALIGN = 2;
+Q.UI.TableLayout.CENTER_ALIGN = 4;
+Q.UI.TableLayout.TOP_ALIGN = 8;
+Q.UI.TableLayout.BOTTOM_ALIGN = 16;
+Q.UI.TableLayout.CENTER_VERTICAL_ALIGN = 32;
 

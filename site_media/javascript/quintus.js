@@ -6715,7 +6715,6 @@ Quintus.UI = function(Q) {
 			y = cords[1];
 		}
 
-//		console.log("width: " + computedStyle.width + ", height: " + computedStyle.height);
         x -= parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2)) / 2;
         y -= parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2)) / 2;
 
@@ -6724,11 +6723,18 @@ Quintus.UI = function(Q) {
 		this.p.cx = parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2))/2;
 		this.p.cy = parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2))/2;
 
+		// Adjust it according to the current view of the stage
+		if(this.stage.viewport) {
+			x -= this.stage.viewport.x;
+			y -= this.stage.viewport.y;
+		}
+
 		this.el.style.left = x + "px";
 		this.el.style.top = y + "px";
     },
 
     step: function(dt) {
+	//	console.log("step");
       this.position();
     },
   });
