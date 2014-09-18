@@ -1,10 +1,8 @@
 Q.UI.Layout.extend("ControlButtons", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 100,
+			w: Q.width,
 			h: 100,
-			x: 0,
-			y: 0,
 			z: 10,
 			button_type: Q.ControlButtons.DONE, 
 			layout: Q.UI.Layout.HORIZONTAL,
@@ -117,16 +115,11 @@ Q.ControlButtons.EDIT = 256;
 Q.UI.Layout.extend("Video", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 400,
-			h: 300,
+			w: Q.width,
+			h: Q.height,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN,
 			radius: 0,
-
-			status: Q.Form.INCOMPLETE,
-			layout: Q.UI.Layout.VERTICAL,
 			filename: "",
 		}));
 		this.on("inserted");
@@ -390,8 +383,8 @@ Q.UI.Layout.extend("Card", {
 		this._super(Q._defaults(p, {
 			sort: true,
 			z: 10,
-			x: 400,
-			y: 300,
+			x: Q.width/2,
+			y: Q.height/2,
 			w: Q.width,
 			h: Q.height,
 			type: Q.SPRITE_NONE,
@@ -405,22 +398,29 @@ Q.UI.Layout.extend("Card", {
 			border: 2,
 		}));
 
-		// place it on the center of the screen
-		this.p.x = Q.width/2;
-		this.p.y = Q.height/2;
 	},
 
 	destroyed: function() {
-		console.log("destroying card");
+		this.stage.player.add("stepControls");
+		this.stage.player.add("2d");
 		this.children.forEach(function(child) {
-			console.log("\tchild");
 			child.destroy();
 		});
 	},
 
+	movefront: function() {
+		this.stage.player.del("stepControls");
+		this.stage.player.del("2d");
+
+		if(this.stage.viewport) {
+			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
+			this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
+		}
+	},
+
 	inserted: function() {
-		this.insert(this.p.content);
-		this.p.content.p.card = this;
+//		this.insert(this.p.content);
+//		this.p.content.p.card = this;
 	},
 
 	show: function(content) {
@@ -465,6 +465,8 @@ Q.Card.extend("Product", {
 	},
 
 	inserted: function() {
+		this.movefront();
+
 		this.p.image.p.x = -this.p.cx + 50;
 		this.p.image.p.y = -this.p.cy + 50;
 
@@ -529,6 +531,8 @@ Q.Card.extend("BusinessCard", {
 	},
 
 	inserted: function() {
+		this.movefront();
+
 		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: this.p.person.sheet, frame: this.p.person.frame});
 		this.insert(player);
 
@@ -552,7 +556,7 @@ Q.Card.extend("BusinessCard", {
 		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 		this.insert(con1);
 
-		var shg_card = new Q.SHGCard({SHG: this.p.SHG});
+		var shg_card = new Q.SHGCard(this.p);
 
 		var shg = new Q.Tile({
 			label: new Q.UI.Text({label: "SHG"}), 
@@ -589,7 +593,7 @@ Q.Card.extend("BusinessCard", {
 	},
 
 	edit: function() {
-		var card = new Q.BusinessCardForm({person: this.p.person, SHG: this.p.SHG, context: this.p.context, oncompletion: this.p.oncompletion});
+		var card = new Q.BusinessCardForm(this.p);
 		this.stage.insert(card);
 
 		this.destroy();
@@ -611,6 +615,8 @@ Q.Card.extend("BusinessCardForm", {
 
 
 	inserted: function() {
+		this.movefront();
+
 		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: this.p.person.sheet, frame: this.p.person.frame});
 		this.insert(player);
 
@@ -631,7 +637,7 @@ Q.Card.extend("BusinessCardForm", {
 		this.sinput = new Q.UI.HTMLElement({html: "<select> <option value='Knitting'>Knitting</option><option value='Weaving'>Weaving</option><option value='Sowing'>Sowing</option> </select>", x: 0, y: 0});
 		rows.push([skill, this.sinput]);
 
-		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.h - 100, h: 200});
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 		this.insert(con1);
 
 		var type = Q.ControlButtons.CANCEL;
@@ -641,7 +647,7 @@ Q.Card.extend("BusinessCardForm", {
 	},
 
 	cancel: function() {
-		var card = new Q.BusinessCard({person: this.p.person, SHG: this.p.SHG});
+		var card = new Q.BusinessCard(this.p);
 		this.stage.insert(card);
 		this.destroy();
 	},
@@ -664,7 +670,8 @@ Q.Card.extend("BusinessCardForm", {
 			.each(function() {
 				person.skill = $(this).val();
 		});
-		var card = new Q.BusinessCard({person: person, SHG: this.p.SHG, context: this.p.context, oncompletion: this.p.oncompletion});
+		game.sync_data["employee"] = true;
+		var card = new Q.BusinessCard(this.p);
 		this.stage.insert(card);
 
 		this.destroy();
@@ -684,7 +691,8 @@ Q.Card.extend("BusinessCardForm", {
 Q.Card.extend("Form", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			align: 0,
+			layout: Q.UI.Layout.NONE,
 			status: Q.Form.INCOMPLETE,
 			index: 0,
 		}));
@@ -693,6 +701,8 @@ Q.Card.extend("Form", {
 	},
 
 	inserted: function() {
+		this.movefront();
+
 		this.insert(this.p.content[this.p.index]);
 		var type = 0;
 		if(this.p.content[this.p.index+1]!=null)
@@ -703,7 +713,7 @@ Q.Card.extend("Form", {
 		if(this.p.content[this.p.index-1]!=null)
 			type = type | Q.ControlButtons.PREV;
 
-		this.insert(new Q.ControlButtons({context: this, button_type: type}));
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 	},
 
 
@@ -744,7 +754,9 @@ Q.Card.extend("TileCard", {
 	},
 
 	inserted: function() {
-		console.log("inserting tilecard");
+		this.stage.player.del("stepControls");
+		this.stage.player.del("2d");
+
 		if(this.p.grid == Q.TileCard.GRID_2_1) {
 			count_r = 1;
 			count_c = 2;
@@ -818,7 +830,7 @@ Q.scene("test_cards", function(stage) {
 		sellable: true,
 	});
 
-	var card = new Q.Card({content: product});
+//	var card = new Q.Card({content: product});
 	var tile = new Q.Tile({
 			image: new Q.Sprite({
 					sheet: "basket_01_sheet", 
