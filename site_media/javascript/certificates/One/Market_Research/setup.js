@@ -1,8 +1,13 @@
 Q.scene("setup",function(stage) {
 	stage.name = "setup";
+	Q.stageTMX("VirtualWorld.tmx", stage);
 
 //	Q.audio.stop();
 //	Q.audio.play("Tavern.wav", {loop: true});
+
+	var Mira = Q("Player").first();
+	stage.player = Mira;
+	stage.add("viewport").follow(Mira);
 
 	stage.oncompletion = function() {
 		setTimeout(function(){
@@ -12,8 +17,10 @@ Q.scene("setup",function(stage) {
 	};
 
 	var card = new Q.BusinessCardForm({person: game.player, SHG: game.SHG, context: stage, oncompletion: "oncompletion"});
-//	var card = new Q.SHGCard({SHG: game.SHG});
-	stage.insert(card);
+
+	setTimeout(function(){
+		stage.insert(card);
+	}, 1000);		
 
 
 //	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
