@@ -87,6 +87,12 @@ img{
 	height:600;
 }
 
+.game_container div {
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+}
+
 #myvideo {
 	position:absolute;
 	display:none;
