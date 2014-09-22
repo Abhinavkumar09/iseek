@@ -49,24 +49,15 @@ function loadjscssfile(filename, filetype){
 function Game(name) {
 	this.name = name;
 
-	this.mute = false;
-	this.play = function(file) {
-		if(!this.mute) {
-			this.Q.audio.play(file);
-		}
-	};	
 
 	/* All resources to be loaded
 	*/
 	this.resources = [
-		"mira_1.png", 'tiles.png', 'tileSet.png', 'house_inside_new.png', 'house_tileset.png', 'cloud.png', 
-
-		"sahiya.png", "Mira.png", "desk.png", "chairback.png",
-		"chairseat.png", "blackboard.png", "pranav.png",
-		"mira_house.png", "market.png", "school.png", "workshop.png", "cards.jpg",
+		'tiles.png', 'tileSet.png', 'house_inside_new.png', 'house_tileset.png',
 
 		// Classroom
 		'emptyclassroom.png', 'classroom/blackboard.png', 'classroom/chairback.png', 'classroom/chairseat.png', 'classroom/desk.png',
+		"desk.png", "chairback.png", "chairseat.png", "blackboard.png", 
 
 
 		// Objects
@@ -78,14 +69,16 @@ function Game(name) {
 
 
 		//People
-		'People/Mira.png', 'People/pranav.png', 'People/sahiya.png',
+//		'People/Mira.png', 'People/Shyam.png', 'People/Asif.png', 'People/Ashwin.png', 'People/Sahiya.png', 'People/Enterpreneur.png', 
+//		'People/Rama.png', 'People/Seeta.png', 'People/Seema.png',
 
 		//Buildings
 		'Building/workshop.png', 'Building/mira_house.png', 'Building/newHut.png',  'Building/school.png', 'Building/market.png', 'Building/healthcenter.png',
+		"mira_house.png", "market.png", "school.png", "workshop.png",
 
 		// Icons
 		"Icons/Guru_icon.png", "Icons/icon_info.png", "Icons/mute.png", "Icons/unmute.png", 
-		'VirtualWorld.png', 'nav_icons.png', "Icons/coin.png", 'Icons/score.png', 'Icons/close.png',
+		'VirtualWorld.png', "Icons/coin.png", 'Icons/score.png', 'Icons/close.png',
 		'Icons/medal.png', "Icons/money.png", "Icons/health.png",
 
 		// TMX
@@ -189,13 +182,13 @@ function Game(name) {
 	this.player = {
 		id: -1,
 		name: "Mira",
-		sheet: "mira_sheet",
+		sheet: "player_sheet",
 		frame: 1,
 		address: "Address",
 		phone: "Phone",
 		money: 100,
 		health: 100,
-		keys: [],
+		keys: ['mind'],
 		change_money: function(price) {
 			this.money += price;
 			game.Q.state.trigger("change.money", this.money);
@@ -205,14 +198,73 @@ function Game(name) {
 	var properties = {};
 	properties["name"] = "SHG";
 	properties["people"] = [
-		new Person({"id": -1, "name": "Sheela", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
-		new Person({"id": -1, "name": "Rama", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
-		new Person({"id": -1, "name": "Swati", "sheet": "mira_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+		new Person({"id": -1, "name": "Sheela", "sheet": "person_4_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+		new Person({"id": -1, "name": "Rama", "sheet": "person_5_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
+		new Person({"id": -1, "name": "Swati", "sheet": "person_6_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
 	]
 	properties.address = "SHG Address";
 	this.SHG = new SHG(properties);
 
 	this.sync_data = {};
+
+
+	this.PEOPLE = {};
+	this.PEOPLE.RESOURCES = {
+		// Males
+		"person_1": "People/Shyam.png",
+		"person_2": "People/Ashwin.png",
+		"person_3": "People/Asif.png",
+
+		// Females
+		"person_4": "People/Rama.png",
+		"person_5": "People/Seeta.png",
+		"person_6": "People/Seema.png",
+
+		// Special folks
+		"nurse": "People/Sahiya.png",
+		"player": "People/Mira.png",
+		"enterpreneur": "People/Enterpreneur.png",
+	};
+
+	for( people in this.PEOPLE.RESOURCES) {
+		this.resources.push(this.PEOPLE.RESOURCES[people]);
+	}
+
+	this.AUDIO = {};
+	this.AUDIO.RESOURCES = {
+		"VILLAGE": "Tavern.wav", 
+		"BOARD": "Lazy_Day.wav",
+		"MONEY": "sell_buy_item.wav", 
+		"MOVE_ITEM": "put_pick_item.wav", 
+	};
+
+	for( audio in this.AUDIO.RESOURCES) {
+		//this.resources.push(this.AUDIO.RESOURCES[audio]);
+	}
+
+	var G = this;
+	this.AUDIO.stop_n_play = function(type) {
+		console.log("play");
+		G.Q.audio.stop();
+		if(!this.mute) {
+			G.Q.audio.play(type, {loop: true});
+		}
+	};
+
+	this.AUDIO.mute = false;
+	this.AUDIO.play = function(file) {
+		if(!this.mute) {
+			G.Q.audio.play(file);
+		}
+	};	
+
+	this.AUDIO.stop = function(type) {
+		G.Q.audio.stop();
+	};
+
+
+	this.TMX = {};
+	this.TMX.VirtualWorld = "VirtualWorld.tmx";
 }
 
 

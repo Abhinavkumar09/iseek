@@ -66,7 +66,7 @@ game.certificates = [
 				false, 
 				[
 					new CertificateElement(
-						"setup",
+						"market_research_0_setup",
 						"Setup",
 						"setup.js",
 						false,

@@ -1,10 +1,13 @@
 Q.scene("market_research_1",function(stage) {
 	stage.name = "market_research_1";
-	Q.stageTMX("VirtualWorld.tmx", stage);
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
 
-	var Mira = Q("Player").first();
-	stage.add("viewport").follow(Mira);
-	Mira.addMaterialContainer("Player");
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
+
+	var player = Q("Player").first();
+	stage.add("viewport").follow(player);
+	player.addMaterialContainer();
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
@@ -17,10 +20,6 @@ Q.scene("market_research_1",function(stage) {
 //	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
 //	guru.trigger("newconcept", "Start");
 
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
-	};
 });
 
 
@@ -40,9 +39,9 @@ Q.scene("market_research_1_House", function(stage) {
 
 
 	// Mira
-	var Mira = Q("Player").first();
-	Mira.addMaterialContainer("Player");
-	stage.player = Mira;
+	var player = Q("Player").first();
+	player.addMaterialContainer("Player");
+	stage.player = player;
 
 });
 
@@ -54,18 +53,20 @@ Q.scene("market_research_1_School",function(stage) {
 	Q.stageTMX("school.tmx", stage);
 
 
+	game.AUDIO.stop();
+
 	// Map Exit Door
 	var exit_door = new Q.Door({width:175, height: 1, h: 1, w: 175, x: 420, y: 590});
 	stage.insert(exit_door);
 
 
 	// Mira
-	var Mira = new Q.Player({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 100, y: 450, name:"Mira (inside Market)"});
-	stage.insert(Mira);
-	stage.player = Mira;
+	var player = new Q.Player({sheet: "player_sheet", sprite: 'person_animation', frame:1, x: 100, y: 450, name:"Player"});
+	stage.insert(player);
+	stage.player = player;
 
 
-	Mira.onquestioncompletion = function () {
+	player.onquestioncompletion = function () {
 		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 		stage.pause();
 	};
@@ -118,19 +119,13 @@ Q.scene("market_research_1_School",function(stage) {
 				],
 			}),
 		],
-		context: Mira,
+		context: player,
 		func: "onquestioncompletion",
 	});
 
 	setTimeout(function(){
 		stage.insert(lecture);
 	}, 1000);		
-
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
-	};
-
 });
 
 

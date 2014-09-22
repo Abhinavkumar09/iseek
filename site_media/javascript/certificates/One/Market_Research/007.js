@@ -1,10 +1,9 @@
 Q.scene("market_research_2",function(stage) {
 	stage.name = "market_research_2";
-	Q.stageTMX("VirtualWorld.tmx", stage);
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
 
-//	Q.audio.stop();
-//	Q.audio.play("Tavern.wav", {loop: true});
+	game.play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var Mira = Q("Player").first();
 	stage.add("viewport").follow(Mira);
@@ -258,10 +257,10 @@ Q.scene("market_research_2_SeemaWorkshop", function(stage) {
 	stage.insert(exit_door);
 
 	// Mira
-	var Mira = Q("Player").first();
-	stage.player = Mira;
-	Mira.addMaterialContainer();
-	Mira.reStock(Q.game.stocks["Player"]);
+	var player = Q("Player").first();
+	stage.player = player;
+	player.addMaterialContainer();
+	player.reStock(Q.game.stocks["Player"]);
 
 	// Other players
 	var Enterpreneur = Q("Enterpreneur").first();

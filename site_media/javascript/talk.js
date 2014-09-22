@@ -1,37 +1,3 @@
-Q.Sprite.extend("MyVideo",{ 
-	init: function(p) {
-		this._super(p, {
-			w: 300,
-			h: 200,
-		});
-		this.p.video = document.getElementById('myvideo');
-		this.p.video.play();
-	},
-
-	draw: function(ctx) {
-		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
-	},
-});
-
-Q.component("Video", {
-	extend: {
-		show_video: function(lesson) {
-			console.log("Video.show_video");
-			newvideo = document.getElementById("myvideo");
-			newvideo.play();
-			var myvideo = new Q.MyVideo({filename: lesson.filename, w: 400, h: 300, x: this.p.x, y: this.p.y});
-			this.stage.insert(myvideo);
-			lesson.status = 0;
-			newvideo.onended = function(e) {
-				myvideo.destroy();
-				lesson.status = 1;
-			};
-		},
-
-	}
-});
-
-
 Q.component("Talk", {
 	extend: {
 		info: function(options) {
@@ -43,11 +9,11 @@ Q.component("Talk", {
 				mirror = 1;
 
 			if(this.p.quote) {
-				this.p.quote.trigger("destroyme");
+				this.p.quote.destroy();
 				this.p.quote = null;					
 			}
 			this.p.quote = new Q.Quote({speaker:this, labels:labels, mirror: mirror, duration: duration});
-			this.stage.insert(this.p.quote);
+			this.stage.insert(this.p.quote, this);
 		},
 
 	}
@@ -72,14 +38,18 @@ Q.Sprite.extend("Info",{
 
 	inserted: function() {
 		if(this.p.showOnMiniMap) {
-			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", this.p.speaker);
+			var minimapinfo = Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first();
+			if(minimapinfo)
+				minimapinfo.trigger("show", this.p.speaker);
 		}
 	},
 
 	step: function(dt) {
 		this.p.time_spent += dt
 		if((this.p.time_spent > this.p.duration) && (this.p.duration > 0)) {
-			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", null);
+			var minimapinfo = Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first();
+			if(minimapinfo)
+				minimapinfo.trigger("show", null);
 			this.destroy();
 		}
 	}
@@ -119,17 +89,14 @@ Q.Sprite.extend("Quote",{
 		this.p.height = this.p.ui_text.p.h + 2 * this.p.radius;
 
 		var mirror = this.p.mirror;
-		this.p.x = this.p.speaker.p.x + mirror * ( this.p.speaker.p.cx + this.p.width / 2);
-		this.p.y = this.p.speaker.p.y +  (-this.p.speaker.p.cy - this.p.height / 2);
+		this.p.x = mirror * ( this.p.speaker.p.cx + this.p.width / 2);
+		this.p.y = (-this.p.speaker.p.cy - this.p.height / 2);
 
-		this.on("destroyme");
 		this.on("inserted");
 	},
 
-	destroyme: function() {
-//		console.log("destroyme");
+	destroyed: function() {
 		this.p.ui_text.destroy();
-		this.destroy();
 	},
 
 	inserted: function() {
@@ -166,7 +133,7 @@ Q.Sprite.extend("Quote",{
 	step: function(dt) {
 		this.p.time_spent += dt;
 		if(this.p.time_spent > this.p.duration)
-			this.trigger("destroyme");
+			this.destroy();
 	}
 
 });

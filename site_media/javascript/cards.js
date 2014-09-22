@@ -250,7 +250,6 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 		for(var i = 0; i < this.p.choices.length; i++) {
 			this.p.choices[i].p.parent = this;
 			this.insert(this.p.choices[i]);
-			console.log("choice x:" + this.p.choices[i].p.x + ", y:" + this.p.choices[i].p.y + ", cx:" + this.p.choices[i].p.cx + ", cy:" + this.p.choices[i].p.cy + ", w:" + this.p.choices[i].p.w + ", h:" + this.p.choices[i].p.h);
 		}
 		this.fit(10);
 	},
@@ -401,16 +400,14 @@ Q.UI.Layout.extend("Card", {
 	},
 
 	destroyed: function() {
-		this.stage.player.add("stepControls");
-		this.stage.player.add("2d");
+		this.stage.player.p.stepDistance = 32; 
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
 	},
 
 	movefront: function() {
-		this.stage.player.del("stepControls");
-		this.stage.player.del("2d");
+		this.stage.player.p.stepDistance = 0; 
 
 		if(this.stage.viewport) {
 			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
@@ -754,8 +751,7 @@ Q.Card.extend("TileCard", {
 	},
 
 	inserted: function() {
-		this.stage.player.del("stepControls");
-		this.stage.player.del("2d");
+		this.movefront();
 
 		if(this.p.grid == Q.TileCard.GRID_2_1) {
 			count_r = 1;

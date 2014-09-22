@@ -3,22 +3,19 @@ Q.Sprite.extend("KeyContainer", {
 		this._super(Q._defaults(p, {
 			name: "key",
 			z: 3,
-			type: Q.SPRITE_PICKED_MATERIAL,
+			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
 		}));
 	},
 
 	reset: function(stocks) {
-		console.log("reset");
-		//alert("reset");
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
 		x = 0;
 		for (i = 0; i < Object.keys(this.p.keys).length; i++) {
 			key_name = this.p.keys[i];
-			console.log("key name: " + key_name);
-			var material = new Q.Material({asset: 'key.png', x: x});
+			var material = new Q.Sprite({asset: 'key.png', x: x});
 			this.stage.insert(material, this);
 			x += 15;
 		}

@@ -18,7 +18,7 @@
    <properties>
     <property name="Class" value="Player"/>
     <property name="frame" value="1"/>
-    <property name="sheet" value="mira_sheet"/>
+    <property name="sheet" value="player_sheet"/>
     <property name="sprite" value="person_animation"/>
    </properties>
   </tile>

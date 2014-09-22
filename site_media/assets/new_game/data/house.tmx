@@ -9,7 +9,7 @@
    <properties>
     <property name="Class" value="Player"/>
     <property name="frame" value="1"/>
-    <property name="sheet" value="mira_sheet"/>
+    <property name="sheet" value="player_sheet"/>
    </properties>
   </tile>
  </tileset>
@@ -3744,8 +3744,20 @@
     <property name="sprite" value="person_animation"/>
    </properties>
   </object>
-  <object name="Family Member1" gid="296" x="71" y="167"/>
-  <object name="Family Member2" gid="296" x="135" y="171"/>
-  <object name="Family Member3" gid="296" x="196" y="170"/>
+  <object name="Family Member1" gid="296" x="71" y="167">
+   <properties>
+    <property name="sheet" value="person_4_sheet"/>
+   </properties>
+  </object>
+  <object name="Family Member2" gid="296" x="135" y="171">
+   <properties>
+    <property name="sheet" value="person_5_sheet"/>
+   </properties>
+  </object>
+  <object name="Family Member3" gid="296" x="196" y="170">
+   <properties>
+    <property name="sheet" value="person_6_sheet"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

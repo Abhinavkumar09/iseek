@@ -1,13 +1,13 @@
-Q.scene("setup",function(stage) {
+Q.scene("market_research_0_setup",function(stage) {
 	stage.name = "setup";
-	Q.stageTMX("VirtualWorld.tmx", stage);
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
 
-//	Q.audio.stop();
-//	Q.audio.play("Tavern.wav", {loop: true});
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
-	var Mira = Q("Player").first();
-	stage.player = Mira;
-	stage.add("viewport").follow(Mira);
+	var player = Q("Player").first();
+	stage.player = player;
+	stage.add("viewport").follow(player);
 
 	stage.oncompletion = function() {
 		setTimeout(function(){

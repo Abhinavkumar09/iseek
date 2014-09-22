@@ -2,19 +2,18 @@ console.log("loaded health element");
 
 Q.scene("health_1",function(stage) {
 	stage.name = "health_1";
-	Q.stageTMX("VirtualWorld.tmx", stage);
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
 
-//	Q.audio.stop();
-//	Q.audio.play("Tavern.wav", {loop: true});
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
-	var Mira = Q("Player").first();
-	stage.player = Mira;
-	Mira.add("KeyCarrier");
-	stage.add("viewport").follow(Mira);
+	var player = Q("Player").first();
+	stage.player = player;
+	player.add("KeyCarrier");
+	stage.add("viewport").follow(player);
 	//Mira.addMaterialContainer("Player");
 
-	Mira.addKeyContainer();
-
+	player.addKeyContainer();
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
@@ -25,36 +24,36 @@ Q.scene("health_1",function(stage) {
 		
 		if(b.p.name == "HealthCenter" && !(b.p.isInteractable)){
 			b.collide = function(col) {
-				Sahiya.info({duration:-1, showOnMiniMap: true});
+				Nurse.info({duration:-1, showOnMiniMap: true});
 			}
 			b.on("hit", b, "collide");
 		}
 		i += 1;
 	}
 
-	var Sahiya = new Q.Person({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
-	stage.insert(Sahiya);
-	
-	Sahiya.collision = function(col) {
+	var Nurse = new Q.Person({sheet: "nurse_sheet", frame: 0, x:400, y:800, isInteractable:true, name:"Nurse"});
+	stage.insert(Nurse);
+
+	Nurse.collision = function(col) {
 		if(Q.game.player.keys.length >= 3){ // assumed 'relationship' key attained at the end
 			var i = 0;
 			while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
-				b = Q("Building").at(i);
+				var b = Q("Building").at(i);
 				if(b.p.name == "HealthCenter"){
 					if(!b.p.isInteractable){
 						b.setInteractable(true);
-						this.p.labels = [
-							"So now you know what is important",
-							"for good health - a sound mind,",
-							"a healthy body and amiable relationship", 
-							"with those around you!",
-							"Now, you can enter the healthcenter"
-						];		
 					}					
 				}
 				i += 1;
 			}
-			Sahiya.quote(Sahiya.p.labels);		
+			this.p.labels = [
+				"So now you know what is important",
+				"for good health - a sound mind,",
+				"a healthy body and amiable relationship", 
+				"with those around you!",
+				"Now, you can enter the healthcenter"
+			];		
+			this.quote(this.p.labels);		
 		}
 		else if(Q.game.player.keys.length >= 2) { // assumed 'mind' key is attained second
 			this.p.labels = [
@@ -65,72 +64,6 @@ Q.scene("health_1",function(stage) {
 				"Look around for the 'relationship' key."
 			];
 			Anthony.info({duration:5, showOnMiniMap: true});		
-
-			Anthony.off("hit", Anthony, "collision");
-			Anthony.collision = function(col) {
-				if(Q.game.player.keys.length >= 3) {
-					Anthony.p.labels = [
-						"Congrats Mira! You now have the 'relationship' key."				
-					];
-					Anthony.quote(Anthony.p.labels);
-				} else if(Q.game.player.keys.length >= 2){
-					Anthony.p.labels = [
-							"Hi Mira. Let me check how strong your",
-							"relations are with your friends and family",
-							" ",
-							"You can then have the 'relationship' key"
-					];
-					// Anthony.quote({labels:Anthony.p.labels});
-					
-					var relationshipQuestions = ["Who is supportive in your life?", "Who makes your life harder?"];
-					var relationshipSurvey = Array(relationshipQuestions.length);
-					for(i = 0; i < relationshipSurvey.length; i++){
-						relationshipSurvey[i] = new Q.MultipleChoiceQuestion({
-									question: new Q.ImageText({
-										label: new Q.UI.Text({label: relationshipQuestions[i], type: Q.SPRITE_NONE, }),
-										fill: null,
-									}), 
-									choices: [
-										new Q.ImageText({
-											label: new Q.UI.Text({label: "Father", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-										new Q.ImageText({
-											label: new Q.UI.Text({label: "Mother", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-										new Q.ImageText({
-											label: new Q.UI.Text({label: "Brother", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-										new Q.ImageText({
-											label: new Q.UI.Text({label: "Sister", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-									],
-								})
-					}
-
-					form = new Q.Form(
-						{
-							content: relationshipSurvey,
-							context: Anthony,
-							func: "onquestioncompletion",
-							x: 900,
-							y: 900,
-						}
-					);
-	
-					stage.insert(form);
-				}
-				else if(Q.game.player.keys.length < 2)
-					Anthony.quote(["Hi"]);
-			};
-			Anthony.on("hit", Anthony, "collision");
 		}
 		else if(Q.game.player.keys.length >= 1) { // assumed 'body' key is attained first
 			this.p.labels = [
@@ -141,61 +74,7 @@ Q.scene("health_1",function(stage) {
 			];		
 			Akbar.info({duration:5, showOnMiniMap: true});		
 
-			Akbar.off("hit", Akbar, "collision");
-			Akbar.collision = function(col) {
-				if(Q.game.player.keys.length >= 2) {
-					Akbar.p.labels = [
-						"Congrats Mira! You now have the 'mind' key."				
-					];
-					Akbar.quote(Akbar.p.labels);
-				} else if(Q.game.player.keys.length >= 1) {
-					Akbar.p.labels = [
-						"Hi Mira. Answer these questions in",
-						"order to get the 'mind' key"				
-					];
-					// Akbar.quote(Akbar.p.labels);
-
-					var mindQuestion = new Q.MultipleChoiceQuestion({
-											question: new Q.ImageText({
-												label: new Q.UI.Text({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
-												fill: null,
-											}), 
-											choices: [
-												new Q.ImageText({
-													label: new Q.UI.Text({label: "Morning", type: Q.SPRITE_NONE}),
-													isSelectable: true,
-													fill: null,
-												}), 
-												new Q.ImageText({
-													label: new Q.UI.Text({label: "Evening", type: Q.SPRITE_NONE}),
-													isSelectable: true,
-													fill: null,
-												}), 
-												new Q.ImageText({
-													label: new Q.UI.Text({label: "Night", type: Q.SPRITE_NONE}),
-													isSelectable: true,
-													fill: null,
-												}), 
-											],
-										})
-
-					var form = new Q.Form(
-						{
-							content: [mindQuestion],
-							context: Akbar,
-							func: "onquestioncompletion",
-							x: 800,
-							y: 700,
-						}
-					);
-
-					stage.insert(form);
-				}
-				else if(Q.game.player.keys.length < 1)
-					Akbar.quote(["Hi"]);
-			};
-			Akbar.on("hit", Akbar, "collision");
-			Sahiya.quote(Sahiya.p.labels);
+			this.quote(this.p.labels);
 		}
 		else{
 			this.p.labels = [
@@ -207,66 +86,183 @@ Q.scene("health_1",function(stage) {
 			];
 			Amar.info({duration:5, showOnMiniMap: true});		
 
-			Amar.off("hit", Amar, "collision");
-			Amar.collision = function(col) {
-				if(Q.game.player.keys.length >= 1) {
-					Amar.p.labels = [
-						"Congrats Mira! You now have the 'body' key."
-					];
-				}
-				else if(Q.game.player.keys.length < 1)
-					Amar.p.labels = [
-					"नमस्ते Mira. In order to get the 'body' key, you need to ",
-					"complete certain activities.",
-					" ",
-					"Go home and complete as many of the 'body'",
-					"activities as you can"
-					];
-
-
-				Amar.quote(Amar.p.labels);
-				var i = 0;
-				while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
-					b = Q("Building").at(i);
-					if(b.p.name == "House") {
-						console.log("setInteractable");
-						b.setInteractable(true);
-					}
-					i += 1;
-				}
-			};
-			Amar.on("hit", Amar, "collision");
-			Sahiya.quote(Sahiya.p.labels);
+			this.quote(this.p.labels);
 		}		
 	};
-	Sahiya.on("hit", Sahiya, "collision");
+	Nurse.on("hit", Nurse, "collision");
 
-	var Amar = new Q.Person({asset: "People/pranav.png", x:1000, y:600, isInteractable:true, name:"Amar"});
+	var Amar = new Q.Person({sheet: "person_1_sheet", frame: 1, x:1000, y:600, isInteractable:true, name:"Amar"});
 	stage.insert(Amar);
 
-	var Akbar = new Q.Person({asset: "People/pranav.png", x:800, y:700, isInteractable:true, name:"Akbar"});
+	Amar.off("hit", Amar, "collision");
+	Amar.collision = function(col) {
+		if(Q.game.player.keys.length >= 1) {
+			Amar.p.labels = [
+				"Congrats Mira! You now have the 'body' key."
+			];
+		}
+		else if(Q.game.player.keys.length < 1)
+			Amar.p.labels = [
+			"नमस्ते Mira. In order to get the 'body' key, you need to ",
+			"complete certain activities.",
+			" ",
+			"Go home and complete as many of the 'body'",
+			"activities as you can"
+			];
+
+
+		Amar.quote(Amar.p.labels);
+		var i = 0;
+		while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
+			b = Q("Building").at(i);
+			if(b.p.name == "House") {
+				b.setInteractable(true);
+			}
+			i += 1;
+		}
+	};
+	Amar.on("hit", Amar, "collision");
+
+
+
+	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, name:"Akbar"});
 	stage.insert(Akbar);
 	
 	Akbar.onquestioncompletion = function () {
 		console.log("added mind key");
 		Q.game.player.keys.push("mind");
-		Mira.resetKeyContainer();
+		player.resetKeyContainer();
 	};
 
-	var Anthony = new Q.Person({asset: "People/pranav.png", x:900, y:900, isInteractable:true, name:"Anthony"});
+
+//	Akbar.off("hit", Akbar, "collision");
+	Akbar.collision = function(col) {
+		if(Q.game.player.keys.length >= 2) {
+			this.p.labels = [
+				"Congrats Mira! You now have the 'mind' key."				
+			];
+			this.quote(this.p.labels);
+		} else if(Q.game.player.keys.length >= 1) {
+			this.p.labels = [
+				"Hi Mira. Answer these questions in",
+				"order to get the 'mind' key"				
+			];
+			// Akbar.quote(Akbar.p.labels);
+
+			var mindQuestion = new Q.MultipleChoiceQuestion({
+									question: new Q.ImageText({
+										label: new Q.UI.Text({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
+										fill: null,
+									}), 
+									choices: [
+										new Q.ImageText({
+											label: new Q.UI.Text({label: "Morning", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+										new Q.ImageText({
+											label: new Q.UI.Text({label: "Evening", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+										new Q.ImageText({
+											label: new Q.UI.Text({label: "Night", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+									],
+								})
+
+			var form = new Q.Form({
+				content: [mindQuestion],
+				context: this,
+				func: "onquestioncompletion",
+//				x: 800,
+//				y: 700,
+			});
+
+			this.stage.insert(form);
+		}
+		else if(Q.game.player.keys.length < 1)
+			this.quote(["Hi"]);
+	};
+	Akbar.on("hit", Akbar, "collision");
+
+
+	var Anthony = new Q.Person({sheet: "person_3_sheet", frame: 1, x:900, y:900, name:"Anthony"});
 	stage.insert(Anthony);
 	
 	Anthony.onquestioncompletion = function () {
 		console.log("added relationship key");
 		Q.game.player.keys.push("relationship");
-		Mira.resetKeyContainer();
-		Sahiya.info({duration:5, showOnMiniMap:true});		
+		player.resetKeyContainer();
+		Nurse.info({duration:5, showOnMiniMap:true});		
 	};
 
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
+//	Anthony.off("hit", Anthony, "collision");
+	Anthony.collision = function(col) {
+		if(Q.game.player.keys.length >= 3) {
+			this.p.labels = [
+				"Congrats Mira! You now have the 'relationship' key."				
+			];
+			this.quote(this.p.labels);
+		} else if(Q.game.player.keys.length >= 2){
+			this.p.labels = [
+					"Hi Mira. Let me check how strong your",
+					"relations are with your friends and family",
+					" ",
+					"You can then have the 'relationship' key"
+			];
+			// Anthony.quote({labels:Anthony.p.labels});
+			
+			var relationshipQuestions = ["Who is supportive in your life?", "Who makes your life harder?"];
+			var relationshipSurvey = Array(relationshipQuestions.length);
+			for(i = 0; i < relationshipSurvey.length; i++){
+				relationshipSurvey[i] = new Q.MultipleChoiceQuestion({
+							question: new Q.ImageText({
+								label: new Q.UI.Text({label: relationshipQuestions[i], type: Q.SPRITE_NONE, }),
+								fill: null,
+							}), 
+							choices: [
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "Father", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "Mother", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "Brother", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+								new Q.ImageText({
+									label: new Q.UI.Text({label: "Sister", type: Q.SPRITE_NONE}),
+									isSelectable: true,
+									fill: null,
+								}), 
+							],
+						})
+			}
+
+			var form = new Q.Form(
+				{
+					content: relationshipSurvey,
+					context: this,
+					func: "onquestioncompletion",
+				}
+			);
+
+			stage.insert(form);
+		}
+		else if(Q.game.player.keys.length < 2)
+			this.quote(["Hi"]);
 	};
+	Anthony.on("hit", Anthony, "collision");
+
 
 //	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
 //	guru.trigger("newconcept", "Start");
@@ -288,15 +284,15 @@ Q.scene("health_1_House", function(stage) {
 
 
 	// Mira
-	var Mira = Q("Player").first();
-	Mira.add("KeyCarrier");
-	Mira.addKeyContainer();
-	stage.player = Mira;
+	var player = Q("Player").first();
+	player.add("KeyCarrier");
+	player.addKeyContainer();
+	stage.player = player;
 
-	Mira.onquestioncompletion = function () {
+	player.onquestioncompletion = function () {
 		console.log("added body key");
 		Q.game.player.keys.push("body");
-		Mira.resetKeyContainer();
+		player.resetKeyContainer();
 	};
 
 	var bodyActivities = ["eat nutritional food", "take supplements", "keep up hygiene", "rest", "do physical activity", "maintain proper urination \nsanitation"];
@@ -325,15 +321,15 @@ Q.scene("health_1_House", function(stage) {
 	form = new Q.Form(
 		{
 			content: bodyQuestions,
-			context: Mira,
-			button_type: Q.ControlButtons.NEXT,
+			context: player,
+//			button_type: Q.ControlButtons.NEXT,
 			func: "onquestioncompletion",
 			x: 400,
 			y: 300
 		}
 	);
 	
-	Mira.gotonext = function (f) {
+	player.gotonext = function (f) {
 		stage.insert(f.p.next);
 	};
 
