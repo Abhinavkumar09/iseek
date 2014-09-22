@@ -14,7 +14,7 @@ Q.Sprite.extend("Person", {
 			covered_material: 0,
 			duration: 1,
 		}));
-		this.add("Talk, Pulsate");
+		this.add("Talk");
 
 		if(this.p.isInteractable)
 			this.on("hit", this, "collision");		
@@ -22,7 +22,6 @@ Q.Sprite.extend("Person", {
 
 
 	collision: function(col) {
-		console.log("first collision");
 		this.quote(this.p.labels);
 	},
 
@@ -255,14 +254,6 @@ Q.Person.extend("Buyer", {
 
 });
 
-
-Q.Person.extend("Teacher", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			asset: "mira_1.png"
-		}));
-	},
-});
 
 
 Q.Person.extend("Enterpreneur", {

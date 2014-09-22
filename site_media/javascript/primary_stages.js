@@ -487,7 +487,7 @@ Q.Sprite.extend("GameStats", {
 		});
 
 		this.stage.insert(this.p.box, this);
-		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: "mira_sheet", frame:1});
+		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: "player_sheet", frame:1});
 		this.stage.insert(player, this);
 
 		var health_icon = new Q.Medal({asset: "Icons/health.png", x: player.p.x + 80, y: player.p.y - 15, w: 100, });
@@ -515,6 +515,5 @@ Q.scene("LevelSelector", function(stage) {
 	stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 5, y: Q.height/2, h: Q.height, w: Q.width/2 - 10, });
 	stage.insert(stage.gamestats);
 
-	Q.audio.stop();
-	//Q.audio.play("Lazy_Day.wav", {loop: true});
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
 });

@@ -295,6 +295,8 @@ Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 		this.stage.insert(sprite, this);
 		if(this.p.layout != Q.UI.Layout.NONE)
 			this.relayout();
+		if(this.p.ifFit)
+			this.fit();
 		if(this.p.align != 0)
 			this.realign();
 		// Bind to destroy

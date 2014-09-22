@@ -108,3 +108,9 @@ Add slow and fast speed for Mira
 Add blinking 
 
 Take picture for SHG members and using app
+
+Internationalize the language
+
+Visual pointer to where the player needs to go
+
+Trash (we already have components). Show a pile of junk as well, and penalize the player when the player throws the trash to the pile and reward when they throw it in the trash bin.

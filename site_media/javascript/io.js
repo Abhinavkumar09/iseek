@@ -65,27 +65,26 @@ function timeoutLoop(fn, reps, delay) {
 	Define what data needs to be stored
 	And then store/restore them
 */
-function sync(ifServerToClient) {
+function syncToServer() {
 	// game.person
-	if(! ifServerToClient) {
-		console.log("client to server");
-		if(game.sync_data["employee"]) {
-			console.log("push game.person");
-			$.post( "/editEmployee/", {'id': game.player.id, 'name': game.player.name, 'phone': game.player.phone}, function( data ) {
-				game.sync_data["employee"] = false;
-			});
-		}
+	console.log("client to server");
+	if(game.sync_data["employee"]) {
+		console.log("push game.person");
+		$.post("/editEmployee/", {'id': game.player.id, 'name': game.player.name, 'phone': game.player.phone}, function( data ) {
+			delete game.sync_data["employee"];
+		});
 	}
-	else {
-		console.log("server to client");
-		if(! game.sync_data["employee"]) {
-			console.log("fetch game.person");
-			$.post( "/readEmployee/", {'name': 'Administrator'}, function( data ) {
-				game.player.id = data[0]['id'];
-				game.player.name = data[0]['name'];
-				game.player.phone = data[0]['work_phone'];
-			});
-		}
+}
+
+function syncFromServer() {
+	console.log("server to client");
+	if(! game.sync_data["employee"]) {
+		console.log("fetch game.person");
+		$.post( "/readEmployee/", {'name': 'Administrator'}, function( data ) {
+			game.player.id = data[0]['id'];
+			game.player.name = data[0]['name'];
+			game.player.phone = data[0]['work_phone'];
+		});
 	}
 }
 

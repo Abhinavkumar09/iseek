@@ -115,11 +115,14 @@ Q.Sprite.extend("MiniMapInfo", {
 	},
 
 	show: function(location) {
-		console.log("show");
 		this.p.location = location;
 		if(this.p.location) {
+			console.log("show");
 			this.p.x = location.p.x * this.p.minimap_width / 80 / 32 - this.p.minimap_width / 2;
 			this.p.y = location.p.y * this.p.minimap_height / 60 / 32 - this.p.minimap_height / 2;
+		}
+		else {
+		console.log("stop showing");
 		}
 	},
 

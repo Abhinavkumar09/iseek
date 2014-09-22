@@ -2,13 +2,13 @@ Q.scene("health_2",function(stage) {
 	console.log("loaded test");
 	stage.name = "health_2";
 	Q.stageTMX("VirtualWorld.tmx", stage);
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
-//	Q.audio.stop();
-//	Q.audio.play("Tavern.wav", {loop: true});
 
-	var Mira = Q("Player").first();
-	stage.add("viewport").follow(Mira);
-	Mira.addMaterialContainer("Player");
+	var player = Q("Player").first();
+	stage.add("viewport").follow(player);
+	player.addMaterialContainer("Player");
+	stage.player = player;
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
@@ -20,27 +20,26 @@ Q.scene("health_2",function(stage) {
 		i += 1;
 	}
 
-	var Sahiya = new Q.Person({asset: "People/sahiya.png", x:400, y:800, isInteractable:true, name:"Sahiya"});
-	stage.insert(Sahiya);
-
-	Sahiya.info({duration:4});
+	var nurse = new Q.Person({sheet: "nurse_sheet", frame: 1, x:400, y:800, isInteractable:true, name:"nurse"});
+	stage.insert(nurse);
+	nurse.info({duration:4});
 	
-	Sahiya.off("hit", Sahiya, "collision");
-	Sahiya.collision = function(col) {
-		if(Q.game.player.keys.length >= 3){
+	nurse.off("hit", nurse, "collision");
+	nurse.collision = function(col) {
+		if(Q.game.player.keys.length >= -1){
 			this.p.labels = [
 				"Mira, you now know what is important",
 				"for good health. Why don't you go around",
 				"helping people get what they lack? "
 			];
 		}
-		Sahiya.quote(Sahiya.p.labels);
+		this.quote(this.p.labels);
 	};
-	Sahiya.on("hit", Sahiya, "collision");
+	nurse.on("hit", nurse, "collision");
 
 	var countAnswered = 0;
 	
-	var Amar = new Q.Person({asset: "People/pranav.png", x:1000, y:600, isInteractable:true, name:"Amar"});
+	var Amar = new Q.Person({sheet: "person_3_sheet", frame: 1, x:1000, y:600, isInteractable:true, name:"Amar"});
 	stage.insert(Amar);
 	
 	var testQuestions = ["Oh, hello! How are you? I’m still fit \n and better than everyone else! I wish \nI had more friends though and that I was \nmore motivated to finish my work for \nmy business. Can you help me?",
@@ -84,7 +83,7 @@ Q.scene("health_2",function(stage) {
 
 	Amar.off("hit", Amar, "collision");
 	Amar.collision = function(col) {
-		if(Q.game.player.keys.length >= 3){
+		if(Q.game.player.keys.length >= -1){
 			forms[0].p.context = Amar;
 			forms[0].p.x = Amar.p.x;
 			forms[0].p.y = Amar.p.y;
@@ -105,12 +104,12 @@ Q.scene("health_2",function(stage) {
 		}
 	};
 
-	var Akbar = new Q.Person({asset: "People/pranav.png", x:800, y:700, isInteractable:true, name:"Akbar"});
+	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, isInteractable:true, name:"Akbar"});
 	stage.insert(Akbar);
 	
 	Akbar.off("hit", Akbar, "collision");
 	Akbar.collision = function(col) {
-		if(Q.game.player.keys.length >= 3){
+		if(Q.game.player.keys.length >= -1){
 			forms[1].p.context = Akbar;
 			forms[1].p.x = Akbar.p.x;
 			forms[1].p.y = Akbar.p.y;
@@ -131,12 +130,12 @@ Q.scene("health_2",function(stage) {
 		}
 	};
 
-	var Anthony = new Q.Person({asset: "People/pranav.png", x:900, y:900, isInteractable:true, name:"Anthony"});
+	var Anthony = new Q.Person({sheet: "person_1_sheet", frame: 1, x:900, y:900, isInteractable:true, name:"Anthony"});
 	stage.insert(Anthony);
 
 	Anthony.off("hit", Anthony, "collision");
 	Anthony.collision = function(col) {
-		if(Q.game.player.keys.length >= 3){
+		if(Q.game.player.keys.length >= -1){
 			forms[2].p.context = Anthony;
 			forms[2].p.x = Anthony.p.x;
 			forms[2].p.y = Anthony.p.y;
@@ -173,12 +172,12 @@ Q.scene("health_2_HealthCenter", function(stage) {
 	stage.insert(exit_door);
 
 	// Mira
-	var Mira = Q("Player").first();
-	Mira.add("KeyCarrier");
-	Mira.addKeyContainer();
-	stage.player = Mira;
+	var player = Q("Player").first();
+	player.add("KeyCarrier");
+	player.addKeyContainer();
+	stage.player = player;
 
-	Mira.onquestioncompletion = function () {
+	player.onquestioncompletion = function () {
 		setTimeout(function(){
 			Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 			stage.pause();
@@ -187,7 +186,7 @@ Q.scene("health_2_HealthCenter", function(stage) {
 
 
 	setTimeout(function(){
-		Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element, nextStage: Q.STAGE_LEVEL_LEARNING_MODULE, context: Mira, func: "onquestioncompletion"});
+		Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {questions: stage.options.element.element, nextStage: Q.STAGE_LEVEL_LEARNING_MODULE, context: player, func: "onquestioncompletion"});
 	}, 500);
 });
 

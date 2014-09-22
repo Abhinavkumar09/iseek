@@ -349,7 +349,7 @@ var Quintus = function Quintus(opts) {
     if (obj.length === +obj.length) {
       for (var i = 0, l = obj.length; i < l; i++) {
         lastresult = iterator.call(context, obj[i], i, arg1,arg2);
-//        if(result) { return result; }
+        if((lastresult) && (! lastresult.obj)) { return lastresult; }
         if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
       }
 //      return false;
@@ -867,6 +867,8 @@ var Quintus = function Quintus(opts) {
         // `on` or the object itself.
         for(var i=0,len = this.listeners[event].length;i<len;i++) {
           var listener = this.listeners[event][i];
+		if(! listener)
+			console.log("event: " + event);
           listener[1].call(listener[0],data);
         }
       }
@@ -1665,9 +1667,9 @@ var Quintus = function Quintus(opts) {
   @param {Function} errorCallback
   */
   Q.loadAssetWebAudio = function(key,src,callback,errorCallback) {
-    var request = new XMLHttpRequest(),
-        baseName = Q._removeExtension(src),
-        extension = Q._audioAssetExtension();
+    var request = new XMLHttpRequest();
+    var baseName = Q._removeExtension(src);
+    var extension = Q._audioAssetExtension();
 
     request.open("GET", Q.assetUrl(Q.options.audioPath,baseName + "." + extension), true);
     request.responseType = "arraybuffer";
