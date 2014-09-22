@@ -239,7 +239,7 @@ function Game(name) {
 	};
 
 	for( audio in this.AUDIO.RESOURCES) {
-		//this.resources.push(this.AUDIO.RESOURCES[audio]);
+		this.resources.push(this.AUDIO.RESOURCES[audio]);
 	}
 
 	var G = this;
