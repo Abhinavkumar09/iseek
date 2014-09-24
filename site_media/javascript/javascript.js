@@ -292,7 +292,7 @@ var Q = Quintus({
 			height:  600,
 		})
 		.enableSound()
-		.controls(true);
+		.controls(true, [[],[],[],[],[]]);
 
 
 

@@ -135,6 +135,7 @@ Q.UI.Layout.extend("Video", {
 	},
 
 	draw: function(ctx) {
+		console.log("x, y, w, h: " + (-this.p.w/2) + ", " + (-this.p.h/2) + ", " + this.p.w + ", " + this.p.h);
 		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
 	},
 });

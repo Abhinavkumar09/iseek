@@ -3882,7 +3882,6 @@ Quintus.Input = function(Q) {
     Q.input.keyboardControls();
 
     if(joypad) {
-      var controls = controls;
       if(controls == null) {
         controls = [ [],[],[],['action','b'],['fire','a']]
       }
