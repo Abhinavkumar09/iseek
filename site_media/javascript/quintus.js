@@ -348,18 +348,19 @@ var Quintus = function Quintus(opts) {
     if (obj == null) { return; }
     if (obj.length === +obj.length) {
       for (var i = 0, l = obj.length; i < l; i++) {
-        lastresult = iterator.call(context, obj[i], i, arg1,arg2);
-        if((lastresult) && (! lastresult.obj)) { return lastresult; }
-        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
+//        lastresult = iterator.call(context, obj[i], i, arg1,arg2);
+//        if((lastresult) && (! lastresult.obj)) { return lastresult; }
+//        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
+        result = iterator.call(context, obj[i], i, arg1,arg2);
+        if(result) return result;
       }
-//      return false;
     } else {
       for (var key in obj) {
-        lastresult = iterator.call(context, obj[key], key, arg1,arg2);
-//        if(result) { return result; }
-        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
+//        lastresult = iterator.call(context, obj[key], key, arg1,arg2);
+//        if(lastresult) { if(!result) result = lastresult; else if(result.obj.p.z < lastresult.obj.p.z) result = lastresult; }
+        result = iterator.call(context, obj[key], key, arg1,arg2);
+        if(result) { return result; }
       }
-//      return false;
     }
     if(result)
       return result;
@@ -3882,7 +3883,6 @@ Quintus.Input = function(Q) {
     Q.input.keyboardControls();
 
     if(joypad) {
-      var controls = controls;
       if(controls == null) {
         controls = [ [],[],[],['action','b'],['fire','a']]
       }

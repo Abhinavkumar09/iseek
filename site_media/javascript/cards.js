@@ -135,6 +135,7 @@ Q.UI.Layout.extend("Video", {
 	},
 
 	draw: function(ctx) {
+		//console.log("x, y, w, h: " + (-this.p.w/2) + ", " + (-this.p.h/2) + ", " + this.p.w + ", " + this.p.h);
 		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
 	},
 });
@@ -172,6 +173,9 @@ Q.UI.Layout.extend("ImageText", {
 		if(adjustedP.layoutType == Q.ImageText.LEFT_POSITION)
 			layout = Q.UI.Layout.HORIZONTAL;
 
+//		if(adjustedP.isSelectable) {
+//			adjustedP.type =  Q.SPRITE_NONE;
+//		}
 		this._super(Q._defaults(adjustedP, {layout: layout, }));
 
 		this.on("inserted");
@@ -224,7 +228,7 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 		this._super(Q._defaults(p, {
 			w: 400,
 			h: 500,
-			type: Q.SPRITE_NONE,
+			type: Q.SPRITE_PURE_UI,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 0,
 			align: Q.UI.Layout.LEFT_ALIGN,
@@ -393,29 +397,30 @@ Q.UI.Layout.extend("Card", {
 			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
 			fill: "rgba(255, 255, 255, 1)",
 			radius: 0,
-			shadow: 5,
-			border: 2,
 		}));
 
 	},
 
 	destroyed: function() {
-		this.stage.player.p.stepDistance = 32; 
+		this.p.context.unpause();
+//		this.stage.player.p.stepDistance = 32; 
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
 	},
 
 	movefront: function() {
-		this.stage.player.p.stepDistance = 0; 
+		this.p.context.pause();
+//		this.stage.player.p.stepDistance = 0; 
 
-		if(this.stage.viewport) {
-			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
-			this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
-		}
+//		if(this.stage.viewport) {
+//			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
+//			this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
+//		}
 	},
 
 	inserted: function() {
+		this.p.context.pause();
 //		this.insert(this.p.content);
 //		this.p.content.p.card = this;
 	},
@@ -618,19 +623,20 @@ Q.Card.extend("BusinessCardForm", {
 		this.insert(player);
 
 		var rows = [];
-		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+//		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+		var name = new Q.UI.WrappableText({label: "Name", w: 100, h: 300, x: 0, y: 0});
 		this.ninput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.name + "' />", x: 0, y: 0});
 		rows.push([name, this.ninput]);
 
-		var address = new Q.UI.Text({label: "Address", x: 0, y: 0});
+		var address = new Q.UI.WrappableText({label: "Address", w: 100, x: 0, y: 0});
 		this.ainput = new Q.UI.HTMLElement({html: "<textarea width= 200 height = 50>" + this.p.person.address + "</textarea>", x: 0, y: 0});
 		rows.push([address, this.ainput]);
 
-		var phone = new Q.UI.Text({label: "Phone", x: 0, y: 0});
+		var phone = new Q.UI.WrappableText({label: "Phone", w:100, x: 0, y: 0});
 		this.pinput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.phone + "' />", x: 0, y: 0});
 		rows.push([phone, this.pinput]);
 
-		var skill = new Q.UI.Text({label: "Skill", x: 0, y: 0});
+		var skill = new Q.UI.WrappableText({label: "Skill", w: 100, x: 0, y: 0});
 		this.sinput = new Q.UI.HTMLElement({html: "<select> <option value='Knitting'>Knitting</option><option value='Weaving'>Weaving</option><option value='Sowing'>Sowing</option> </select>", x: 0, y: 0});
 		rows.push([skill, this.sinput]);
 

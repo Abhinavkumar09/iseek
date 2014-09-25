@@ -19,7 +19,7 @@ Q.scene("LevelFinished",function(stage) {
 
 	button.on("click",function() {
 		Q.clearStage(Q.STAGE_LEVEL_SCORECARD);
-		Q.clearStage(Q.STAGE_LEVEL_DIALOG);
+//		Q.clearStage(Q.STAGE_LEVEL_DIALOG);
 		Q.clearStage(Q.STAGE_LEVEL_LEARNING_MODULE);
 		Q.clearStage(Q.STAGE_LEVEL_PRIMARY);
 		Q.clearStage(Q.STAGE_LEVEL_NAVIGATION);
@@ -95,64 +95,37 @@ Q.scene("TransitionScene", function(stage) {
 });
 
 Q.scene("Dialog", function(stage) {
-	var box = stage.insert(new Q.UI.Container({
-		x: Q.width/2, 
-		y: Q.height/2, 
-		fill: "rgba(0,0,0,0.5)"
-	}));
+			var mindQuestion = new Q.MultipleChoiceQuestion({
+									question: new Q.ImageText({
+										label: new Q.UI.WrappableText({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
+										fill: null,
+									}), 
+									choices: [
+										new Q.ImageText({
+											label: new Q.UI.WrappableText({label: "Morning", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+										new Q.ImageText({
+											label: new Q.UI.WrappableText({label: "Evening", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+										new Q.ImageText({
+											label: new Q.UI.WrappableText({label: "Night", type: Q.SPRITE_NONE}),
+											isSelectable: true,
+											fill: null,
+										}), 
+									],
+								})
 
-	if(stage.options.dialog) {
-		var label = box.insert(new Q.UI.Text({x:10, y: 0, label: stage.options.dialog, align: "center", color: "white", size: 12, lineHeight: 1.2 }));
-		var button = box.insert(new Q.UI.Button({ x: 0, y: label.p.h/2+50, fill: "#CCCCCC", label: "Continue" }));
-		button.on("click",function() {
-			Q.stage(stage.options.nextStage).unpause();
-			Q.clearStage(Q.STAGE_LEVEL_DIALOG);	
-			Q("Player", Q.STAGE_LEVEL_PRIMARY).first().resetKeyContainer();
-			stage.options.context[stage.options.func]();
-		});
-		box.fit(20);
-	}
-	else if(stage.options.questions) {
-		var questionnaire = new Q.Questionnaire({x: 400, y: 300, w: 611, h: 150, questions: stage.options.questions});
-		stage.insert(questionnaire);
+			var form = new Q.Form({
+				content: [mindQuestion],
+				context: stage,
+				func: "onquestioncompletion_akbar",
+			});
 
-		questionnaire.oncompletion = function() {
-			stage.options.context[stage.options.func]();
-			Q.stage(stage.options.nextStage).unpause();
-			Q.clearStage(Q.STAGE_LEVEL_DIALOG);
-		}
-
-		questionnaire.show(true);
-		box.fit(20);
-	}
-	else if(stage.options.done) {
-		var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Continue" }));
-		var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, label: "Done!" }));
-		button.on("click",function() {
-			Q.clearStage(Q.STAGE_LEVEL_DIALOG);
-			Q.clearStage(Q.STAGE_LEVEL_LEARNING_MODULE);
-			Q.clearStage(Q.STAGE_LEVEL_PRIMARY);
-			Q.clearStage(Q.STAGE_LEVEL_NAVIGATION);
-			Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
-		});
-		box.fit(20);
-	}
-
-	Q.stage(stage.options.nextStage).pause();
-});
-
-Q.scene("DialogBox",function(stage) {
-	var box = stage.insert(new Q.UI.Container({
-		x: Q.width/2, 
-		y: Q.height/2, 
-		fill: "rgba(0,0,0,0.5)"
-	}));
-
-	var button = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Continue" }))         
-	var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, label: stage.options.label }));
-	button.on("click",function() {
-		Q.clearStage(Q.STAGE_LEVEL_DIALOG);
-	});
+//			stage.insert(form);
 });
 
 

@@ -3,12 +3,12 @@ Q.Sprite.extend("Person", {
 		this._super(Q._defaults(p, {
 			x: 200,
 			y: 300,
-			z: 1,
+			z: Q.PLAYER_Z,
 			gravity: 0,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_COLLIDABLE,
 			isInteractable: false,
-			labels: ["Hi!",],
+			label: "Hi!",
 
 			time_spent: 0,
 			covered_material: 0,
@@ -22,7 +22,7 @@ Q.Sprite.extend("Person", {
 
 
 	collision: function(col) {
-		this.quote(this.p.labels);
+		this.quote(this.p.label);
 	},
 
 });

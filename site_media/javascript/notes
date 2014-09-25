@@ -114,3 +114,28 @@ Internationalize the language
 Visual pointer to where the player needs to go
 
 Trash (we already have components). Show a pile of junk as well, and penalize the player when the player throws the trash to the pile and reward when they throw it in the trash bin.
+
+
+Back button
+
+
+Scale the game according to the screen
+
+
+Save and restore stage
+
+
+Sync product information with openERP (and formula list)
+
+Add the first screen which asks if the player wants to go for learning or running the real game
+
+Priority:
+0) Entering personal information (including photos of the player)
+1) Entering the product information (including formula)
+2) Sale/Purchase activivities (pull in informtion from the openERP) (send text messages/emails to the senders/buyer)
+3) Profit/Loss information
+4) Add/remove SHG members
+5) Pick trash from the village
+6) 
+
+
