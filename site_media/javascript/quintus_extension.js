@@ -4,7 +4,7 @@ Quintus.UI_extension = function(Q) {
   Q.UI.WrappableText = Q.Sprite.extend("UI.WrappableText", {
     init: function(p,defaultProps) {
       this._super(Q._defaults(p||{},defaultProps),{
-        type: Q.SPRITE_UI,
+        type: Q.SPRITE_NONE,
         size: 24,
 		w: Q.width - 10,
 		h: 100,

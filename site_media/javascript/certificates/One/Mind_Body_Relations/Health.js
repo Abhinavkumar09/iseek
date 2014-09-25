@@ -74,21 +74,13 @@ Q.scene("health_1",function(stage) {
 	Amar.off("hit", Amar, "collision");
 	Amar.collision = function(col) {
 		if(Q.game.player.keys.length >= 1) {
-			Amar.p.labels = [
-				"Congrats Mira! You now have the 'body' key."
-			];
+			Amar.p.label = "Congrats Mira! You now have the 'body' key.";
 		}
 		else if(Q.game.player.keys.length < 1)
-			Amar.p.labels = [
-			"नमस्ते Mira. In order to get the 'body' key, you need to ",
-			"complete certain activities.",
-			" ",
-			"Go home and complete as many of the 'body'",
-			"activities as you can"
-			];
+			Amar.p.label = "नमस्ते Mira. In order to get the 'body' key, you need to complete certain activities. Go home and complete as many of the 'body' activities as you can";
 
 
-		Amar.quote(Amar.p.labels);
+		Amar.bottom_quote(Amar.p.label);
 		var i = 0;
 		while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 			b = Q("Building").at(i);
@@ -120,22 +112,22 @@ Q.scene("health_1",function(stage) {
 		} else if(Q.game.player.keys.length >= 1) {
 			var mindQuestion = new Q.MultipleChoiceQuestion({
 									question: new Q.ImageText({
-										label: new Q.UI.WrappableText({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
+										label: new Q.UI.WrappableText({label: "What time of the day are you most happy ?"}),
 										fill: null,
 									}), 
 									choices: [
 										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Morning", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Morning"}),
 											isSelectable: true,
 											fill: null,
 										}), 
 										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Evening", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Evening"}),
 											isSelectable: true,
 											fill: null,
 										}), 
 										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Night", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Night"}),
 											isSelectable: true,
 											fill: null,
 										}), 
@@ -151,7 +143,7 @@ Q.scene("health_1",function(stage) {
 			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
 		else if(Q.game.player.keys.length < 1)
-			this.quote("Hi");
+			this.bottom_quote("Hi");
 	};
 	Akbar.on("hit", Akbar, "collision");
 
@@ -177,27 +169,27 @@ Q.scene("health_1",function(stage) {
 			for(i = 0; i < relationshipSurvey.length; i++){
 				relationshipSurvey[i] = new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.WrappableText({label: relationshipQuestions[i], type: Q.SPRITE_NONE, }),
+								label: new Q.UI.WrappableText({label: relationshipQuestions[i]}),
 								fill: null,
 							}), 
 							choices: [
 								new Q.ImageText({
-									label: new Q.UI.WrappableText({label: "Father", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Father"}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.WrappableText({label: "Mother", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Mother"}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.WrappableText({label: "Brother", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Brother"}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.WrappableText({label: "Sister", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Sister"}),
 									isSelectable: true,
 									fill: null,
 								}), 
@@ -216,7 +208,7 @@ Q.scene("health_1",function(stage) {
 			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
 		else if(Q.game.player.keys.length < 2)
-			this.quote("Hi");
+			this.bottom_quote("Hi");
 	};
 	Anthony.on("hit", Anthony, "collision");
 
@@ -257,17 +249,17 @@ Q.scene("health_1_House", function(stage) {
 	for(i = 0; i < bodyQuestions.length; i++){
 		bodyQuestions[i] = new Q.MultipleChoiceQuestion({
 					question: new Q.ImageText({
-						label: new Q.UI.WrappableText({label: "Did you " + bodyActivities[i] + " ?", w: 300, h: 200, type:Q.SPRITE_NONE}),
+						label: new Q.UI.WrappableText({label: "Did you " + bodyActivities[i] + "?"}),
 						fill: null,
 					}), 
 					choices: [
 						new Q.ImageText({
-							label: new Q.UI.WrappableText({label: "Yes", w:300, h: 200, type:Q.SPRITE_NONE}),
+							label: new Q.UI.WrappableText({label: "Yes"}),
 							isSelectable: true,
 							fill: null,
 						}), 
 						new Q.ImageText({
-							label: new Q.UI.WrappableText({label: "No", w:300, h: 200, type:Q.SPRITE_NONE}),
+							label: new Q.UI.WrappableText({label: "No"}),
 							isSelectable: true,
 							fill: null,
 						}), 
