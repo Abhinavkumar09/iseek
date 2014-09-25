@@ -19,7 +19,7 @@ Q.scene("market_research_0_setup",function(stage) {
 	var card = new Q.BusinessCardForm({person: game.player, SHG: game.SHG, context: stage, oncompletion: "oncompletion"});
 
 	setTimeout(function(){
-		stage.insert(card);
+		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(card);
 	}, 1000);		
 
 

@@ -66,7 +66,7 @@ Q.scene("market_research_1_School",function(stage) {
 	stage.player = player;
 
 
-	player.onquestioncompletion = function () {
+	stage.onquestioncompletion = function () {
 		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 		stage.pause();
 	};
@@ -119,7 +119,7 @@ Q.scene("market_research_1_School",function(stage) {
 				],
 			}),
 		],
-		context: player,
+		context: stage,
 		func: "onquestioncompletion",
 	});
 

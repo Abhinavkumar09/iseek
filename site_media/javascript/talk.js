@@ -4,6 +4,18 @@ Q.component("Talk", {
 			this.stage.insert(new Q.Info(Q._defaults(options, {speaker: this})), this);
 		},
 
+		bottom_quote: function(label, mirror, duration) {
+			if(! mirror)
+				mirror = 1;
+
+			if(this.p.quote) {
+				this.p.quote.destroy();
+				this.p.quote = null;
+			}
+			this.p.quote = new Q.BottomQuote({speaker:this, label:label, duration: duration});
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(this.p.quote);
+		},
+
 		quote: function(labels, mirror, duration) {
 			if(! mirror)
 				mirror = 1;
@@ -56,6 +68,54 @@ Q.Sprite.extend("Info",{
 });
 
 
+
+
+Q.UI.Layout.extend("BottomQuote",{ 
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.HORIZONTAL, 
+			separation_x: 10,
+			name: "Quote",
+			labels: ["Hi!"],
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			time_spent: 0,
+			duration: 5,
+			speaker: null,
+			z: 10,
+			x: Q.width/2,
+			w: Q.width,
+			h: 120,
+			y: Q.height - 60,
+			border: 1,
+			fill: "white",
+		}));
+
+		this.ui_text = new Q.UI.WrappableText({label: this.p.label, type: Q.SPRITE_NONE, w: Q.width - 50, h: 50});
+		this.speaker_sprite = new Q.Sprite({sheet: this.p.speaker.p.sheet, asset: this.p.speaker.p.asset, frame: this.p.speaker.p.frame, x:-250});
+
+		this.on("inserted");
+	},
+
+	destroyed: function() {
+		this.ui_text.destroy();
+		this.speaker_sprite.destroy();
+	},
+
+	inserted: function() {
+		this.insert(this.ui_text);
+		this.insert(this.speaker_sprite);
+		this.fit(10);
+		this.p.y = Q.height - this.p.cy - 0;
+	},
+
+	step: function(dt) {
+		this.p.time_spent += dt;
+		if(this.p.time_spent > this.p.duration)
+			this.destroy();
+	}
+
+});
 
 
 Q.Sprite.extend("Quote",{ 

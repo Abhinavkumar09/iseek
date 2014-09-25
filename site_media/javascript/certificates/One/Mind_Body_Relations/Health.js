@@ -46,47 +46,24 @@ Q.scene("health_1",function(stage) {
 				}
 				i += 1;
 			}
-			this.p.labels = [
-				"So now you know what is important",
-				"for good health - a sound mind,",
-				"a healthy body and amiable relationship", 
-				"with those around you!",
-				"Now, you can enter the healthcenter"
-			];		
-			this.quote(this.p.labels);		
+			this.p.label = "So now you know what is important for good health - a sound mind, a healthy body and amiable relationship with those around you! Now, you can enter the healthcenter";		
+			this.bottom_quote(this.p.labels[0]);
 		}
 		else if(Q.game.player.keys.length >= 2) { // assumed 'mind' key is attained second
-			this.p.labels = [
-				"Mira, now you have the 'mind' and 'body' keys",
-				"but again, that is not enough. A sound mind",
-				"and a health body only flourish when you have",
-				"good relations with your friends and family.", 
-				"Look around for the 'relationship' key."
-			];
+			this.p.label = "Mira, now you have the 'mind' and 'body' keys but again, that is not enough. A sound mind and a health body only flourish when you have good relations with your friends and family. Look around for the 'relationship' key.";
 			Anthony.info({duration:5, showOnMiniMap: true});		
 		}
 		else if(Q.game.player.keys.length >= 1) { // assumed 'body' key is attained first
-			this.p.labels = [
-				"Mira, now you have the 'body' key but ",
-				"that is not enough for all round good health.",
-				"A healthy body is boosted by a sound mind.",
-				"Look around for the 'mind' key."
-			];		
+			this.p.label = "Mira, now you have the 'body' key but that is not enough for all round good health. A healthy body is boosted by a sound mind. Look around for the 'mind' key.";
 			Akbar.info({duration:5, showOnMiniMap: true});		
 
-			this.quote(this.p.labels);
+			this.bottom_quote(this.p.label);
 		}
 		else{
-			this.p.labels = [
-				"Hi Mira! The health center is closed as we have", 
-				"lost all the keys. People have taken the keys", 
-				"for their well being and have not returned them.", 
-				"Look around for the healthiest persons in the",
-				"community and get the keys from them."
-			];
+			this.p.label = "Hi Mira! The health center is closed as we have lost all the keys. People have taken the keys for their well being and have not returned them. Look around for the healthiest persons in the community and get the keys from them.";
 			Amar.info({duration:5, showOnMiniMap: true});		
 
-			this.quote(this.p.labels);
+			this.bottom_quote(this.p.label);
 		}		
 	};
 	Nurse.on("hit", Nurse, "collision");
@@ -128,7 +105,7 @@ Q.scene("health_1",function(stage) {
 	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, name:"Akbar"});
 	stage.insert(Akbar);
 	
-	Akbar.onquestioncompletion = function () {
+	stage.onquestioncompletion_akbar = function () {
 		console.log("added mind key");
 		Q.game.player.keys.push("mind");
 		player.resetKeyContainer();
@@ -138,35 +115,27 @@ Q.scene("health_1",function(stage) {
 //	Akbar.off("hit", Akbar, "collision");
 	Akbar.collision = function(col) {
 		if(Q.game.player.keys.length >= 2) {
-			this.p.labels = [
-				"Congrats Mira! You now have the 'mind' key."				
-			];
-			this.quote(this.p.labels);
+			this.p.label = "Congrats Mira! You now have the 'mind' key.";
+			this.bottom_quote(this.p.label);
 		} else if(Q.game.player.keys.length >= 1) {
-			this.p.labels = [
-				"Hi Mira. Answer these questions in",
-				"order to get the 'mind' key"				
-			];
-			// Akbar.quote(Akbar.p.labels);
-
 			var mindQuestion = new Q.MultipleChoiceQuestion({
 									question: new Q.ImageText({
-										label: new Q.UI.Text({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
+										label: new Q.UI.WrappableText({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
 										fill: null,
 									}), 
 									choices: [
 										new Q.ImageText({
-											label: new Q.UI.Text({label: "Morning", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Morning", type: Q.SPRITE_NONE}),
 											isSelectable: true,
 											fill: null,
 										}), 
 										new Q.ImageText({
-											label: new Q.UI.Text({label: "Evening", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Evening", type: Q.SPRITE_NONE}),
 											isSelectable: true,
 											fill: null,
 										}), 
 										new Q.ImageText({
-											label: new Q.UI.Text({label: "Night", type: Q.SPRITE_NONE}),
+											label: new Q.UI.WrappableText({label: "Night", type: Q.SPRITE_NONE}),
 											isSelectable: true,
 											fill: null,
 										}), 
@@ -175,16 +144,14 @@ Q.scene("health_1",function(stage) {
 
 			var form = new Q.Form({
 				content: [mindQuestion],
-				context: this,
-				func: "onquestioncompletion",
-//				x: 800,
-//				y: 700,
+				context: stage,
+				func: "onquestioncompletion_akbar",
 			});
 
-			this.stage.insert(form);
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
 		else if(Q.game.player.keys.length < 1)
-			this.quote(["Hi"]);
+			this.quote("Hi");
 	};
 	Akbar.on("hit", Akbar, "collision");
 
@@ -192,7 +159,7 @@ Q.scene("health_1",function(stage) {
 	var Anthony = new Q.Person({sheet: "person_3_sheet", frame: 1, x:900, y:900, name:"Anthony"});
 	stage.insert(Anthony);
 	
-	Anthony.onquestioncompletion = function () {
+	stage.onquestioncompletion_anthony = function () {
 		console.log("added relationship key");
 		Q.game.player.keys.push("relationship");
 		player.resetKeyContainer();
@@ -202,45 +169,35 @@ Q.scene("health_1",function(stage) {
 //	Anthony.off("hit", Anthony, "collision");
 	Anthony.collision = function(col) {
 		if(Q.game.player.keys.length >= 3) {
-			this.p.labels = [
-				"Congrats Mira! You now have the 'relationship' key."				
-			];
-			this.quote(this.p.labels);
+			this.p.label = "Congrats Mira! You now have the 'relationship' key.";
+			this.bottom_quote(this.p.label);
 		} else if(Q.game.player.keys.length >= 2){
-			this.p.labels = [
-					"Hi Mira. Let me check how strong your",
-					"relations are with your friends and family",
-					" ",
-					"You can then have the 'relationship' key"
-			];
-			// Anthony.quote({labels:Anthony.p.labels});
-			
 			var relationshipQuestions = ["Who is supportive in your life?", "Who makes your life harder?"];
 			var relationshipSurvey = Array(relationshipQuestions.length);
 			for(i = 0; i < relationshipSurvey.length; i++){
 				relationshipSurvey[i] = new Q.MultipleChoiceQuestion({
 							question: new Q.ImageText({
-								label: new Q.UI.Text({label: relationshipQuestions[i], type: Q.SPRITE_NONE, }),
+								label: new Q.UI.WrappableText({label: relationshipQuestions[i], type: Q.SPRITE_NONE, }),
 								fill: null,
 							}), 
 							choices: [
 								new Q.ImageText({
-									label: new Q.UI.Text({label: "Father", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Father", type: Q.SPRITE_NONE}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.Text({label: "Mother", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Mother", type: Q.SPRITE_NONE}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.Text({label: "Brother", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Brother", type: Q.SPRITE_NONE}),
 									isSelectable: true,
 									fill: null,
 								}), 
 								new Q.ImageText({
-									label: new Q.UI.Text({label: "Sister", type: Q.SPRITE_NONE}),
+									label: new Q.UI.WrappableText({label: "Sister", type: Q.SPRITE_NONE}),
 									isSelectable: true,
 									fill: null,
 								}), 
@@ -251,15 +208,15 @@ Q.scene("health_1",function(stage) {
 			var form = new Q.Form(
 				{
 					content: relationshipSurvey,
-					context: this,
-					func: "onquestioncompletion",
+					context: stage,
+					func: "onquestioncompletion_anthony",
 				}
 			);
 
-			stage.insert(form);
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
 		else if(Q.game.player.keys.length < 2)
-			this.quote(["Hi"]);
+			this.quote("Hi");
 	};
 	Anthony.on("hit", Anthony, "collision");
 
@@ -289,7 +246,7 @@ Q.scene("health_1_House", function(stage) {
 	player.addKeyContainer();
 	stage.player = player;
 
-	player.onquestioncompletion = function () {
+	stage.onquestioncompletion_amar = function () {
 		console.log("added body key");
 		Q.game.player.keys.push("body");
 		player.resetKeyContainer();
@@ -300,43 +257,35 @@ Q.scene("health_1_House", function(stage) {
 	for(i = 0; i < bodyQuestions.length; i++){
 		bodyQuestions[i] = new Q.MultipleChoiceQuestion({
 					question: new Q.ImageText({
-						label: new Q.UI.Text({label: "Did you " + bodyActivities[i] + " ?", type: Q.SPRITE_NONE, }),
+						label: new Q.UI.WrappableText({label: "Did you " + bodyActivities[i] + " ?", w: 300, h: 200, type:Q.SPRITE_NONE}),
 						fill: null,
 					}), 
 					choices: [
 						new Q.ImageText({
-							label: new Q.UI.Text({label: "Yes", type: Q.SPRITE_NONE}),
+							label: new Q.UI.WrappableText({label: "Yes", w:300, h: 200, type:Q.SPRITE_NONE}),
 							isSelectable: true,
 							fill: null,
 						}), 
 						new Q.ImageText({
-							label: new Q.UI.Text({label: "No", type: Q.SPRITE_NONE}),
+							label: new Q.UI.WrappableText({label: "No", w:300, h: 200, type:Q.SPRITE_NONE}),
 							isSelectable: true,
 							fill: null,
 						}), 
 					],
-				})
+				});
 	}
 
-	form = new Q.Form(
+	var form = new Q.Form(
 		{
 			content: bodyQuestions,
-			context: player,
-//			button_type: Q.ControlButtons.NEXT,
-			func: "onquestioncompletion",
-			x: 400,
-			y: 300
+			context: stage,
+			func: "onquestioncompletion_amar",
 		}
 	);
 	
-	player.gotonext = function (f) {
-		stage.insert(f.p.next);
-	};
-
-	
 	if(Q.game.player.keys.length == 0) {
 		setTimeout(function(){
-			stage.insert(form);
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}, 1000);		
 	}
 });
@@ -345,9 +294,9 @@ Q.scene("health_1_House", function(stage) {
 Q.scene("health_1_HealthCenter", function(stage) {
 	console.log("HealthCenter");
 	stage.stock_name = "HealthCenter";
-	stage.acceptable_materials = [];
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("healthcenter.tmx", stage);
 
 

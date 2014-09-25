@@ -9,7 +9,7 @@
    <properties>
     <property name="Class" value="Player"/>
     <property name="frame" value="1"/>
-    <property name="sheet" value="mira_sheet"/>
+    <property name="sheet" value="player_sheet"/>
    </properties>
   </tile>
  </tileset>

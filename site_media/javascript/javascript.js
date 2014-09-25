@@ -188,7 +188,7 @@ function Game(name) {
 		phone: "Phone",
 		money: 100,
 		health: 100,
-		keys: ['mind'],
+		keys: [],
 		change_money: function(price) {
 			this.money += price;
 			game.Q.state.trigger("change.money", this.money);
@@ -239,7 +239,7 @@ function Game(name) {
 	};
 
 	for( audio in this.AUDIO.RESOURCES) {
-		this.resources.push(this.AUDIO.RESOURCES[audio]);
+//		this.resources.push(this.AUDIO.RESOURCES[audio]);
 	}
 
 	var G = this;
@@ -284,12 +284,13 @@ var Q = Quintus({
 			resources: game.resources,
 			audioSupported: [ 'wav','mp3' ],
 		})
-		.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch, Audio, TMX")
+		.include("Sprites, Scenes, 2D, UI, UI_extension, Anim, Input, Touch, Audio, TMX")
 		.setup("game_canvas", {
-			maximize: "touch",
+//			maximize: "touch",
 			maximize: true,
 			width:   800,
 			height:  600,
+			scaleToFit: true,
 		})
 		.enableSound()
 		.controls(true, [[],[],[],[],[]]);
@@ -315,11 +316,16 @@ Q.STAGE_LEVEL_SCOREBOARD = 5;
 Q.STAGE_LEVEL_DIALOG = 6;
 Q.STAGE_LEVEL_TRANSITION = 8;
 
+Q.BACKGROUND_Z = 1;
+Q.PLAYER_Z = 2;
+Q.CARD_Z = 5;
+Q.FORGROUND_Z = 10;
+
 
 Q.SPRITE_UI = Q.SPRITE_PURE_UI | Q.SPRITE_MATERIAL | Q.SPRITE_PICKED_MATERIAL;
 
 
-Q.touch(Q.SPRITE_UI, [Q.STAGE_LEVEL_LEARNING_MODULE, Q.STAGE_LEVEL_SCORECARD, Q.STAGE_LEVEL_NAVIGATION, Q.STAGE_LEVEL_SCOREBOARD, Q.STAGE_LEVEL_DIALOG, Q.STAGE_LEVEL_PRIMARY]);
+Q.touch(Q.SPRITE_UI, [Q.STAGE_LEVEL_DIALOG, Q.STAGE_LEVEL_SCORECARD, Q.STAGE_LEVEL_NAVIGATION, Q.STAGE_LEVEL_SCOREBOARD, Q.STAGE_LEVEL_LEARNING_MODULE, Q.STAGE_LEVEL_PRIMARY]);
 
 
 
