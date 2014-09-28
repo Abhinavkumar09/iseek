@@ -32,7 +32,6 @@ Q.UI.Layout.extend("ControlButtons", {
 		var callback_buy = this.p.callback_buy;
 		var callback_sell = this.p.callback_sell;
 		var callback_back = this.p.callback_back;
-
 		var context = this.p.context;
 
 		if(this.p.button_type & Q.ControlButtons.PREV) {
@@ -332,7 +331,9 @@ Q.UI.Layout.extend("InfoQuestion", {
 */
 Q.ImageText.extend("Tile", {
 	init: function(p) {
-		this._super(p);
+		this._super(Q._defaults(p, {
+			isSelected: false,
+		}));
 
 		this.add("Touch");
 		this.on("touch");
@@ -354,6 +355,9 @@ Q.ImageText.extend("Tile", {
 				else
 					this[this.p["action"]](this.p.action_params);
 			}
+		}
+		else{
+			this.p.isSelected = true;
 		}
 	},
 });
@@ -576,6 +580,10 @@ Q.Card.extend("TileCard", {
 			count_r = 3;
 			count_c = 3;
 		}
+		else if(this.p.grid == Q.TileCard.GRID_3_1) {
+			count_r = 1;
+			count_c = 3;
+		}
 		for(var i = 0; i < this.p.tiles.length; i++) {
 			console.log("tile: " + i);
 			var r = Math.floor(i / count_c);
@@ -602,12 +610,14 @@ Q.TileCard.GRID_2_1 = 1;
 Q.TileCard.GRID_2_2 = 2;
 Q.TileCard.GRID_3_2 = 4;
 Q.TileCard.GRID_3_3 = 8;
+Q.TileCard.GRID_3_1 = 16;
 
 
 Q.Card.extend("Activity", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
 			layout: Q.UI.Layout.NONE,
+			// type: Q.ControlButtons.BACK,
 		}));
 		this.on("inserted");
 	},
@@ -627,8 +637,8 @@ Q.Card.extend("Activity", {
 		this.insert(this.p.description);
 
 		var type = 0;
-		
-		type += Q.ControlButtons.BACK;		
+		type += Q.ControlButtons.DONE;		
+
 		this.insert((new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25})));
 
 		this.insert(new Q.HealthBar({x: -120, y: 50, scoreUpto: this.p.scoreUpto[0]}));
@@ -644,6 +654,11 @@ Q.Card.extend("Activity", {
 		this.destroy();
 		this.stage.insert(this.p.back_card);
 	},
+
+	done: function() {
+		console.log("done");
+		this.destroy();
+	},
 });
 
 Q.Sprite.extend("HealthBar", {
@@ -653,7 +668,7 @@ Q.Sprite.extend("HealthBar", {
 			y: 35,
 			w: 30,
 			h: 75,
-			score: 30,
+			score: 50,
 			scoreUpto: 50,
 			maxScore: 100,
 			parameter: "health",

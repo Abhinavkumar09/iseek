@@ -78,6 +78,8 @@ function Game(name) {
 		//Activities
 		'CardObjects/fruitbasket.png', 'CardObjects/handwashanimation_sideleft.png', 'CardObjects/praycard.png', 
 		'CardObjects/singsongcard.png', 'CardObjects/sleepposter.png', 'CardObjects/vitamincard.png',
+		'CardObjects/cutnailscard.png', 'CardObjects/mosquitospraycard.png', 'CardObjects/padscard.png',
+		'CardObjects/healthkit.png',
 
 		//Buildings
 		'Building/workshop.png', 'Building/mira_house.png', 'Building/newHut.png',  'Building/school.png', 'Building/market.png', 'Building/healthcenter.png',
