@@ -3771,7 +3771,7 @@
   <object name="Mira" gid="226" x="387" y="557">
    <properties>
     <property name="frame" value="10"/>
-    <property name="sheet" value="mira_sheet"/>
+    <property name="sheet" value="player_sheet"/>
     <property name="sprite" value="person_animation"/>
    </properties>
   </object>
