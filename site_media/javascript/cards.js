@@ -838,6 +838,7 @@ Q.TileCard.extend("SHGCard", {
 
 	cancel: function() {
 		this.stage.insert(this.p.back_card);
+		this.destroy();
 	},
 });
 
