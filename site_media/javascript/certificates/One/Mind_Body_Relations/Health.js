@@ -47,11 +47,13 @@ Q.scene("health_1",function(stage) {
 				i += 1;
 			}
 			this.p.label = "So now you know what is important for good health - a sound mind, a healthy body and amiable relationship with those around you! Now, you can enter the healthcenter";		
-			this.bottom_quote(this.p.labels[0]);
+			this.bottom_quote(this.p.label);
 		}
 		else if(Q.game.player.keys.length >= 2) { // assumed 'mind' key is attained second
 			this.p.label = "Mira, now you have the 'mind' and 'body' keys but again, that is not enough. A sound mind and a health body only flourish when you have good relations with your friends and family. Look around for the 'relationship' key.";
 			Anthony.info({duration:5, showOnMiniMap: true});		
+			
+			this.bottom_quote(this.p.label);
 		}
 		else if(Q.game.player.keys.length >= 1) { // assumed 'body' key is attained first
 			this.p.label = "Mira, now you have the 'body' key but that is not enough for all round good health. A healthy body is boosted by a sound mind. Look around for the 'mind' key.";
@@ -91,8 +93,6 @@ Q.scene("health_1",function(stage) {
 		}
 	};
 	Amar.on("hit", Amar, "collision");
-
-
 
 	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, name:"Akbar"});
 	stage.insert(Akbar);

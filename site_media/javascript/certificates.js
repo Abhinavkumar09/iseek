@@ -33,6 +33,7 @@ function CertificateBadge(name, folder, image, isFinished, elements) {
 			if(this.elements[i].isFinished)
 				count++;
 		}
+		console.log("finished count: " + count);
 		return count;
 	};
 }
@@ -66,14 +67,6 @@ game.certificates = [
 				false, 
 				[
 					new CertificateElement(
-						"market_research_0_setup",
-						"Setup",
-						"setup.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School:false, SeemaWorkshop: false, HealthCenter: false}
-					),
-					new CertificateElement(
 						"market_research_1",
 						"Lecture",
 						"Lecture.js",
@@ -92,7 +85,7 @@ game.certificates = [
 				]
 			),
 			new CertificateBadge(
-				"Mind, Body, and ...", 
+				"Mind, Body, Relations", 
 				"Mind_Body_Relations",
 				"Objects/Medal/badge01.png",
 				false, 
@@ -109,6 +102,14 @@ game.certificates = [
 						"health_2",
 						"Test",
 						"Test.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
+					),
+					new CertificateElement(
+						"health_3",
+						"Activities",
+						"Activities.js",
 						false,
 						null,
 						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
@@ -144,6 +145,7 @@ for(var i = 0; i < game.certificates.length; i++) {
 		for(var k = 0; k < badge.elements.length; k++) {
 			var element = badge.elements[k];
 			var f = "/site_media/javascript/certificates/" + certificate.folder + "/"  + badge.folder + "/" + element.file;
+			console.log(f);
 			loadjscssfile(f, "js");
 		}
 	}

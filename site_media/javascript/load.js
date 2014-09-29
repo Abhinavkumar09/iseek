@@ -169,6 +169,7 @@ Q.loadTMX(Q.options.resources,function() {
 	Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {});
 //	Q.stageScene("market_research_1_House", Q.STAGE_LEVEL_LEARNING_MODULE, {sort:true,});
 //	Q.stageScene("test_cards", Q.STAGE_LEVEL_LEARNING_MODULE, {});
+	// Q.stageScene("health_3", Q.STAGE_LEVEL_PRIMARY, {element: Q.game.certificates[0].badges[0].elements[1]});
 }, {
 	progressCallback: function(loaded,total) {
 		var element = document.getElementById("loading_progress");

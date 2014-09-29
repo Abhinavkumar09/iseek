@@ -95,37 +95,6 @@ Q.scene("TransitionScene", function(stage) {
 });
 
 Q.scene("Dialog", function(stage) {
-			var mindQuestion = new Q.MultipleChoiceQuestion({
-									question: new Q.ImageText({
-										label: new Q.UI.WrappableText({label: "What time of the day are you \nmost happy ?", type: Q.SPRITE_NONE, }),
-										fill: null,
-									}), 
-									choices: [
-										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Morning", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Evening", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-										new Q.ImageText({
-											label: new Q.UI.WrappableText({label: "Night", type: Q.SPRITE_NONE}),
-											isSelectable: true,
-											fill: null,
-										}), 
-									],
-								})
-
-			var form = new Q.Form({
-				content: [mindQuestion],
-				context: stage,
-				func: "onquestioncompletion_akbar",
-			});
-
-//			stage.insert(form);
 });
 
 
@@ -165,8 +134,8 @@ Q.Sprite.extend("Element", {
 		var options = Q._defaults(this.stage.options, {direction: "dark"});
 		options["nextStage"] = [
 			["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
-			["stageScene", this.p.element.element_id, Q.STAGE_LEVEL_PRIMARY, {element: this.p.element}],
 			["stageScene", "navigation", Q.STAGE_LEVEL_NAVIGATION, {}],
+			["stageScene", this.p.element.element_id, Q.STAGE_LEVEL_PRIMARY, {element: this.p.element}],
 			["stageScene", "scorecard", Q.STAGE_LEVEL_SCORECARD, {}]
 		];
 
