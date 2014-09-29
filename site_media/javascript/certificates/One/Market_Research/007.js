@@ -47,10 +47,9 @@ Q.scene("market_research_2_House", function(stage) {
 
 
 	// Mira
-	var Mira = Q("Player").first();
-	Mira.addMaterialContainer("Player");
-	stage.player = Mira;
-
+	var player = Q("Player").first();
+	stage.player = player;
+	player.addMaterialContainer();
 });
 
 Q.scene("market_research_2_Market", function(stage) {
@@ -58,6 +57,7 @@ Q.scene("market_research_2_Market", function(stage) {
 	stage.stock_name = "Market";
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX("market.tmx", stage);
 	stage.add("viewport").centerOn(400, 300);
 
 	var market_tables = [
@@ -86,7 +86,6 @@ Q.scene("market_research_2_Market", function(stage) {
 	];
 	//var market_tables = [{}, {}, {}, {}, {}];
 
-	Q.stageTMX("market.tmx", stage);
 
 
 	// Map Exit Door
@@ -94,10 +93,10 @@ Q.scene("market_research_2_Market", function(stage) {
 	stage.insert(exit_door);
 
 	// Mira
-	var Mira = Q("Player").first();
-	stage.player = Mira;
-	Mira.addMaterialContainer();
-	Mira.reStock(Q.game.stocks["Player"]);
+	var player = Q("Player").first();
+	stage.player = player;
+	player.addMaterialContainer();
+	player.reStock(Q.game.stocks["Player"]);
 
 
 
@@ -106,7 +105,7 @@ Q.scene("market_research_2_Market", function(stage) {
 	for(i = 0; i < 6; i++) {
 		var materialcontainer = Q("MaterialContainer").at(i);
 		console.log(materialcontainer.buyer_count());
-		materialcontainer.p.player = Mira;
+		materialcontainer.p.player = player;
 		materialcontainer.p.stock_name = stage.stock_name;
 		materialcontainer.p.isClickable = false;
 		materialcontainer.p.ifBelongsToPlayer = false;
@@ -114,7 +113,7 @@ Q.scene("market_research_2_Market", function(stage) {
 		stage.tables.push(materialcontainer);
 		if(i != 5) {
 			// Vendor
-			var person = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 0, y: - materialcontainer.p.h, name:"Vendor"});
+			var person = new Q.Person({sheet: "person_3_sheet", sprite: 'person_animation', frame:1, x: 0, y: - materialcontainer.p.h, name:"Vendor"});
 			stage.insert(person, materialcontainer);
 
 			// Material being sold
@@ -130,7 +129,7 @@ Q.scene("market_research_2_Market", function(stage) {
 									x: 0, 
 									y: -stage.tables[i].p.h/2 + 32 + 20 * j, 
 									name: material_name, 
-									player: Mira,
+									player: player,
 									ifBelongsToPlayer: false,
 									price: Q.game.material_names[material_name].price, 
 									stock_name: stage.stock_name,
@@ -199,7 +198,7 @@ Q.scene("market_research_2_Market", function(stage) {
 			buyer_y = [0, 0, y_down + 40, y_down + 40, y_down + 40];
 			buyer_frame = [7, 4, 10, 10, 10];
 			for(var j = 0; j < buyer_count; j++) {
-				var person = new Q.Buyer({sheet: "mira_sheet", sprite:'person_animation', frame: buyer_frame[j], x: buyer_x[j], y: buyer_y[j], offset: 100 * i, name:"Buyer"});
+				var person = new Q.Buyer({sheet: "person_4_sheet", sprite:'person_animation', frame: buyer_frame[j], x: buyer_x[j], y: buyer_y[j], offset: 100 * i, name:"Buyer"});
 				stage.insert(person, materialcontainer);
 			}
 		}

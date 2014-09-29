@@ -39,7 +39,7 @@ Q.scene("health_1",function(stage) {
 		i += 1;
 	}
 
-	var Nurse = new Q.Person({sheet: "nurse_sheet", frame: 0, x:400, y:800, isInteractable:true, name:"Nurse"});
+	var Nurse = new Q.Person({sheet: "nurse_sheet", frame: 0, x:1050, y:600, isInteractable:true, name:"Nurse"});
 	stage.insert(Nurse);
 
 	Nurse.collision = function(col) {
@@ -76,7 +76,7 @@ Q.scene("health_1",function(stage) {
 	};
 	Nurse.on("hit", Nurse, "collision");
 
-	var Amar = new Q.Person({sheet: "person_1_sheet", frame: 1, x:1000, y:600, isInteractable:true, name:"Amar"});
+	var Amar = new Q.Person({sheet: "person_1_sheet", frame: 1, x:1000, y:700, isInteractable:true, name:"Amar"});
 	stage.insert(Amar);
 
 	Amar.off("hit", Amar, "collision");
@@ -102,7 +102,7 @@ Q.scene("health_1",function(stage) {
 
 
 
-	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, name:"Akbar"});
+	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:1300, y:800, name:"Akbar"});
 	stage.insert(Akbar);
 	
 	stage.onquestioncompletion_akbar = function () {
@@ -156,7 +156,7 @@ Q.scene("health_1",function(stage) {
 	Akbar.on("hit", Akbar, "collision");
 
 
-	var Anthony = new Q.Person({sheet: "person_3_sheet", frame: 1, x:900, y:900, name:"Anthony"});
+	var Anthony = new Q.Person({sheet: "person_3_sheet", frame: 1, x:1600, y:600, name:"Anthony"});
 	stage.insert(Anthony);
 	
 	stage.onquestioncompletion_anthony = function () {
