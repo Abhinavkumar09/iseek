@@ -41,42 +41,43 @@ Q.scene("health_3_HealthCenter", function(stage) {
 	player.add("KeyCarrier");
 	stage.add("viewport").follow(player);
 	player.p.label = "";
+	player.p.available = true;
+	player.duration = 2;
 	
-	player.addMember = function(member) {
-		stage.insert(member);
-	}
+	var presentMember = 0;
 
-	var Nurse = new Q.Person({sheet: "nurse_sheet", frame:1, x:300, y:225, isInteractable:true, 
-								name: "Nurse", sprite: "person_animation", duration: 7, speed: 100});
+	var Nurse = new Q.Person({sheet: "nurse_sheet", frame:1, x:300, y:225, isInteractable:true, label: "",
+								name: "Nurse", sprite: "person_animation", duration: 1, speed: 125});
 	stage.insert(Nurse);
 
-	Nurse.info({duration: Nurse.p.duration, showOnMiniMap: true});
+	Nurse.info({duration: 4, showOnMiniMap: true});
 	Nurse.add("2d, animation");
 
-	if(Q.game.player.keys.length >= 0){ // >=3 
+	if(Q.game.player.keys.length >= 0){  // >=3
 		Nurse.p.label = "Hi, I have to be elsewhere today. Can you serve the community on my behalf? Try to help the community members the best you can!";
 		Nurse.collision = function(col) {
-			this.bottom_quote(this.p.label);
-			this.p.collided = true;
+			this.bottom_quote(this.p.label, 0, 3);
+			setTimeout(function(){Nurse.p.collided = true;}, 1000);
 		};
 		Nurse.on("hit", Nurse, "collision");
 	}
-	else
-		Nurse.p.label = "You need to learn about the basics of health before you can play this level";
-
+	
 	Nurse.step = function(dt) {
 		if(this.p.collided){
-			// this.p.collided = false;
 			this.p.label = "";
 			if(this.p.y >= exit_door.p.y - 100) {
 				if(this.p.x >= exit_door.p.x){
 					this.p.vx = 0;
 					this.p.vy = this.p.speed;
 					this.play("run_down");
-					setTimeout(function(){Nurse.destroy();}, 500);				// Nurse leaves
-					// console.log("adding member_1");
-					// setTimeout(function(){stage.insert(member_1);}, 500);
-			    	// setTimeout(function(){memberAdder.p.playerAvailable = true;}, 500);
+					if(this.p.y < exit_door.p.y - 75){
+						this.destroy();					// Nurse leaves
+						var addMember = members[0];
+						setTimeout(function(){
+							stage.insert(addMember);	// added first member
+							player.p.available = false;
+						}, 500);
+					}
 			    }
 			    else{
 			    	this.p.vy = 0;
@@ -98,238 +99,212 @@ Q.scene("health_3_HealthCenter", function(stage) {
 		}
 	}
 
-	// var emotion_assets = [['People/meera_angry3.png', 'People/meera_dizzyspinning3.png', 'People/meera_cry6.png'],
-	// 					  ['People/meera_sick1.png', 'People/meera_cry6.png'],
-	// 					  ['People/meera_cry6.png', 'People/meera_angry3.png']];
-	// var emotion_labels = [["Angry", "Tired", "Sad"],
-	// 					  ["Feverish", "Sick"],
-	// 					  ["Sad", "Lonely"]];
+	var emotion_assets = [['People/meera_angry3.png', 'People/meera_dizzyspinning3.png', 'People/meera_cry6.png'],
+						  ['People/meera_sick1.png', 'People/meera_cry6.png'],
+						  ['People/meera_cry6.png', 'People/meera_angry3.png']];
+	var emotion_labels = [["Angry", "Tired", "Sad"],
+						  ["Feverish", "Sick"],
+						  ["Sad", "Lonely"]];
+	var symptoms_grid = [Q.TileCard.GRID_3_1, Q.TileCard.GRID_2_1, Q.TileCard.GRID_2_1];
 
-	// var incorrect_answers = [[1, 6, 7, 8], [3, 7, 8], [0, 1, 2, 6, 7, 8]];
+	var incorrect_answers = [[1, 6, 7, 8], [3, 7, 8], [0, 1, 2, 6, 7, 8]];
+	var healthImprovement = [[75, 67, 70], [70, 80, 60], [70, 70, 80]];
 
-	// var png_cards = ["CardObjects/fruitbasket.png", "CardObjects/handwashanimation_sideleft.png", "CardObjects/vitamincard.png", 
-	// 				"CardObjects/singsongcard.png", "pranav.png", "CardObjects/sleepposter.png",
-	// 				"CardObjects/cutnailscard.png", "CardObjects/mosquitospraycard.png", "CardObjects/padscard.png"
-	// 				];
-	// var activity_description = ["Eat a fruit",  "Wash your hands", "Take your vitamins", 
-	// 							"Sing a song or dance", "Talk to a friend", "Take a nap",
-	// 							"Cut your nails", "Buy a mosquito repellant", "Buy sanitary pads"];
-	// var activity_names = ["Fruits",  "Wash hands", "Vitamins", "Sing", "Friend", "Rest", "Cut nails", "Insect Spray", "Pads"];
+	var png_cards = ["CardObjects/fruitbasket.png", "CardObjects/handwashanimation_sideleft.png", "CardObjects/vitamincard.png", 
+					"CardObjects/singsongcard.png", "pranav.png", "CardObjects/sleepposter.png",
+					"CardObjects/cutnailscard.png", "CardObjects/mosquitospraycard.png", "CardObjects/padscard.png"
+					];
+	var activity_description = ["Eat a fruit",  "Wash your hands", "Take your vitamins", 
+								"Sing a song or dance", "Talk to a friend", "Take a nap",
+								"Cut your nails", "Buy a mosquito repellant", "Buy sanitary pads"];
+	var activity_names = ["Fruits",  "Wash hands", "Vitamins", "Sing", "Friend", "Rest", "Cut nails", "Insect Spray", "Pads"];
 
 	
-	// var myTiles = Array(png_cards.length);
-	// for(i = 0; i < myTiles.length; i++) {
-	// 	myTiles[i] = new Q.Tile({
-	// 					image: new Q.Sprite({asset: png_cards[i]}),
-	// 					label: new Q.UI.Text({label: activity_names[i]}),
-	// 					disabled: true,
-	// 				});
-	// }
-
-	// var activities_card = Array(3);
-	// for(j = 0; j < activities_card.length; j++){
-	// 	activities_card[j] = new Q.TileCard({tiles: myTiles, grid: Q.TileCard.GRID_3_3,});
-
-	// 	activities_card[j].done = function() {
-	// 		var count_selected = 0;
-	// 		for(i = 0; i < this.p.tiles.length; i++) {
-	// 			if(this.p.tiles[i].p.isSelected)
-	// 				count_selected++;
-	// 		}
-	// 		this.destroy();
-	// 		if(count_selected != 3) {
-	// 			console.log("count_selected " + count_selected);
-	// 			player.bottom_quote("Remember, we need to select EXACTLY 3 activities. Let's try again");
-	// 			for(i = 0; i < this.p.tiles.length; i++)
-	// 				this.p.tiles[i].p.isSelected = false;
-				
-	// 			setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activities_card[j]);}, 1000);
-	// 		}
-	// 		else{
-	// 			for(i = 0; i < this.p.tiles.length; i++) 
-	// 				console.log(i + " : " + this.p.tiles[i].p.isSelected);
-				
-	// 			var allCorrect = true;
-	// 			for(i = 0; i < incorrect_answers[j].length; i++) {
-	// 				if(this.p.tiles[incorrect_answers[j][i]].p.isSelected)
-	// 					allCorrect = false;	
-	// 			}
-	// 			player.bottom_quote("Let us see how your health has improved");
-	// 			if(!allCorrect) {
-	// 				for(i = 0; i < this.p.tiles.length; i++)
-	// 					this.p.tiles[i].p.isSelected = false;
-				
-	// 				setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityTryAgainCard);}, 1000);	
-	// 			}
-	// 			else
-	// 				setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityDoneCard);}, 1000);	
-	// 		}
-	// 	}
-	// }
-
-	// var symptom_cards = Array(activities_card.length);
-	// for(i = 0; i < 3; i++) {
- //  		var tiles = Array(3);
-	// 	for(j = 0; j < emotion_assets[i].length; j++) {
-	// 		tiles[j] = new Q.Tile({
-	// 						image: new Q.ImageText({image: new Q.Sprite({asset: emotion_assets[i][j]}), 
-	// 												label: new Q.UI.Text({label: emotion_labels[i][j]}),}),
-	// 						disabled: true,
-	// 					});
-	// 	}
-			
-	// 	symptom_cards[i] = new Q.TileCard({tiles: tiles, grid: Q.TileCard.GRID_3_1});
-	
-	// 	// symptom_cards[i].done = function() {
-	// 	// 	this.p.shown_symptoms = true;
-	// 	// 	this.destroy();
-
-	// 	// 	setTimeout(function(){player.bottom_quote("Alright. Let us try to pick THREE activities that could help you");}, 1000);
-	// 	// 	setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activities_card[i]);}, 4000);
-	// 	// }
- //  	}
-	
-	var member_1 = new Q.Person({sheet: "person_4_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
-								   isInteractable: true, sprite: "person_animation", speed: 75, 
-								   label: "Hi, I’m feeling angry and sad! Could you please help me feel better?", 
-								   // symptoms: symptom_cards[0],
-								});
-	member_1.add("2d, animation");
-
-	// var member_2 = new Q.Person({sheet: "person_5_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
-	// 							   isInteractable: true, sprite: "person_animation", speed: 75, 
-	// 							   label: "Hi, I’m feeling ill, with a fever. Could you please help me?", 
-	// 							   symptoms: symptom_cards[1],
-	// 							});
-	// member_2.add("2d, animation");
-
-	// var member_3 = new Q.Person({sheet: "person_6_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
-	// 							   isInteractable: true, sprite: "person_animation", speed: 75, 
-	// 							   label: "Hi, my best friend got married and left town. Now I’m lonely. I have nobody to talk to and I am sad. Could you help me please?",
-	// 							   symptoms: symptom_cards[2],
-	// 							});
-	// member_3.add("2d, animation");
-
-	member_1.step = function(dt) {
-		if((member_1.p.y < table.p.y + 70)) {
-			member_1.p.vx = 0;
-			member_1.p.vy = 0;
-			member_1.info({duration: 2});
-			member_1.trigger('poststep',dt);
-		}
-	   else {
-	   		console.log("running up");
-		    member_1.p.vy = -1 * member_1.p.speed;
-		    member_1.play("run_up");
-	    }
+	var myTiles = Array(png_cards.length);
+	for(i = 0; i < myTiles.length; i++) {
+		myTiles[i] = new Q.Tile({
+						image: new Q.Sprite({asset: png_cards[i]}),
+						label: new Q.UI.Text({label: activity_names[i]}),
+						disabled: true,
+					});
 	}
 
-	// member_1.collision = function(col) {
-	// 	if(!member_1.p.symptoms.p.shown_symptoms){
-	// 			member_1.bottom_quote(member_1.p.label);
-	// 			// setTimeout(function(){
-	// 			// 	console.log("adding symptoms card");
-	// 			// 	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(member_1.p.symptoms);
-	// 			// }, 5000);	
-	// 		}
-	// }
-	// member_1.on("hit", member_1, "collision");
+	var symptom_cards = Array(3);
+	var activityDoneCards = Array(3);
+	for(i = 0; i < 3; i++) {
+  		var tiles = Array(emotion_assets[i].length);
+		for(j = 0; j < tiles.length; j++) {
+			tiles[j] = new Q.Tile({
+							image: new Q.ImageText({image: new Q.Sprite({asset: emotion_assets[i][j]}), 
+													label: new Q.UI.Text({label: emotion_labels[i][j]}),}),
+							disabled: true,
+						});
+		}
+		console.log("Iteration : " + i);		
+
+		var improvement = healthImprovement[i];
+		activityDoneCards[i] = new Q.Activity({
+							image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
+							name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"})}),
+							description: new Q.ImageText({label: new Q.UI.Text({label: ""})}),
+							scoreUpto: improvement,
+						});
+		console.log("Iteration : " + i);
+
+		activityDoneCards[i].done = function() {
+			this.destroy();
+			setTimeout(function(){player.p.available = true;}, 300);
+
+			if(presentMember == members.length -1 ){
+				setTimeout(function(){
+					Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+					stage.pause();
+				}, 5000);
+			}
+		}
+
+		symptom_cards[i] = new Q.TileCard({tiles: tiles, grid: symptoms_grid[i]});
+		symptom_cards[i].p.incorrectAnswers = incorrect_answers[i];
+		symptom_cards[i].p.activityDoneCard = activityDoneCards[i];
+
+		symptom_cards[i].done = function() {
+			this.destroy();
+			setTimeout(function(){player.bottom_quote("Alright. Let us try to pick THREE activities that could help you", 0, 3);}, 1000);
+
+			var activity_card = new Q.TileCard({tiles: myTiles, grid: Q.TileCard.GRID_3_3, });
+			activity_card.p.incorrectAnswers = this.p.incorrectAnswers;
+			
+			player.p.activity_card = activity_card;
+			var activityDoneCard = this.p.activityDoneCard;
+
+			activity_card.done = function() {
+				var count_selected = 0;
+				for(j = 0; j < this.p.tiles.length; j++) {
+					if(this.p.tiles[j].p.isSelected)
+						count_selected++;
+				}
+				this.destroy();
+				if(count_selected != 3) {
+					player.bottom_quote("Remember, we need to select EXACTLY 3 activities. Let's try again", 0, 2);
+					for(j = 0; j < this.p.tiles.length; j++)
+						this.p.tiles[j].p.isSelected = false;
+					
+					setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activity_card);}, 1000);
+				}
+				else{
+					var allCorrect = true;
+					for(j = 0; j < this.p.incorrectAnswers.length; j++) {
+						if(this.p.tiles[this.p.incorrectAnswers[j]].p.isSelected)
+							allCorrect = false;	
+					}
+
+					for(j = 0; j < this.p.tiles.length; j++)
+						this.p.tiles[j].p.isSelected = false;
+
+					player.bottom_quote("Let us see how your health has improved", 0, 2);
+					if(!allCorrect) {
+						for(j = 0; j < this.p.tiles.length; j++)
+							this.p.tiles[j].p.isSelected = false;
+					
+						setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityTryAgainCard);}, 1000);	
+					}
+					else{
+						console.log(activityDoneCard.p.scoreUpto[0] + " : " + activityDoneCard.p.scoreUpto[1] + " : " + activityDoneCard.p.scoreUpto[2]);
+						setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityDoneCard);}, 1000);	
+					}
+				}
+			}
 
 
-	// member_2.step = function(dt) {
-	// 	memberStep(member_2);
-	// }
+			setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activity_card);}, 4000);
+		}
+  	}
+	
+	var members = Array(3);
+	members[0] = new Q.Person({sheet: "person_4_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
+								   isInteractable: true, sprite: "person_animation", speed: 100, duration: 1,
+								   label: "Hi, I’m feeling angry and sad! Could you please help me feel better?", 
+								   symptoms: symptom_cards[0], 
+								});
+	members[0].add("2d, animation");
 
-	// member_3.step = function(dt) {
-	// 	memberStep(member_3);
-	// }
+	members[1] = new Q.Person({sheet: "person_5_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
+								   isInteractable: true, sprite: "person_animation", speed: 100, duration: 1,
+								   label: "Hi, I’m feeling ill, with a fever. Could you please help me?", 
+								   symptoms: symptom_cards[1],
+								});
+	members[1].add("2d, animation");
 
-	// memberCollision = function(member) {
-	// 	console.log("collided");
-	// 	if(!member.p.symptoms.p.shown_symptoms){
-	// 			member.bottom_quote(member.p.label);
-	// 			setTimeout(function(){
-	// 				console.log("adding symptoms card");
-	// 				Q.stage(Q.STAGE_LEVEL_DIALOG).insert(member.p.symptoms);
-	// 			}, 5000);	
-	// 		}
-	// }
+	members[2] = new Q.Person({sheet: "person_6_sheet", frame: 1, x: exit_door.p.x, y: exit_door.p.y - 50, 
+								   isInteractable: true, sprite: "person_animation", speed: 100, duration: 1,
+								   label: "Hi, my best friend got married and left town. Now I’m lonely. I have nobody to talk to and I am sad. Could you help me please?",
+								   symptoms: symptom_cards[2],
+								});
+	members[2].add("2d, animation");
 
-	// // member_1.step = function(dt) {
-	// // 	memberCollision(member_1);
-	// // }
-	// // member_1.on("hit", member_1, "collision");
+	for(i = 0; i < members.length; i++) {
+		if(i != members.length - 1)
+			members[i].p.nextMember = members[i+1];
 
-	// member_2.step = function(dt) {
-	// 	memberCollision(member_2);
-	// }
-	// member_2.on("hit", member_2, "collision");
+		members[i].step = function(dt) {
+			if(!player.p.available){
+				if((this.p.y < table.p.y + 70)) {
+					this.p.vx = 0;
+					this.p.vy = 0;
+					if(!this.p.symptoms.p.shown_symptoms)
+						this.info({duration: 1});
+					this.trigger('poststep',dt);
+				}
+			   else {
+			   		this.p.vy = -1 * this.p.speed;
+				    this.play("run_up");
+			    }
+			}
+			else{
+				this.bottom_quote("Great! Thank you so much. I will definitely try these activities.", 0, 1);
+			    this.p.vy = this.p.speed;
+			    this.play("run_down");
 
-	// member_3.step = function(dt) {
-	// 	memberCollision(member_3);
-	// }
-	// member_3.on("hit", member_3, "collision");
+			    if(this.p.y > exit_door.p.y - 50){
+			    	this.destroy();
+			    	presentMember++;
+			    	if(this.p.nextMember){
+			    		var enterMember = this.p.nextMember;
+				    	setTimeout(function(){
+				    		stage.insert(enterMember);
+				    		player.p.available = false;
+				    	}, 1000);
+				    }
+			    }
+			}
+		}
 
-	// var activityTryAgainCard = new Q.Activity({
-	// 						image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
-	// 						name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"}),}),
-	// 						description: new Q.ImageText({label: new Q.UI.Text({label: ""}),}),
-	// 						scoreUpto: [Math.random() * 20 + 50, Math.random() * 20 + 50, Math.random() * 20 + 50],
-	// 					});
+		members[i].collision = function(col) {
+			if(!this.p.symptoms.p.shown_symptoms){
+					this.bottom_quote(this.p.label, 0, 3);
+					this.p.label = "";
+					this.p.symptoms.p.shown_symptoms = true;
+					var symptomsCard = this.p.symptoms;
+					setTimeout(function(){
+						Q.stage(Q.STAGE_LEVEL_DIALOG).insert(symptomsCard);
+					}, 2000);	
+				}
+		}
+		members[i].on("hit", members[i], "collision");
+	}
 
-	// activityTryAgainCard.done = function() {
-	// 	console.log("We are done");
-	// 	this.destroy();
-	// 	player.bottom_quote("I think we can do better. Let's try again");	
-	// 	setTimeout(function(){
-	// 		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activities_card);
-	// 	}, 1000);
-	// }
+	var activityTryAgainCard = new Q.Activity({
+							image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
+							name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"}),}),
+							description: new Q.ImageText({label: new Q.UI.Text({label: ""}),}),
+							scoreUpto: [Math.random() * 20 + 50, Math.random() * 20 + 50, Math.random() * 20 + 50],
+						});
 
-	// var activityDoneCard = new Q.Activity({
-	// 						image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
-	// 						name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"})}),
-	// 						description: new Q.ImageText({label: new Q.UI.Text({label: ""})}),
-	// 						scoreUpto: [80, 80, 70],
-	// 					});
-
-	// activityDoneCard.done = function() {
-	// 	this.destroy();
-	// 	setTimeout(function(){
-	// 		player.bottom_quote("Great! I'm sure doing these activities would make you feel a lot better");
-	// 	}, 2000);
-
-
-	// 	memberAdder.p.present_member++;
-	// 	memberAdder.p.playerAvailable = true;
-
-	// 	// if(present_member == members.length){
-	// 	// 	setTimeout(function(){
-	// 	// 		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
-	// 	// 		stage.pause();
-	// 	// 	}, 5000);
-	// 	// }
-	// }
-
-	// Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activities_card);	
-});
-
-Q.GameObject.extend("BoxThrower",{
-  init: function() {
-    this.p = {
-      launchDelay: 0.75,
-      launchRandom: 1,
-      launch: 2
-    }
-  },
-
-  update: function(dt) {
-    this.p.launch -= dt;
-
-    if(this.p.launch < 0) {
-      this.stage.insert(new Q.Box());
-      this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-    }
-  }
-
+	activityTryAgainCard.done = function() {
+		this.destroy();
+		player.bottom_quote("I think we can do better. Let's try again", 0, 3);	
+		setTimeout(function(){
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(player.p.activity_card);
+		}, 1000);
+	}
 });
