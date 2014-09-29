@@ -354,7 +354,9 @@ Q.UI.Layout.extend("InfoQuestion", {
 */
 Q.ImageText.extend("Tile", {
 	init: function(p) {
-		this._super(p);
+		this._super(Q._defaults(p, {
+			isSelected: false,
+		}));
 
 		this.add("Touch");
 		this.on("touch");
@@ -376,6 +378,9 @@ Q.ImageText.extend("Tile", {
 				else
 					this[this.p["action"]](this.p.action_params);
 			}
+		}
+		else{
+			this.p.isSelected = true;
 		}
 	},
 });
@@ -837,7 +842,7 @@ Q.TileCard.extend("SHGCard", {
 });
 
 
-Q.Card.extend("Activity", {
+Q.Card.extend("ActivityCard", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
 			layout: Q.UI.Layout.NONE,

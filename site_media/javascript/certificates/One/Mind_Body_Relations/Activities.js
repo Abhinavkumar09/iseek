@@ -142,16 +142,18 @@ Q.scene("health_3_HealthCenter", function(stage) {
 		}
 		
 		var improvement = healthImprovement[i];
-		activityDoneCards[i] = new Q.Activity({
+		activityDoneCards[i] = new Q.ActivityCard({
 							image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
 							name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"})}),
 							description: new Q.ImageText({label: new Q.UI.Text({label: ""})}),
 							scoreUpto: improvement,
+							context: stage,
 						});
 		
 		activityDoneCards[i].done = function() {
 			this.destroy();
-			setTimeout(function(){player.p.available = true;}, 300);
+			player.bottom_quote("Great! We figured it out!", 0, 1);
+			setTimeout(function(){player.p.available = true;}, 1000);
 
 			if(presentMember == members.length -1 ){
 				setTimeout(function(){
@@ -161,21 +163,21 @@ Q.scene("health_3_HealthCenter", function(stage) {
 			}
 		}
 
-		symptom_cards[i] = new Q.TileCard({tiles: tiles, grid: symptoms_grid[i]});
+		symptom_cards[i] = new Q.TileCard({tiles: tiles, grid: symptoms_grid[i], context: stage,});
 		symptom_cards[i].p.incorrectAnswers = incorrect_answers[i];
 		symptom_cards[i].p.activityDoneCard = activityDoneCards[i];
 
-		symptom_cards[i].done = function() {
+		symptom_cards[i].ok = function() {
 			this.destroy();
 			setTimeout(function(){player.bottom_quote("Alright. Let us try to pick THREE activities that could help you", 0, 3);}, 1000);
 
-			var activity_card = new Q.TileCard({tiles: myTiles, grid: Q.TileCard.GRID_3_3, });
+			var activity_card = new Q.TileCard({tiles: myTiles, grid: Q.TileCard.GRID_3_3, context: stage,});
 			activity_card.p.incorrectAnswers = this.p.incorrectAnswers;
 			
 			player.p.activity_card = activity_card;
 			var activityDoneCard = this.p.activityDoneCard;
 
-			activity_card.done = function() {
+			activity_card.ok = function() {
 				var count_selected = 0;
 				for(j = 0; j < this.p.tiles.length; j++) {
 					if(this.p.tiles[j].p.isSelected)
@@ -187,7 +189,7 @@ Q.scene("health_3_HealthCenter", function(stage) {
 					for(j = 0; j < this.p.tiles.length; j++)
 						this.p.tiles[j].p.isSelected = false;
 					
-					setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activity_card);}, 1000);
+					setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activity_card);}, 2000);
 				}
 				else{
 					var allCorrect = true;
@@ -197,17 +199,14 @@ Q.scene("health_3_HealthCenter", function(stage) {
 					}
 
 					for(j = 0; j < this.p.tiles.length; j++)
-						this.p.tiles[j].p.isSelected = false;
+							this.p.tiles[j].p.isSelected = false;
 
 					player.bottom_quote("Let us see how your health has improved", 0, 2);
+
 					if(!allCorrect) {
-						for(j = 0; j < this.p.tiles.length; j++)
-							this.p.tiles[j].p.isSelected = false;
-					
 						setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityTryAgainCard);}, 1000);	
 					}
 					else{
-						console.log(activityDoneCard.p.scoreUpto[0] + " : " + activityDoneCard.p.scoreUpto[1] + " : " + activityDoneCard.p.scoreUpto[2]);
 						setTimeout(function(){Q.stage(Q.STAGE_LEVEL_DIALOG).insert(activityDoneCard);}, 1000);	
 					}
 				}
@@ -259,7 +258,7 @@ Q.scene("health_3_HealthCenter", function(stage) {
 			    }
 			}
 			else{
-				this.bottom_quote("Great! Thank you so much. I will definitely try these activities.", 0, 1);
+				this.bottom_quote("Thank you so much. I will definitely try these activities.", 0, 1);
 			    this.p.vy = this.p.speed;
 			    this.play("run_down");
 
@@ -291,11 +290,12 @@ Q.scene("health_3_HealthCenter", function(stage) {
 		members[i].on("hit", members[i], "collision");
 	}
 
-	var activityTryAgainCard = new Q.Activity({
+	var activityTryAgainCard = new Q.ActivityCard({
 							image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
 							name: new Q.ImageText({label: new Q.UI.Text({label: "Your health improves as:"}),}),
 							description: new Q.ImageText({label: new Q.UI.Text({label: ""}),}),
 							scoreUpto: [Math.random() * 20 + 50, Math.random() * 20 + 50, Math.random() * 20 + 50],
+							context: stage,
 						});
 
 	activityTryAgainCard.done = function() {
