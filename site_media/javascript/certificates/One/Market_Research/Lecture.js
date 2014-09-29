@@ -1,3 +1,5 @@
+console.log("loaded Market Research Lecture element");
+
 Q.scene("market_research_1",function(stage) {
 	stage.name = "market_research_1";
 
@@ -11,13 +13,14 @@ Q.scene("market_research_1",function(stage) {
 	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
 	guru.trigger("register", stage.desc_card);
 
-	Q.stageTMX(game.TMX.VirtualWorld, stage);
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var player = Q("Player").first();
-	stage.add("viewport").follow(player);
+	stage.player = player;
 	player.addMaterialContainer();
+	stage.add("viewport").follow(player);
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
