@@ -311,7 +311,9 @@ Q.UI.Layout.extend("RangeQuestion", {
 */
 Q.ImageText.extend("Tile", {
 	init: function(p) {
-		this._super(p);
+		this._super(Q._defaults(p, {
+			isSelected: false,
+		}));
 
 		this.add("Touch");
 		this.on("touch");
@@ -333,6 +335,9 @@ Q.ImageText.extend("Tile", {
 				else
 					this[this.p["action"]](this.p.action_params);
 			}
+		}
+		else{
+			this.p.isSelected = true;
 		}
 	},
 });
@@ -754,7 +759,11 @@ Q.Card.extend("TileCard", {
 	inserted: function() {
 		this.movefront();
 
-		if(this.p.grid == Q.TileCard.GRID_2_1) {
+		if(this.p.grid == Q.TileCard.GRID_3_1) {
+			count_r = 1;
+			count_c = 3;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_2_1) {
 			count_r = 1;
 			count_c = 2;
 		}
@@ -781,16 +790,22 @@ Q.Card.extend("TileCard", {
 			this.insert(this.p.tiles[i]);
 		}
 
-		var type = Q.ControlButtons.CANCEL;
+		var type = Q.ControlButtons.OK;
 		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 
 	},
+
+	ok: function() {
+		this.destroy();
+	}
 });
 
 Q.TileCard.GRID_2_1 = 1;
 Q.TileCard.GRID_2_2 = 2;
 Q.TileCard.GRID_3_2 = 4;
 Q.TileCard.GRID_3_3 = 8;
+Q.TileCard.GRID_3_1 = 16;
+
 
 Q.TileCard.extend("SHGCard", {
 	init: function(p) {
@@ -819,31 +834,51 @@ Q.TileCard.extend("SHGCard", {
 
 
 
-Q.scene("test_cards", function(stage) {
-	var product = new Q.Product({
-		image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
-		name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
-		description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
-		sellable: true,
-	});
+Q.Card.extend("ActivityCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+			grid: Q.TileCard.GRID_3_2,
+			// type: Q.ControlButtons.BACK,
+		}));
+		this.on("inserted");
+	},
 
-//	var card = new Q.Card({content: product});
-	var tile = new Q.Tile({
-			image: new Q.Sprite({
-					sheet: "basket_01_sheet", 
-					frame:2
-			}),
-			disabled: false,
-			action_card: product,
-	});
-	var tile2 = new Q.Tile({
-			image: new Q.Sprite({
-					sheet: "basket_01_sheet", 
-					frame:2
-			}),
-			disabled: false,
-			action_card: product,
-	});
-	var tcard = new Q.TileCard({tiles: [tile,tile2], grid: Q.TileCard.GRID_2_1});
-	stage.insert(product);
+	inserted: function() {
+		this.p.image.p.x = -this.p.cx + 50;
+		this.p.image.p.y = -this.p.cy + 50;
+
+		this.p.name.p.x = this.p.cx - 300;
+		this.p.name.p.y = -this.p.cy + 150;
+
+		this.p.description.p.x = 0;
+		this.p.description.p.y = 0;
+
+		this.insert(this.p.image);
+		this.insert(this.p.name);
+		this.insert(this.p.description);
+
+		var type = 0;
+		type += Q.ControlButtons.DONE;		
+
+		this.insert((new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25})));
+
+		this.insert(new Q.HealthBar({x: -120, y: 50, scoreUpto: this.p.scoreUpto[0]}));
+		this.insert(new Q.UI.Text({x: -120, y: 110, label: "Mind"}));
+		this.insert(new Q.HealthBar({x: 0, y: 50, scoreUpto: this.p.scoreUpto[1]}));
+		this.insert(new Q.UI.Text({x: 0, y: 110, label: "Body"}));
+		this.insert(new Q.HealthBar({x: 120, y: 50, scoreUpto: this.p.scoreUpto[2]}));
+		this.insert(new Q.UI.Text({x: 120, y: 110, label: "Relations"}));
+	},
+
+	back: function() {
+		console.log("go back");
+		this.destroy();
+		this.stage.insert(this.p.back_card);
+	},
+
+	done: function() {
+		console.log("done");
+		this.destroy();
+	},
 });

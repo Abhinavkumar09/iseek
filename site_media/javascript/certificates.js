@@ -92,7 +92,7 @@ game.certificates = [
 				]
 			),
 			new CertificateBadge(
-				"Mind, Body, and ...", 
+				"Mind, Body, Relations", 
 				"Mind_Body_Relations",
 				"Objects/Medal/badge01.png",
 				false, 
@@ -109,6 +109,14 @@ game.certificates = [
 						"health_2",
 						"Test",
 						"Test.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
+					),
+					new CertificateElement(
+						"health_3",
+						"Activities",
+						"Activities.js",
 						false,
 						null,
 						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
