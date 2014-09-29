@@ -140,8 +140,7 @@ Q.scene("health_3_HealthCenter", function(stage) {
 							disabled: true,
 						});
 		}
-		console.log("Iteration : " + i);		
-
+		
 		var improvement = healthImprovement[i];
 		activityDoneCards[i] = new Q.Activity({
 							image: new Q.Sprite({asset: "CardObjects/healthkit.png"}),
@@ -149,8 +148,7 @@ Q.scene("health_3_HealthCenter", function(stage) {
 							description: new Q.ImageText({label: new Q.UI.Text({label: ""})}),
 							scoreUpto: improvement,
 						});
-		console.log("Iteration : " + i);
-
+		
 		activityDoneCards[i].done = function() {
 			this.destroy();
 			setTimeout(function(){player.p.available = true;}, 300);
