@@ -31,7 +31,7 @@ Q.scene("health_2",function(stage) {
 		i += 1;
 	}
 
-	var nurse = new Q.Person({sheet: "nurse_sheet", frame: 1, x:400, y:800, isInteractable:true, name:"nurse"});
+	var nurse = new Q.Person({sheet: "nurse_sheet", frame: 1, x:1050, y:600, isInteractable:true, name:"nurse"});
 	stage.insert(nurse);
 	nurse.info({duration:4});
 	
@@ -46,7 +46,7 @@ Q.scene("health_2",function(stage) {
 
 	var countAnswered = 0;
 	
-	var Amar = new Q.Person({sheet: "person_3_sheet", frame: 1, x:1000, y:600, isInteractable:true, name:"Amar"});
+	var Amar = new Q.Person({sheet: "person_3_sheet", frame: 1, x:1000, y:700, isInteractable:true, name:"Amar"});
 	stage.insert(Amar);
 	
 	var testQuestions = ["Oh, hello! How are you? I’m still fit and better than everyone else! I wish I had more friends though and that I was more motivated to finish my work for my business. Can you help me?",
@@ -110,7 +110,7 @@ Q.scene("health_2",function(stage) {
 		}
 	};
 
-	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, isInteractable:true, name:"Akbar"});
+	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:1300, y:800, isInteractable:true, name:"Akbar"});
 	stage.insert(Akbar);
 	
 	Akbar.off("hit", Akbar, "collision");
@@ -134,7 +134,7 @@ Q.scene("health_2",function(stage) {
 		}
 	};
 
-	var Anthony = new Q.Person({sheet: "person_1_sheet", frame: 1, x:900, y:900, isInteractable:true, name:"Anthony"});
+	var Anthony = new Q.Person({sheet: "person_1_sheet", frame: 1, x:1600, y:600, isInteractable:true, name:"Anthony"});
 	stage.insert(Anthony);
 
 	Anthony.off("hit", Anthony, "collision");
