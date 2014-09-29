@@ -1,6 +1,17 @@
 Q.scene("health_2",function(stage) {
-	console.log("loaded test");
 	stage.name = "health_2";
+
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX("VirtualWorld.tmx", stage);
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
@@ -39,7 +50,7 @@ Q.scene("health_2",function(stage) {
 	stage.insert(Amar);
 	
 	var testQuestions = ["Oh, hello! How are you? I’m still fit and better than everyone else! I wish I had more friends though and that I was more motivated to finish my work for my business. Can you help me?",
-						 "Hello! I am still feeling motivated and pretty good. I just wish I didn’t \nget sick all the time and had more friends. Can you help me?",
+						 "Hello! I am still feeling motivated and pretty good. I just wish I didn’t get sick all the time and had more friends. Can you help me?",
 						 "Hello! I still have lots of friends and family to spend time with. I just wish I didn’t get sick all the time and felt more motivated and energized to do work. Can you help me?"];
 
 	var testSurvey = Array(testQuestions.length);

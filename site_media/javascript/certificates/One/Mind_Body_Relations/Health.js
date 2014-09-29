@@ -2,23 +2,31 @@ console.log("loaded health element");
 
 Q.scene("health_1",function(stage) {
 	stage.name = "health_1";
+
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX(game.TMX.VirtualWorld, stage);
-
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var player = Q("Player").first();
 	stage.player = player;
 	player.add("KeyCarrier");
 	stage.add("viewport").follow(player);
-	//Mira.addMaterialContainer("Player");
 
 	player.addKeyContainer();
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
-		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
 		b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = stage.name + "_" + b.p.name;
 		
@@ -47,7 +55,7 @@ Q.scene("health_1",function(stage) {
 				i += 1;
 			}
 			this.p.label = "So now you know what is important for good health - a sound mind, a healthy body and amiable relationship with those around you! Now, you can enter the healthcenter";		
-			this.bottom_quote(this.p.labels[0]);
+			this.bottom_quote(this.p.label);
 		}
 		else if(Q.game.player.keys.length >= 2) { // assumed 'mind' key is attained second
 			this.p.label = "Mira, now you have the 'mind' and 'body' keys but again, that is not enough. A sound mind and a health body only flourish when you have good relations with your friends and family. Look around for the 'relationship' key.";
@@ -152,7 +160,6 @@ Q.scene("health_1",function(stage) {
 	stage.insert(Anthony);
 	
 	stage.onquestioncompletion_anthony = function () {
-		console.log("added relationship key");
 		Q.game.player.keys.push("relationship");
 		player.resetKeyContainer();
 		Nurse.info({duration:5, showOnMiniMap:true});		
@@ -211,10 +218,6 @@ Q.scene("health_1",function(stage) {
 			this.bottom_quote("Hi");
 	};
 	Anthony.on("hit", Anthony, "collision");
-
-
-//	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
-//	guru.trigger("newconcept", "Start");
 });
 
 

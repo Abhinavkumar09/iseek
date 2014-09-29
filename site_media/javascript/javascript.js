@@ -246,25 +246,29 @@ function Game(name) {
 	this.AUDIO.stop_n_play = function(type) {
 		console.log("play");
 		G.Q.audio.stop();
-		if(!this.mute) {
-			G.Q.audio.play(type, {loop: true});
-		}
+		G.Q.audio.play(type, {loop: true});
 	};
 
-	this.AUDIO.mute = false;
+	this.AUDIO.ifMute = 0;
 	this.AUDIO.play = function(file) {
-		if(!this.mute) {
-			G.Q.audio.play(file);
-		}
+		G.Q.audio.play(file);
 	};	
 
 	this.AUDIO.stop = function(type) {
 		G.Q.audio.stop();
 	};
 
+	this.AUDIO.mute = function() {
+		this.ifMute = 1 - this.ifMute;
+		G.Q.audio.mute();
+		return this.ifMute;
+	};
 
 	this.TMX = {};
 	this.TMX.VirtualWorld = "VirtualWorld.tmx";
+
+	this.FONTS = {};
+	this.FONTS['REGULAR'] = "helvetica";
 }
 
 
@@ -286,11 +290,10 @@ var Q = Quintus({
 		})
 		.include("Sprites, Scenes, 2D, UI, UI_extension, Anim, Input, Touch, Audio, TMX")
 		.setup("game_canvas", {
-//			maximize: "touch",
-			maximize: true,
+			maximize: "touch",
+//			maximize: true,
 			width:   800,
-			height:  600,
-			scaleToFit: true,
+			height:  450,
 		})
 		.enableSound()
 		.controls(true, [[],[],[],[],[]]);

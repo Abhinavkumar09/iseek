@@ -68,8 +68,8 @@ Q.loadTMX(Q.options.resources,function() {
 	Q.sheet('coin',
 		'Icons/coin.png',
 		{
-			tilew: 40,
-			tileh: 45,
+			tilew: 32,
+			tileh: 32,
 			sx: 0,
 			sy: 0,
 		});
