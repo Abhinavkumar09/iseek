@@ -1,8 +1,18 @@
 Q.scene("market_research_1",function(stage) {
 	stage.name = "market_research_1";
-	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
-	Q.stageTMX(game.TMX.VirtualWorld, stage);
 
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var player = Q("Player").first();
@@ -16,10 +26,6 @@ Q.scene("market_research_1",function(stage) {
 		b.p.nextScene = stage.name + "_" + b.p.name;
 		i += 1;
 	}
-
-//	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
-//	guru.trigger("newconcept", "Start");
-
 });
 
 

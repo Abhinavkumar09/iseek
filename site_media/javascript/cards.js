@@ -305,43 +305,6 @@ Q.UI.Layout.extend("RangeQuestion", {
 });
 
 
-/** Info Card
-  * @param this.p.video - video object
-  * @param this.p.label - label object(text)
-  */
-Q.UI.Layout.extend("InfoQuestion", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			w: 400,
-			h: 300,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN,
-
-			radius: 0,
-
-			status: Q.Form.INCOMPLETE,
-			isSelectAll: false,
-			answers: [],
-			layout: Q.UI.Layout.VERTICAL,
-		}));
-		this.on("inserted");
-	},
-
-	inserted: function() {
-		if(this.p.video){
-			this.insert(this.p.video);
-		}
-		if(this.p.question){
-			this.insert(this.p.question);
-		}
-		this.fit(10);
-	},
-});
-
-
-
 /*
 	disabled: is It disabled right now?
 	action_card: Expects as input a card that should be displayed if the tile is clicked
@@ -411,18 +374,10 @@ Q.UI.Layout.extend("Card", {
 
 	movefront: function() {
 		this.p.context.pause();
-//		this.stage.player.p.stepDistance = 0; 
-
-//		if(this.stage.viewport) {
-//			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
-//			this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
-//		}
 	},
 
 	inserted: function() {
 		this.p.context.pause();
-//		this.insert(this.p.content);
-//		this.p.content.p.card = this;
 	},
 
 	show: function(content) {
@@ -431,7 +386,42 @@ Q.UI.Layout.extend("Card", {
 		this.inserted();
 	},
 
+	done: function() {
+		this.destroy();
+	},
 
+	ok: function() {
+		this.destroy();
+	}
+
+});
+
+/** Info Card
+  */
+Q.Card.extend("StageInfoCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			align: Q.UI.Layout.CENTER_ALIGN,
+			separation_y: 10,
+			layout: Q.UI.Layout.VERTICAL,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+
+		var box = new Q.UI.Layout({layout: Q.UI.Layout.HORIZONTAL});
+//		this.insert(box);
+		this.insert(this.p.speaker);
+
+		this.insert(this.p.description);
+
+		this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.OK, y: this.p.cy - 25}));
+		this.fit(10);
+	},
 });
 
 
