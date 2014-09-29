@@ -94,6 +94,8 @@ Q.scene("health_1",function(stage) {
 	};
 	Amar.on("hit", Amar, "collision");
 
+
+
 	var Akbar = new Q.Person({sheet: "person_2_sheet", frame: 1, x:800, y:700, name:"Akbar"});
 	stage.insert(Akbar);
 	

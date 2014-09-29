@@ -179,9 +179,9 @@ Q.UI.Layout.extend("ImageText", {
 		if(adjustedP.layoutType == Q.ImageText.LEFT_POSITION)
 			layout = Q.UI.Layout.HORIZONTAL;
 
-		// if(adjustedP.isSelectable) {
-		// 	adjustedP.type = Q.SPRITE_NONE;
-		// }
+//		if(adjustedP.isSelectable) {
+//			adjustedP.type = Q.SPRITE_NONE;
+//		}
 		this._super(Q._defaults(adjustedP, {layout: layout, }));
 
 		this.on("inserted");
@@ -384,6 +384,7 @@ Q.ImageText.extend("Tile", {
 /*
 	Cards are supposed to be shown outside the virtual world, on the middle of the screen. I.e., irrespective of the player's positions
 	or some other Sprite's position. This of it as when you read a card, your eyes focus on the card and all other things are blurred out.
+
 	This also means that the cards should not be inserted inside any container. It should be inserted directly on the stage.
 */
 Q.UI.Layout.extend("Card", {
@@ -408,7 +409,7 @@ Q.UI.Layout.extend("Card", {
 
 	destroyed: function() {
 		this.p.context.unpause();
-		// this.stage.player.p.stepDistance = 32; 
+//		this.stage.player.p.stepDistance = 32; 
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
@@ -416,19 +417,19 @@ Q.UI.Layout.extend("Card", {
 
 	movefront: function() {
 		this.p.context.pause();
-		// this.stage.player.p.stepDistance = 0;
+//		this.stage.player.p.stepDistance = 0;
 
-		// if(this.stage.viewport) {
-		// 	this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
-		// 	this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
-		// }
+//		if(this.stage.viewport) {
+//			this.p.x = this.stage.viewport.x + Q.width/2/this.stage.viewport.scale;
+//			this.p.y = this.stage.viewport.y + Q.height/2/this.stage.viewport.scale;
+//		}
 	},
 
 
 	inserted: function() {
 		this.p.context.pause();
-		// this.insert(this.p.content);
-		// this.p.content.p.card = this;
+//		this.insert(this.p.content);
+//		this.p.content.p.card = this;
 	},
 
 	show: function(content) {
@@ -567,8 +568,8 @@ Q.Card.extend("BusinessCard", {
 		var shg_card = new Q.SHGCard(this.p);
 
 		var shg = new Q.Tile({
-			label: new Q.UI.Text({label: "SHG"}),
-			x: -this.p.w/2 + 50,
+			label: new Q.UI.Text({label: "SHG"}), 
+			x: -this.p.w/2 + 50, 
 			y: -this.p.h/2 + 275,
 			disabled: false,
 			action_card: shg_card,
@@ -628,7 +629,7 @@ Q.Card.extend("BusinessCardForm", {
 		this.insert(player);
 
 		var rows = [];
-		// var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+//		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
 		var name = new Q.UI.WrappableText({label: "Name", w: 100, h: 300, x: 0, y: 0});
 		this.ninput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.name + "' />", x: 0, y: 0});
 		rows.push([name, this.ninput]);
@@ -822,7 +823,7 @@ Q.TileCard.extend("SHGCard", {
 		var people = this.p.SHG.people;
 		for(p in people) {
 			var person = new Q.Tile({
-				image: new Q.Sprite({sheet: people[p].sheet, frame: people[p].frame}),
+				image: new Q.Sprite({sheet: people[p].sheet, frame: people[p].frame}), 
 				disabled: true,
 				card: this,
 			});
@@ -884,54 +885,3 @@ Q.Card.extend("Activity", {
 		this.destroy();
 	},
 });
-
-Q.Sprite.extend("HealthBar", {
-	init: function(p) {
-		this._super(p, {
-			x: 620,
-			y: 35,
-			w: 30,
-			h: 75,
-			score: 50,
-			scoreUpto: 50,
-			maxScore: 100,
-			parameter: "health",
-			fillStyle: 'green',
-			label: false,
-		});
-	},
-
-	draw: function(ctx) {
-		height = this.p.h * this.p.score / this.p.maxScore;
-		if(this.p.label)
-			width = this.p.w;
-
-		ctx.beginPath();
-		ctx.rect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-		ctx.lineWidth = "1";
-		ctx.strokeStyle = 'black';
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-		ctx.fill();
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.lineWidth = "0";
-		ctx.rect(-this.p.cx, -this.p.cy + this.p.h, this.p.w, -height);
-		ctx.fillStyle = this.p.fillStyle;
-		ctx.fill();
-
-		if(this.p.label) {
-			ctx.fillStyle = 'black';
-			ctx.font = "14px Arial";
-			var metrics = ctx.measureText(this.p.score);
-			ctx.fillText(this.p.score, -metrics.width/2, -7);
-		}
-	
-	},
-
-	step: function(dt){
-		if(this.p.score < this.p.scoreUpto)
-			this.p.score += 20 * dt;
-	},
-});
-
