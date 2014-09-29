@@ -131,9 +131,6 @@ function Game(name) {
 		},
 
 		Player: {
-			basket_01: [
-				new Material({name: 'basket_01', price: 20, isClickable: false, ifBelongsToPlayer: true, commission: 10}),
-			],
 		},
 
 		Market: {

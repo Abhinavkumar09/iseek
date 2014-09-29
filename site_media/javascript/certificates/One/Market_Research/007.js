@@ -1,13 +1,26 @@
+console.log("loaded Market Research Agent element");
+
 Q.scene("market_research_2",function(stage) {
 	stage.name = "market_research_2";
+
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX(game.TMX.VirtualWorld, stage);
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
-	game.play(game.AUDIO.RESOURCES.VILLAGE);
-
-	var Mira = Q("Player").first();
-	stage.add("viewport").follow(Mira);
-	Mira.addMaterialContainer();
+	var player = Q("Player").first();
+	stage.player = player;
+	player.addMaterialContainer();
+	stage.add("viewport").follow(player);
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
@@ -16,10 +29,6 @@ Q.scene("market_research_2",function(stage) {
 		b.p.nextScene = stage.name + "_" + b.p.name;
 		i += 1;
 	}
-
-//	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
-//	guru.trigger("newconcept", "Start");
-
 });
 
 

@@ -365,19 +365,24 @@ Q.UI.Layout.extend("Card", {
 	},
 
 	destroyed: function() {
-		this.p.context.unpause();
-//		this.stage.player.p.stepDistance = 32; 
+		if(this.p.stage)
+			this.p.stage.unpause();
+		else
+			this.p.context.unpause();
 		this.children.forEach(function(child) {
 			child.destroy();
 		});
 	},
 
 	movefront: function() {
-		this.p.context.pause();
+		if(this.p.stage)
+			this.p.stage.pause();
+		else
+			this.p.context.pause();
 	},
 
 	inserted: function() {
-		this.p.context.pause();
+		this.movefront();
 	},
 
 	show: function(content) {
