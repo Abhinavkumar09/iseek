@@ -265,3 +265,55 @@ Q.Sprite.extend("CloseIcon", {
 		console.log("unpausing primary level");
 	}
 });
+
+Q.Sprite.extend("HealthBar", {
+	init: function(p) {
+		this._super(p, {
+			x: 620,
+			y: 35,
+			w: 30,
+			h: 75,
+			score: 50,
+			scoreUpto: 50,
+			maxScore: 100,
+			parameter: "health",
+			fillStyle: 'green',
+			label: false,
+		});
+	},
+
+	draw: function(ctx) {
+		height = this.p.h * this.p.score / this.p.maxScore;
+		if(this.p.label)
+			width = this.p.w;
+
+		ctx.beginPath();
+		ctx.rect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+		ctx.lineWidth = "1";
+		ctx.strokeStyle = 'black';
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineWidth = "0";
+		ctx.rect(-this.p.cx, -this.p.cy + this.p.h, this.p.w, -height);
+		ctx.fillStyle = this.p.fillStyle;
+		ctx.fill();
+
+		if(this.p.label) {
+			ctx.fillStyle = 'black';
+			ctx.font = "14px Arial";
+			var metrics = ctx.measureText(this.p.score);
+			ctx.fillText(this.p.score, -metrics.width/2, -7);
+		}
+	
+	},
+
+	step: function(dt){
+		if(this.p.score < this.p.scoreUpto)
+			this.p.score += 20 * dt;
+	},
+});
+
+

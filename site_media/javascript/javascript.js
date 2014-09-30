@@ -71,6 +71,15 @@ function Game(name) {
 		//People
 //		'People/Mira.png', 'People/Shyam.png', 'People/Asif.png', 'People/Ashwin.png', 'People/Sahiya.png', 'People/Enterpreneur.png', 
 //		'People/Rama.png', 'People/Seeta.png', 'People/Seema.png',
+		
+		//People emotions
+		'People/meera_angry3.png', 'People/meera_dizzyspinning3.png', 'People/meera_sick1.png', 'People/meera_cry6.png',
+
+		//Activities
+		'CardObjects/fruitbasket.png', 'CardObjects/handwashanimation_sideleft.png', 'CardObjects/praycard.png', 
+		'CardObjects/singsongcard.png', 'CardObjects/sleepposter.png', 'CardObjects/vitamincard.png',
+		'CardObjects/cutnailscard.png', 'CardObjects/mosquitospraycard.png', 'CardObjects/padscard.png',
+		'CardObjects/healthkit.png',
 
 		//Buildings
 		'Building/workshop.png', 'Building/mira_house.png', 'Building/newHut.png',  'Building/school.png', 'Building/market.png', 'Building/healthcenter.png',
