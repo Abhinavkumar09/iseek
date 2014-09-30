@@ -274,7 +274,6 @@ Q.Sprite.extend("Rectangle", {
 */
 Q.UI.Layout = Q.UI.Container.extend("UI.Layout", {
 	init: function(p) {
-		this.children = [];
 		this._super(Q._defaults(p, {
 			type: Q.SPRITE_NONE, 
 			layout: Q.UI.Layout.VERTICAL, 

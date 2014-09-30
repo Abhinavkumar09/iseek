@@ -1,13 +1,24 @@
 Q.scene("health_3", function(stage) {
-	console.log("loaded health 3");
 	stage.name = "health_3";
+
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX("VirtualWorld.tmx", stage);
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var player = Q("Player").first();
-	stage.add("viewport").follow(player);
-	player.addMaterialContainer();
 	stage.player = player;
+	stage.add("viewport").centerOn(400, 300);
+	player.addMaterialContainer();
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {

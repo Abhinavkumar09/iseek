@@ -366,7 +366,6 @@ Q.UI.Layout.extend("Card", {
 			fill: "rgba(255, 255, 255, 1)",
 			radius: 0,
 		}));
-
 	},
 
 	destroyed: function() {
@@ -416,6 +415,8 @@ Q.Card.extend("StageInfoCard", {
 			align: Q.UI.Layout.CENTER_ALIGN,
 			separation_y: 10,
 			layout: Q.UI.Layout.VERTICAL,
+			border: 1,
+			radius: 3,
 		}));
 		this.on("inserted");
 	},
@@ -423,11 +424,11 @@ Q.Card.extend("StageInfoCard", {
 	inserted: function() {
 		this.movefront();
 
-		var box = new Q.UI.Layout({layout: Q.UI.Layout.HORIZONTAL});
-//		this.insert(box);
-		this.insert(this.p.speaker);
+		var box = new Q.UI.Layout({layout: Q.UI.Layout.HORIZONTAL, ifFit: true});
+		this.insert(box);
+		box.insert(this.p.speaker);
 
-		this.insert(this.p.description);
+		box.insert(this.p.description);
 
 		this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.OK, y: this.p.cy - 25}));
 		this.fit(10);

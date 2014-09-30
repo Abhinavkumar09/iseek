@@ -8,10 +8,20 @@ console.log("loaded loan element");
 
 Q.scene("loan_1", function(stage) {
 	stage.name = "loan_1";
-	Q.stageTMX("VirtualWorld.tmx", stage);
 
-	Q.audio.stop();
-	//Q.audio.play("Tavern.wav", {loop: true});
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX("VirtualWorld.tmx", stage);
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var Mira = Q("Player").first();
 	//Mira.add("KeyCarrier");
@@ -57,7 +67,7 @@ Q.scene("loan_1_Market", function(stage) {
 
 	
 
-	var Shyam = new Q.Person({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 50, y: 100, name:"Vendor"});
+	var Shyam = new Q.Person({sheet: "person_1_sheet", sprite: 'person_animation', frame:1, x: 50, y: 100, name:"Vendor"});
 	stage.insert(Shyam);
 	//Shyam.off("hit", Shyam, "collision");
 
@@ -239,12 +249,12 @@ Q.scene("loan_1_Market", function(stage) {
 					],
 				}),
 			],
-			context: Shyam,
+			context: stage,
 			func: "onquestioncompletion",
 		});
-		Q.stage().insert(form);
+		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 
-		Shyam.onquestioncompletion = function() {
+		stage.onquestioncompletion = function() {
 			setTimeout(function(){
 				Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 				stage.pause();

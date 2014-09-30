@@ -233,7 +233,7 @@ Q.Sprite.extend("GuruIcon", {
 
 	register: function(card) {
 		this.p.card = card;
-		this.p.card.p.speaker = new Q.Sprite({asset: "Icons/Guru_icon.png"});
+		this.p.card.p.speaker = new Q.Sprite({asset: this.p.asset});
 	},
 
 	touch: function(e) {

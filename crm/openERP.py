@@ -70,6 +70,9 @@ def read_employee(request):
 
 def add_employee(request):
 	client = openERPClient()
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
 	employee = {
 		'name' : request.GET['name'],
 		'work_phone' : request.GET['phone'],

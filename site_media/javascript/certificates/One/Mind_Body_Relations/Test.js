@@ -17,9 +17,9 @@ Q.scene("health_2",function(stage) {
 
 
 	var player = Q("Player").first();
-	stage.add("viewport").follow(player);
-	player.addMaterialContainer("Player");
 	stage.player = player;
+	stage.add("viewport").follow(player);
+	player.addMaterialContainer();
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
