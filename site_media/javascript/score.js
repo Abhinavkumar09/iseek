@@ -232,12 +232,15 @@ Q.Sprite.extend("GuruIcon", {
 	},
 
 	register: function(card) {
+		if(! this.stage)
+			console.log("The GuruIcon needs to be inserted before registering a card");
+
 		this.p.card = card;
 		this.p.card.p.speaker = new Q.Sprite({asset: this.p.asset});
+		this.touch();
 	},
 
 	touch: function(e) {
-		console.log("Guru touched");
 		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(this.p.card);;
 	}
 

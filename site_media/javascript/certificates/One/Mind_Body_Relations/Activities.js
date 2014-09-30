@@ -17,7 +17,7 @@ Q.scene("health_3", function(stage) {
 
 	var player = Q("Player").first();
 	stage.player = player;
-	stage.add("viewport").centerOn(400, 300);
+	stage.add("viewport").follow(player);
 	player.addMaterialContainer();
 
 	var i = 0;
@@ -50,7 +50,8 @@ Q.scene("health_3_HealthCenter", function(stage) {
 
 	var player = Q("Player").first();
 	player.add("KeyCarrier");
-	stage.add("viewport").follow(player);
+	stage.add("viewport").centerOn(400, 300);
+
 	player.p.label = "";
 	player.p.available = true;
 	player.duration = 2;
