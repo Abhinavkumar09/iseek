@@ -140,6 +140,22 @@ game.certificates = [
 					),
 				]
 			),
+			new CertificateBadge(
+				"Test", 
+				"Test",
+				"Objects/Medal/badge01.png",
+				false, 
+				[
+					new CertificateElement(
+						"test_1",
+						"Test",
+						"test.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+				]
+			),
 		]
 	),
 ];

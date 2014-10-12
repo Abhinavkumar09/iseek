@@ -883,3 +883,65 @@ Q.Card.extend("ActivityCard", {
 		this.destroy();
 	},
 });
+
+Q.scene("test_cards", function(stage) {
+	var receipt = new Q.Form({
+		content: [
+			new Q.MultipleChoiceQuestion({
+				question: new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "Buy or Sell?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					fill: null,
+				}), 
+				choices: [
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "Buy", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+					new Q.ImageText({
+						min_value: 0,
+						max_value: 100,
+						value: 50,
+					}), 
+				],
+			}),
+			new Q.RangeQuestion({
+				question: new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "What is the price?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					fill: null,
+				}), 
+				answer: [
+					new Q.UI.Spinner({
+						min_value: 0,
+						max_value: 100,
+						value: 50,
+					}), 
+				],
+			}),
+			new Q.RangeQuestion({
+				question: new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "What's the quantity?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					fill: null,
+				}), 
+				answer: [
+					new Q.UI.Spinner({
+						isSelectable: true,
+						fill: null,
+					}), 
+				],
+			}),
+		],
+		context: stage,
+		func: "onquestioncompletion",
+	});
+	stage.insert(receipt);
+});
