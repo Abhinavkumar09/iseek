@@ -902,9 +902,9 @@ Q.scene("test_cards", function(stage) {
 						fill: null,
 					}), 
 					new Q.ImageText({
-						min_value: 0,
-						max_value: 100,
-						value: 50,
+						label: new Q.UI.Text({label: "Buy", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
 					}), 
 				],
 			}),
@@ -916,13 +916,11 @@ Q.scene("test_cards", function(stage) {
 					}),
 					fill: null,
 				}), 
-				answer: [
-					new Q.UI.Spinner({
-						min_value: 0,
-						max_value: 100,
-						value: 50,
-					}), 
-				],
+				answer: new Q.UI.Spinner({
+					min_value: 0,
+					max_value: 100,
+					value: 50,
+				}), 
 			}),
 			new Q.RangeQuestion({
 				question: new Q.ImageText({
@@ -932,16 +930,14 @@ Q.scene("test_cards", function(stage) {
 					}),
 					fill: null,
 				}), 
-				answer: [
-					new Q.UI.Spinner({
-						isSelectable: true,
-						fill: null,
-					}), 
-				],
+				answer: new Q.UI.Spinner({
+					isSelectable: true,
+					fill: null,
+				}), 
 			}),
 		],
 		context: stage,
 		func: "onquestioncompletion",
 	});
-	stage.insert(receipt);
+	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt);
 });
