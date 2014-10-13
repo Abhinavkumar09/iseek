@@ -1,12 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+import random
 import os
 
 # User profile
 class Profile(User):
 	def save(self, *args, **kwargs):
-		self.set_password(self.username)
+		#self.set_password(self.username)
+		self.set_unusable_password()
+		self.username = self.first_name + self.last_name + str(random.randrange(10000,99999))
 		super(Profile, self).save(*args, **kwargs)
 
 

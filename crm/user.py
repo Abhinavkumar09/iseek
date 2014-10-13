@@ -8,17 +8,19 @@ from django.forms import ModelForm
 from psycopg2 import connect
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from django.conf import settings
+from iseek.mysettings import *
+
 
 class NewUserForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(NewUserForm, self).__init__(*args, **kwargs)
-		self.fields['username'].help_text = ''
+		#self.fields['username'].help_text = ''
 		
 
 	class Meta:
 		model=Profile
 		help_texts=None
-		exclude=("password", "is_staff", "is_active", "is_superuser", "last_login", "groups", "user_permissions", "email", "date_joined")
+		exclude=("username","password", "is_staff", "is_active", "is_superuser", "last_login", "groups", "user_permissions", "email", "date_joined")
 
 
 
@@ -30,14 +32,14 @@ def newuser(request):
 			#print p.username
 			#Change User and host accordingly. host must equal setting.OPENERP['url'], user must be a superuser that has permissions to create DATABASES
 			con = None
-			con = connect(dbname='postgres', user='SRS', host = 'localhost')
+			con = connect(dbname='postgres', user=POSTGRESUSER, host = POSTGRESHOST)
 			con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 			cur = con.cursor()
 			cur.execute('CREATE DATABASE ' + p.username + 'erp TEMPLATE openerp_template')
-			cur.execute('CREATE USER  '+ p.username + 'WITH PASSWORD \'' + p.username+'123\'')
+			cur.execute('CREATE USER  '+ p.username + ' WITH PASSWORD \'' + p.username+'123\'')
 			#cur.execute('GRANT SRS to ' + p.username)
 			#For some reason it is creating an account with the suffix "with"
-			cur.execute('GRANT ALL ON DATABASE ' + p.username+'erp' + ' to ' + p.username+'with')
+			cur.execute('GRANT ALL ON DATABASE ' + p.username+'erp' + ' to ' + p.username)
 			cur.close()
 			con.close()
 			#openerpdb = p['username']+erp
