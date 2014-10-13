@@ -1,20 +1,24 @@
 Q.UI.Layout.extend("ControlButtons", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 100,
+			w: Q.width,
 			h: 100,
-			x: 0,
-			y: 0,
+			z: 10,
 			button_type: Q.ControlButtons.DONE, 
 			layout: Q.UI.Layout.HORIZONTAL,
 			separation_x: 10,
 
+			callback_ok: "ok",
 			callback_done: "done",
 			callback_next: "next",
 			callback_prev: "prev",
+			callback_back: "back",
+			callback_sell: "sell",
+			callback_buy: "buy",
+			callback_edit: "edit",
+			callback_cancel: "cancel",
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -24,11 +28,15 @@ Q.UI.Layout.extend("ControlButtons", {
 	},
 
 	inserted: function() {
+		var callback_ok = this.p.callback_ok;
 		var callback_done = this.p.callback_done;
 		var callback_next = this.p.callback_next;
 		var callback_prev = this.p.callback_prev;
 		var callback_buy = this.p.callback_buy;
 		var callback_sell = this.p.callback_sell;
+		var callback_back = this.p.callback_back;
+		var callback_edit = this.p.callback_edit;
+		var callback_cancel = this.p.callback_cancel;
 
 		var context = this.p.context;
 
@@ -38,10 +46,16 @@ Q.UI.Layout.extend("ControlButtons", {
 				context[callback_prev]();
 			});
 		}
-		if(this.p.button_type & Q.ControlButtons.NEXT) {
-			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+		if(this.p.button_type & Q.ControlButtons.BACK) {
+			var b = this.insert(new Q.UI.Button({label: "Back", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
-				context[callback_next]();
+				context[callback_back]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.CANCEL) {
+			var b = this.insert(new Q.UI.Button({label: "Cancel", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_cancel]();
 			});
 		}
 		if(this.p.button_type & Q.ControlButtons.DONE) {
@@ -57,9 +71,27 @@ Q.UI.Layout.extend("ControlButtons", {
 			});
 		}
 		if(this.p.button_type & Q.ControlButtons.SELL) {
-			var b = this.insert(new Q.UI.Button({label: "Sell", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			var b = this.insert(new Q.UI.Button({z: 10, label: "Sell", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
 			b.on("click", function(){
 				context[callback_sell]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.NEXT) {
+			var b = this.insert(new Q.UI.Button({label: "Next", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_next]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.EDIT) {
+			var b = this.insert(new Q.UI.Button({label: "Edit", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_edit]();
+			});
+		}
+		if(this.p.button_type & Q.ControlButtons.OK) {
+			var b = this.insert(new Q.UI.Button({label: "Ok", radius: 5, stroke: "#F5E0CC", border: 2, fill: "#8F4700"}));
+			b.on("click", function(){
+				context[callback_ok]();
 			});
 		}
 		this.fit(0);
@@ -72,6 +104,8 @@ Q.ControlButtons.PREV = 8;
 Q.ControlButtons.DONE = 16;
 Q.ControlButtons.BUY = 32;
 Q.ControlButtons.SELL = 64;
+Q.ControlButtons.BACK = 128;
+Q.ControlButtons.EDIT = 256;
 
 
 
@@ -81,16 +115,11 @@ Q.ControlButtons.SELL = 64;
 Q.UI.Layout.extend("Video", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 400,
-			h: 300,
+			w: Q.width,
+			h: Q.height,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN,
 			radius: 0,
-
-			status: Q.Form.INCOMPLETE,
-			layout: Q.UI.Layout.VERTICAL,
 			filename: "",
 		}));
 		this.on("inserted");
@@ -106,6 +135,7 @@ Q.UI.Layout.extend("Video", {
 	},
 
 	draw: function(ctx) {
+		//console.log("x, y, w, h: " + (-this.p.w/2) + ", " + (-this.p.h/2) + ", " + this.p.w + ", " + this.p.h);
 		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
 	},
 });
@@ -143,6 +173,9 @@ Q.UI.Layout.extend("ImageText", {
 		if(adjustedP.layoutType == Q.ImageText.LEFT_POSITION)
 			layout = Q.UI.Layout.HORIZONTAL;
 
+//		if(adjustedP.isSelectable) {
+//			adjustedP.type =  Q.SPRITE_NONE;
+//		}
 		this._super(Q._defaults(adjustedP, {layout: layout, }));
 
 		this.on("inserted");
@@ -150,7 +183,6 @@ Q.UI.Layout.extend("ImageText", {
 			this.add("Touch");
 			this.on("touch");
 		}
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -196,7 +228,7 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 		this._super(Q._defaults(p, {
 			w: 400,
 			h: 500,
-			type: Q.SPRITE_NONE,
+			type: Q.SPRITE_PURE_UI,
 			collisionMask: Q.SPRITE_NONE,
 			separation_y: 0,
 			align: Q.UI.Layout.LEFT_ALIGN,
@@ -209,7 +241,6 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 			layout: Q.UI.Layout.VERTICAL,
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -223,7 +254,6 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 		for(var i = 0; i < this.p.choices.length; i++) {
 			this.p.choices[i].p.parent = this;
 			this.insert(this.p.choices[i]);
-			console.log("choice x:" + this.p.choices[i].p.x + ", y:" + this.p.choices[i].p.y + ", cx:" + this.p.choices[i].p.cx + ", cy:" + this.p.choices[i].p.cy + ", w:" + this.p.choices[i].p.w + ", h:" + this.p.choices[i].p.h);
 		}
 		this.fit(10);
 	},
@@ -259,7 +289,6 @@ Q.UI.Layout.extend("RangeQuestion", {
 			layout: Q.UI.Layout.VERTICAL,
 		}));
 		this.on("inserted");
-		this.on("destroyed");
 	},
 
 	destroyed: function() {
@@ -276,40 +305,385 @@ Q.UI.Layout.extend("RangeQuestion", {
 });
 
 
-/** Info Card
-  * @param this.p.video - video object
-  * @param this.p.label - label object(text)
-  */
-Q.UI.Layout.extend("InfoQuestion", {
+/*
+	disabled: is It disabled right now?
+	action_card: Expects as input a card that should be displayed if the tile is clicked
+*/
+Q.ImageText.extend("Tile", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 400,
-			h: 300,
+			isSelected: false,
+		}));
+
+		this.add("Touch");
+		this.on("touch");
+	},
+
+	touch: function() {
+		console.log("tile touch");
+		if(this.p.disabled == false) {
+			// display the next card
+			if(this.p.action_card) {
+				this.p.action_card.p.back_card = this.p.card;
+				var stage = this.stage;
+				this.p.card.destroy();
+				stage.insert(this.p.action_card);
+			}
+			else if (this.p.action){
+				if(this.p.context) 
+					this.p.context[this.p["action"]](this.p.action_params);
+				else
+					this[this.p["action"]](this.p.action_params);
+			}
+		}
+		else{
+			this.p.isSelected = true;
+		}
+	},
+});
+
+
+/*
+	Cards are supposed to be shown outside the virtual world, on the middle of the screen. I.e., irrespective of the player's positions
+	or some other Sprite's position. This of it as when you read a card, your eyes focus on the card and all other things are blurred out.
+
+	This also means that the cards should not be inserted inside any container. It should be inserted directly on the stage.
+*/
+Q.UI.Layout.extend("Card", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			sort: true,
+			z: 10,
+			x: Q.width/2,
+			y: Q.height/2,
+			w: Q.width,
+			h: Q.height,
 			type: Q.SPRITE_NONE,
 			collisionMask: Q.SPRITE_NONE,
+			separationType: 1,
 			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN,
-
+			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			fill: "rgba(255, 255, 255, 1)",
 			radius: 0,
+		}));
+	},
 
-			status: Q.Form.INCOMPLETE,
-			isSelectAll: false,
-			answers: [],
+	destroyed: function() {
+		if(this.p.stage)
+			this.p.stage.unpause();
+		else
+			this.p.context.unpause();
+		this.children.forEach(function(child) {
+			child.destroy();
+		});
+	},
+
+	movefront: function() {
+		if(this.p.stage)
+			this.p.stage.pause();
+		else
+			this.p.context.pause();
+	},
+
+	inserted: function() {
+		this.movefront();
+	},
+
+	show: function(content) {
+		this.p.content = content;
+		this.destroyed();
+		this.inserted();
+	},
+
+	done: function() {
+		this.destroy();
+	},
+
+	ok: function() {
+		this.destroy();
+	}
+
+});
+
+/** Info Card
+  */
+Q.Card.extend("StageInfoCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			align: Q.UI.Layout.CENTER_ALIGN,
+			separation_y: 10,
 			layout: Q.UI.Layout.VERTICAL,
+			border: 1,
+			radius: 3,
 		}));
 		this.on("inserted");
 	},
 
 	inserted: function() {
-		if(this.p.video){
-			this.insert(this.p.video);
-		}
-		if(this.p.question){
-			this.insert(this.p.question);
-		}
+		this.movefront();
+
+		var box = new Q.UI.Layout({layout: Q.UI.Layout.HORIZONTAL, ifFit: true});
+		this.insert(box);
+		box.insert(this.p.speaker);
+
+		box.insert(this.p.description);
+
+		this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.OK, y: this.p.cy - 25}));
 		this.fit(10);
 	},
 });
+
+
+
+/*
+	Product card will be used to show information for a product. Using this card, a player will be able to buy a product/raw material as well.
+
+	Requires, the product following product information:
+		* Product Name
+		* Product Image
+		* Product Description
+		* If buyable by the player
+			-- Price
+		* If sellable by the player
+			-- Initial price
+
+		* back_card: If this card is shown as a result of a tile card, then we want a button to go back
+
+	Design:
+		The card is 600x400
+			The top left 100x100 is for the image
+			the top right 100x500 is for the name
+			the bottom 50x600 is for the buttons
+			the 50x600 before bottom is for the price/quantity
+			the middle part is for description
+	*/
+Q.Card.extend("Product", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+
+		this.p.image.p.x = -this.p.cx + 50;
+		this.p.image.p.y = -this.p.cy + 50;
+
+		this.p.name.p.x = this.p.cx - 250;
+		this.p.name.p.y = -this.p.cy + 50;
+
+		this.p.description.p.x = 0;
+		this.p.description.p.y = 0;
+
+		this.insert(this.p.image);
+		this.insert(this.p.name);
+		this.insert(this.p.description);
+
+		var type = 0;
+
+		if(this.p.back_card)
+			type += Q.ControlButtons.BACK;
+
+		if(this.p.buyable) {
+			this.p.price_text = new Q.UI.Text({label: "Price: " + this.p.price, x: -this.p.cx + 150, y: this.p.cy - 100});
+			this.insert(this.p.price_text);
+
+			this.p.quantity_text = new Q.UI.Text({label: "Quantity", x: this.p.cx - 200, y: this.p.cy - 100});
+			this.p.quantity = new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
+			this.insert(this.p.quantity_text);
+			this.insert(this.p.quantity);
+			type += Q.ControlButtons.BUY;
+			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+		}
+		else if(this.p.sellable) {
+			this.p.price_text = new Q.UI.Text({label: "Price", x: -this.p.cx + 50, y: this.p.cy - 100});
+			this.p.price = new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
+			this.insert(this.p.price_text);
+			this.insert(this.p.price);
+			type += Q.ControlButtons.SELL;
+			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+		}
+
+	},
+
+	back: function() {
+		console.log("go back");
+		this.destroy();
+		this.stage.insert(this.p.back_card);
+	},
+
+	buy: function() {
+		console.log("buy");
+	},
+
+	sell: function() {
+		console.log("sell");
+	},
+});
+
+Q.Card.extend("BusinessCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+
+		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: this.p.person.sheet, frame: this.p.person.frame});
+		this.insert(player);
+
+		var rows = [];
+		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+		var ninput = new Q.UI.Text({label: this.p.person.name, x: 0, y: 0});
+		rows.push([name, ninput]);
+
+		var address = new Q.UI.Text({label: "Address", x: 0, y: 0});
+		var ainput = new Q.UI.Text({label: this.p.person.address, x: 0, y: 0});
+		rows.push([address, ainput]);
+
+		var phone = new Q.UI.Text({label: "Phone", x: 0, y: 0});
+		var pinput = new Q.UI.Text({label: this.p.person.phone, x: 0, y: 0});
+		rows.push([phone, pinput]);
+
+		var skill = new Q.UI.Text({label: "Skill", x: 0, y: 0});
+		var sinput = new Q.UI.Text({label: this.p.person.skill, x: 0, y: 0});
+		rows.push([skill, sinput]);
+
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(con1);
+
+		var shg_card = new Q.SHGCard(this.p);
+
+		var shg = new Q.Tile({
+			label: new Q.UI.Text({label: "SHG"}), 
+			x: -this.p.w/2 + 50, 
+			y: -this.p.h/2 + 275,
+			disabled: false,
+			action_card: shg_card,
+			card: this,
+		});
+		this.insert(shg);
+
+
+		rows = [];
+		name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+		ninput = new Q.UI.Text({label: this.p.SHG.name, x: 0, y: 0});
+		rows.push([name, ninput]);
+
+		address = new Q.UI.Text({label: "Address", x: 0, y: 0});
+		ainput = new Q.UI.Text({label: this.p.SHG.address, x: 0, y: 0});
+		rows.push([address, ainput]);
+
+		var con2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 350 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(con2);
+
+		var type = Q.ControlButtons.OK;
+		type += Q.ControlButtons.EDIT;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	ok: function() {
+		this.destroy();
+		this.p.context[this.p.oncompletion]();
+	},
+
+	edit: function() {
+		var card = new Q.BusinessCardForm(this.p);
+		this.stage.insert(card);
+
+		this.destroy();
+	},
+
+});
+
+
+
+
+
+Q.Card.extend("BusinessCardForm", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+
+	inserted: function() {
+		this.movefront();
+
+		var player = new Q.Person({x: -this.p.w/2 + 50, y: -this.p.h/2 + 75, sheet: this.p.person.sheet, frame: this.p.person.frame});
+		this.insert(player);
+
+		var rows = [];
+//		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
+		var name = new Q.UI.WrappableText({label: "Name", w: 100, h: 300, x: 0, y: 0});
+		this.ninput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.name + "' />", x: 0, y: 0});
+		rows.push([name, this.ninput]);
+
+		var address = new Q.UI.WrappableText({label: "Address", w: 100, x: 0, y: 0});
+		this.ainput = new Q.UI.HTMLElement({html: "<textarea width= 200 height = 50>" + this.p.person.address + "</textarea>", x: 0, y: 0});
+		rows.push([address, this.ainput]);
+
+		var phone = new Q.UI.WrappableText({label: "Phone", w:100, x: 0, y: 0});
+		this.pinput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.phone + "' />", x: 0, y: 0});
+		rows.push([phone, this.pinput]);
+
+		var skill = new Q.UI.WrappableText({label: "Skill", w: 100, x: 0, y: 0});
+		this.sinput = new Q.UI.HTMLElement({html: "<select> <option value='Knitting'>Knitting</option><option value='Weaving'>Weaving</option><option value='Sowing'>Sowing</option> </select>", x: 0, y: 0});
+		rows.push([skill, this.sinput]);
+
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(con1);
+
+		var type = Q.ControlButtons.CANCEL;
+		type += Q.ControlButtons.DONE;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	cancel: function() {
+		var card = new Q.BusinessCard(this.p);
+		this.stage.insert(card);
+		this.destroy();
+	},
+
+	done: function() {
+		var person = this.p.person;
+		$(this.ninput.el).find('input:text, input:password, input:file, select, textarea')
+			.each(function() {
+				person.name = $(this).val();
+		});
+		$(this.ainput.el).find('input:text, input:password, input:file, select, textarea')
+			.each(function() {
+				person.address = $(this).val();
+		});
+		$(this.pinput.el).find('input:text, input:password, input:file, select, textarea')
+			.each(function() {
+				person.phone = $(this).val();
+		});
+		$(this.sinput.el).find('input:text, input:password, input:file, select, textarea')
+			.each(function() {
+				person.skill = $(this).val();
+		});
+		game.sync_data["employee"] = true;
+		var card = new Q.BusinessCard(this.p);
+		this.stage.insert(card);
+
+		this.destroy();
+	},
+});
+
+
+
 
 
 /**
@@ -318,36 +692,21 @@ Q.UI.Layout.extend("InfoQuestion", {
 		exit_type: defines how the question will be considered answered. For example,
 			should there is "Ok" and "Cancel" button, or just "Continue" button.
 */
-Q.UI.Layout.extend("Form", {
+Q.Card.extend("Form", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			x: 400,
-			y: 300,
-			w: 600,
-			h: 400,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separationType: 1,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
+			align: 0,
+			layout: Q.UI.Layout.NONE,
 			status: Q.Form.INCOMPLETE,
-			fill: "rgba(255, 255, 255, 1)",
 			index: 0,
-			radius: 0,
-			border: 0,
 		}));
 		//, context: Mira, func: "onquestioncompletion"
-		this.on("destroyed");
 		this.on("inserted");
 	},
 
-	destroyed: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
-	},
-
 	inserted: function() {
+		this.movefront();
+
 		this.insert(this.p.content[this.p.index]);
 		var type = 0;
 		if(this.p.content[this.p.index+1]!=null)
@@ -358,12 +717,12 @@ Q.UI.Layout.extend("Form", {
 		if(this.p.content[this.p.index-1]!=null)
 			type = type | Q.ControlButtons.PREV;
 
-		this.insert(new Q.ControlButtons({context: this, button_type: type}));
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
 	},
 
 
 	done: function() {
-		this.p.card.destroy();
+		this.destroy();
 		if(this.p.context)
 			this.p.context[this.p.func]();
 	},
@@ -389,54 +748,109 @@ Q.Form.INCOMPLETE = 1;
 Q.Form.COMPLETE = 2;
 
 
-/*
-	Product card will be used to show information for a product. Using this card, a player will be able to buy a product/raw material as well.
 
-	Requires, the product following product information:
-		* Product Name
-		* Product Image
-		* Product Description
-		* If buyable by the player
-			-- Price
-		* If sellable by the player
-			-- Initial price
-
-	Design:
-		The card is 600x400
-			The top left 100x100 is for the image
-			the top right 100x500 is for the name
-			the bottom 50x600 is for the buttons
-			the 50x600 before bottom is for the price/quantity
-			the middle part is for description
-	*/
-Q.UI.Layout.extend("Product", {
+Q.Card.extend("TileCard", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
-			w: 600,
-			h: 400,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separationType: 1,
-			separation_y: 10,
 			layout: Q.UI.Layout.NONE,
-			fill: "rgba(255, 255, 255, 1)",
 		}));
-		this.on("destroyed");
 		this.on("inserted");
 	},
 
-	destroyed: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
+	inserted: function() {
+		this.movefront();
+
+		if(this.p.grid == Q.TileCard.GRID_3_1) {
+			count_r = 1;
+			count_c = 3;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_2_1) {
+			count_r = 1;
+			count_c = 2;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_2_2) {
+			count_r = 2;
+			count_c = 2;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_3_2) {
+			count_r = 2;
+			count_c = 3;
+		}
+		else if(this.p.grid == Q.TileCard.GRID_3_3) {
+			count_r = 3;
+			count_c = 3;
+		}
+		for(var i = 0; i < this.p.tiles.length; i++) {
+			console.log("tile: " + i);
+			var r = Math.floor(i / count_c);
+			var c = i % count_c;
+			this.p.tiles[i].p.x = -this.p.cx + (c + 0.5) * this.p.w / count_c;
+			this.p.tiles[i].p.y = -this.p.cy + (r + 0.5) * this.p.h / count_r;
+
+			this.p.tiles[i].p.card = this;
+			this.insert(this.p.tiles[i]);
+		}
+
+		var type = Q.ControlButtons.OK;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	ok: function() {
+		this.destroy();
+	}
+});
+
+Q.TileCard.GRID_2_1 = 1;
+Q.TileCard.GRID_2_2 = 2;
+Q.TileCard.GRID_3_2 = 4;
+Q.TileCard.GRID_3_3 = 8;
+Q.TileCard.GRID_3_1 = 16;
+
+
+Q.TileCard.extend("SHGCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			grid: Q.TileCard.GRID_3_2,
+		}));
+
+		this.p.tiles = [];
+		var people = this.p.SHG.people;
+		for(p in people) {
+			var person = new Q.Tile({
+				image: new Q.Sprite({sheet: people[p].sheet, frame: people[p].frame}), 
+				disabled: true,
+				card: this,
+			});
+			this.p.tiles.push(person);
+		}
+	},
+
+	cancel: function() {
+		this.stage.insert(this.p.back_card);
+		this.destroy();
+	},
+
+});
+
+
+
+Q.Card.extend("ActivityCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+			grid: Q.TileCard.GRID_3_2,
+			// type: Q.ControlButtons.BACK,
+		}));
+		this.on("inserted");
 	},
 
 	inserted: function() {
 		this.p.image.p.x = -this.p.cx + 50;
 		this.p.image.p.y = -this.p.cy + 50;
 
-		this.p.name.p.x = this.p.cx - 250;
-		this.p.name.p.y = -this.p.cy + 50;
+		this.p.name.p.x = this.p.cx - 300;
+		this.p.name.p.y = -this.p.cy + 150;
 
 		this.p.description.p.x = 0;
 		this.p.description.p.y = 0;
@@ -445,90 +859,27 @@ Q.UI.Layout.extend("Product", {
 		this.insert(this.p.name);
 		this.insert(this.p.description);
 
-		if(this.p.buyable) {
-			this.p.price_text = new Q.UI.Text({label: "Price: " + this.p.price, x: -this.p.cx + 150, y: this.p.cy - 100});
-			this.insert(this.p.price_text);
+		var type = 0;
+		type += Q.ControlButtons.DONE;		
 
-			this.p.quantity_text = new Q.UI.Text({label: "Quantity", x: this.p.cx - 200, y: this.p.cy - 100});
-			this.p.quantity = new Q.UI.Spinner({color: "#8F4700", x: this.p.cx - 100, y: this.p.cy - 100}, null);
-			this.insert(this.p.quantity_text);
-			this.insert(this.p.quantity);
-			var type = Q.ControlButtons.BUY;
-			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
-		}
-		else if(this.p.sellable) {
-			this.p.price_text = new Q.UI.Text({label: "Price", x: -this.p.cx + 50, y: this.p.cy - 100});
-			this.p.price = new Q.UI.Spinner({color: "#8F4700", x: -this.p.cx + 150, y: this.p.cy - 100}, null);
-			this.insert(this.p.price_text);
-			this.insert(this.p.price);
-			var type = Q.ControlButtons.SET;
-			this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
-		}
+		this.insert((new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25})));
+
+		this.insert(new Q.HealthBar({x: -120, y: 50, scoreUpto: this.p.scoreUpto[0]}));
+		this.insert(new Q.UI.Text({x: -120, y: 110, label: "Mind"}));
+		this.insert(new Q.HealthBar({x: 0, y: 50, scoreUpto: this.p.scoreUpto[1]}));
+		this.insert(new Q.UI.Text({x: 0, y: 110, label: "Body"}));
+		this.insert(new Q.HealthBar({x: 120, y: 50, scoreUpto: this.p.scoreUpto[2]}));
+		this.insert(new Q.UI.Text({x: 120, y: 110, label: "Relations"}));
 	},
 
-	buy: function() {
-	}
-});
-
-
-Q.UI.Layout.extend("Card", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			x: 400,
-			y: 300,
-			w: 600,
-			h: 400,
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-			separationType: 1,
-			separation_y: 10,
-			align: Q.UI.Layout.CENTER_ALIGN | Q.UI.Layout.START_TOP,
-			fill: "rgba(255, 255, 255, 1)",
-			radius: 0,
-			shadow: 5,
-			border: 2,
-		}));
-		this.on("destroyed");
-		this.on("inserted");
+	back: function() {
+		console.log("go back");
+		this.destroy();
+		this.stage.insert(this.p.back_card);
 	},
 
-	destroyed: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
+	done: function() {
+		console.log("done");
+		this.destroy();
 	},
-
-	inserted: function() {
-		this.insert(this.p.content);
-		this.p.content.p.card = this;
-	},
-
-
-	addShadow: function(ctx) {
-		if(this.p.shadow) {
-			var shadowAmount = Q._isNumber(this.p.shadow) ? this.p.shadow : 5;
-			ctx.shadowOffsetX=shadowAmount;
-			ctx.shadowOffsetY=shadowAmount;
-			ctx.shadowColor = this.p.shadowColor || "rgba(0,0,50,0.1)";
-		}
-	},
-
-	clearShadow: function(ctx) {
-		ctx.shadowColor = "transparent";
-	},
-
-
-});
-
-
-Q.scene("test_cards", function(stage) {
-	var product = new Q.Product({
-		image: new Q.ImageText({image: new Q.Sprite({sheet: "basket_01_sheet", frame:2})}),
-		name: new Q.ImageText({label: new Q.UI.Text({label: "Basket"})}),
-		description: new Q.ImageText({label: new Q.UI.Text({label: "Basket type 1"})}),
-		sellable: true,
-	});
-
-	var card = new Q.Card({content: product});
-	stage.insert(card);
 });

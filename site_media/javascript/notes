@@ -4,12 +4,6 @@
 
 1) Database tables for products and formula list
 
-2) Close up on the table when you click on the table
-
-
-Make sure we can show hindi
-
-
 
 Add calendar, add password feature
 
@@ -18,8 +12,6 @@ QR code
 
 Real world app for keeping ERP. 
 
-
-Zoom out of the market and show only the heads
 
 
 0) Maize for asking questions health, mind and body
@@ -61,4 +53,89 @@ Add random events like baskets were stolen. Then make the player spend some mone
 
 
 Check if we can skip openERP UI to update data
+
+
+
+Add health points
+	-- If the health points cross a threshold, increase the health bar length
+
+
+Trigger health events based on what events they have already handled, so that there is a balanced approach in how we make them do certain health tasks.
+
+Talk to Alethia to decide how to represent the symptoms (voice/visual)
+
+Create https certificate, 
+
+
+In TileCard, when you click it looks flip
+
+September 26th: Advisory counsil and them go to India
+October 9th: Coming back
+October 24th: Meeting in China with Walmart
+
+
+Meetings:
+Health
+Story elements: Technical meeting.
+Technical requirements fullfilled? Works on mobile, and looks fine and so on.
+
+Talk to Alethia, and see if we can do animations rather than using videos
+
+Setup openERP on iseek
+
+Update the website, and check if we can keep it updated.
+
+
+See if we can host it on Google AppEngine : Nope
+
+Check if openERP API can support transactions
+
+HR salary (complicated as employees are partner)
+
+
+Check if we can use the mobile tilting to move things around
+
+
+We will have 4 inch screen and 5 inch screen both.
+
+
+Health bar, change the color to green from red (or a mixture)
+
+Add trash bins in the village
+
+Add slow and fast speed for Mira
+
+Add blinking 
+
+Take picture for SHG members and using app
+
+Internationalize the language
+
+Visual pointer to where the player needs to go
+
+Trash (we already have components). Show a pile of junk as well, and penalize the player when the player throws the trash to the pile and reward when they throw it in the trash bin.
+
+
+Back button
+
+
+Scale the game according to the screen
+
+
+Save and restore stage
+
+
+Sync product information with openERP (and formula list)
+
+Add the first screen which asks if the player wants to go for learning or running the real game
+
+Priority:
+0) Entering personal information (including photos of the player)
+1) Entering the product information (including formula)
+2) Sale/Purchase activivities (pull in informtion from the openERP) (send text messages/emails to the senders/buyer)
+3) Profit/Loss information
+4) Add/remove SHG members
+5) Pick trash from the village
+6) 
+
 

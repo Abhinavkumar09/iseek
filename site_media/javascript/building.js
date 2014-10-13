@@ -27,14 +27,19 @@ Q.Sprite.extend("Door", {
 	collision: function(col) {
 //		console.log("Collision with Door, reported by the door");
 		if(col.obj.isA("Player")) {
+			var door = this;
+			Q("Player", Q.STAGE_LEVEL_PRIMARY).each(function() {
+				if(this.reStock && door.stage.player.p.materialcontainer) {
+					console.log("restocking");
+					this.reStock(door.stage.player.p.materialcontainer.p.stocks);
+				}
+				//this.reStock('Player');
+				if(this.resetKeyContainer)
+					this.resetKeyContainer();
+			});
+
+
 			// unpause the original stage
-//			console.log("unpausing primary level");
-//			Q.stage(Q.STAGE_LEVEL_PRIMARY).unpause();
-
-//			console.log("Clearing learning module stage");
-//			Q.clearStage(Q.STAGE_LEVEL_LEARNING_MODULE);
-
-
 			var options = Q._defaults(this.stage.options, {direction: "dark"});
 			options["nextStage"] = [
 				["unpause", Q.STAGE_LEVEL_PRIMARY],
@@ -42,12 +47,6 @@ Q.Sprite.extend("Door", {
 			];
 
 			Q.stageScene("TransitionScene", Q.STAGE_LEVEL_TRANSITION, options);
-
-
-			Q("Player", Q.STAGE_LEVEL_PRIMARY).each(function() {
-				//this.reStock('Player');
-				this.resetKeyContainer();
-			});
 		}
 	},
 

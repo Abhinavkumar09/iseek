@@ -3,18 +3,18 @@ Q.Sprite.extend("Person", {
 		this._super(Q._defaults(p, {
 			x: 200,
 			y: 300,
-			z: 1,
+			z: Q.PLAYER_Z,
 			gravity: 0,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_COLLIDABLE,
 			isInteractable: false,
-			labels: ["Hi!",],
+			label: "Hi!",
 
 			time_spent: 0,
 			covered_material: 0,
 			duration: 1,
 		}));
-		this.add("Talk, Pulsate");
+		this.add("Talk");
 
 		if(this.p.isInteractable)
 			this.on("hit", this, "collision");		
@@ -22,8 +22,7 @@ Q.Sprite.extend("Person", {
 
 
 	collision: function(col) {
-		console.log("first collision");
-		this.quote(this.p.labels);
+		this.quote(this.p.label);
 	},
 
 });
@@ -256,55 +255,54 @@ Q.Person.extend("Buyer", {
 });
 
 
-Q.Person.extend("Teacher", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			asset: "mira_1.png"
-		}));
-	},
-});
-
 
 Q.Person.extend("Enterpreneur", {
 	init: function(p) {
 		this._super(p);
-		this.p.labels = [
-			"We make baskets to sell at the local market.", 
-			"Each girl weaves the type of basker that they are best at making", 
-			"Can you sell some of these baskets?",
-			"If you sell, we will give you 10% commission."
-		];
-		this.add("Question");
+		this.p.label = "We make baskets to sell at the local market. Each girl weaves the type of basket that they are best at making. Can you sell some of these baskets? If you sell, we will give you 10% commission.";
 	},
 
 	collision: function(col) {
 		// Check the current state
 		if(Object.keys(Q.game.stocks['SeemaWorkshop']).length != 0) {
-			this.quote(this.p.labels);
+			this.bottom_quote(this.p.label);
 			Q("NewMaterialContainer").set({"isClickable": true});
 		}
 		else {
-			this.p.question = new Question(["yay! What type of basket do you think we should make now?", ["Basket 1", "Basket 2", ]]);
-			this.show_question(this.p.question);
-			enterpreneur = this;
-			setTimeout(function(){enterpreneur.ask(true);}, 1000);
+			var question = new Q.MultipleChoiceQuestion({
+									question: new Q.ImageText({
+										label: new Q.UI.WrappableText({label: "What type of basket do you think we should make now?"}),
+										fill: null,
+									}), 
+									choices: [
+										new Q.ImageText({
+											label: new Q.UI.WrappableText({label: "Basket 1"}),
+											isSelectable: true,
+											fill: null,
+										}), 
+										new Q.ImageText({
+											label: new Q.UI.WrappableText({label: "Basket 2"}),
+											isSelectable: true,
+											fill: null,
+										}), 
+									],
+								})
+
+			var form = new Q.Form({
+				content: [question],
+				stage: this.stage,
+				context: this,
+				func: "onquestioncompletion",
+			});
+
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
 	},
 
-	ask: function(wait) {
-		console.log("ask");
-		if(this.p.question.status == 1) {
-			console.log("it has been answered");
-			// Lecture Done
-			// Show LevelFinished scene
-			Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
-			return;
-		}
-
-		enterpreneur = this;
-		setTimeout(function(){enterpreneur.ask(true);}, 1000);
+	onquestioncompletion: function() {
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+		this.stage.pause();
 	},
-
 });
 
 
@@ -377,3 +375,4 @@ Q.Person.extend("Player", {
 	},
 
 });
+

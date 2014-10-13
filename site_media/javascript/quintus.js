@@ -1113,7 +1113,7 @@ var Quintus = function Quintus(opts) {
      @return {Object} returns this for chaining purposes
     */
     destroy: function() {
-      if(this.isDestroyed) { return; }
+//      if(this.isDestroyed) { return; }
       this.trigger('destroyed');
       this.debind();
       if(this.stage && this.stage.remove) {
@@ -3091,6 +3091,7 @@ Quintus.Audio = function(Q) {
       var source = Q.audioContext.createBufferSource();
       source.buffer = Q.asset(s);
       source.connect(Q.audioContext.destination);
+
       if(options && options['loop']) {
         source.loop = true;
       } else {
@@ -3114,7 +3115,6 @@ Quintus.Audio = function(Q) {
         }
       }
     };
-
   };
 
   Q.audio.enableHTML5Sound = function() {
@@ -3553,7 +3553,7 @@ Quintus.Input = function(Q) {
         color: "#CCC",
         background: "#000",
         alpha: 0.5,
-        zone: Q.width / 2,
+        zone: Q.width,
         joypadTouch: null,
         inputs: DEFAULT_JOYPAD_INPUTS,
         triggers: []
@@ -3871,12 +3871,15 @@ Quintus.Input = function(Q) {
    * @method Q.controls
    * @param {Boolean} joypad - enable 4-way joypad (true) or just left, right controls (false, undefined)
    */
-  Q.controls = function(joypad) {
+  Q.controls = function(joypad, controls) {
     Q.input.keyboardControls();
 
     if(joypad) {
+      if(controls == null) {
+        controls = [ [],[],[],['action','b'],['fire','a']]
+      }
       Q.input.touchControls({
-        controls: [ [],[],[],['action','b'],['fire','a']]
+        controls: controls
       });
       Q.input.joypadControls();
     } else {
@@ -6669,31 +6672,64 @@ Quintus.UI = function(Q) {
 
       Q.wrapper.style.overflow = "hidden";
 
-      this.el = document.createElement("div");
-      this.el.innerHTML = this.p.html;
+      this.on("inserted");
+    },
 
-      Q.wrapper.appendChild(this.el);
-      this.on("inserted",function(parent) {
+    inserted: function() {
+        this.el = document.createElement("div");
+        this.el.innerHTML = this.p.html;
+
+        Q.wrapper.appendChild(this.el);
         this.position();
-        parent.on("destroyed",this,"remove");
-        parent.on("clear",this,"remove");
-      });
-    },
+	},
 
-    position: function() {
-    },
-
-    step: function(dt) {
-      this._super(dt);
-      this.position();
-    },
-
-    remove: function() {
+    destroyed: function() {
       if(this.el) { 
         Q.wrapper.removeChild(this.el);
         this.el= null;
       }
-    }
+    },
+
+    position: function() {
+        if(! this.el)
+          return;
+		var x = this.p.x;
+		var y = this.p.y;
+
+        if (window.getComputedStyle) {
+	      var computedStyle = getComputedStyle(this.el, null)
+	    } else {
+	      computedStyle = this.el.currentStyle;
+	    }
+
+
+		if(this.container) {
+			var cords = this.container.matrix.transform(x, y); 
+			x = cords[0];
+			y = cords[1];
+		}
+
+        x -= parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2)) / 2;
+        y -= parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2)) / 2;
+
+		this.p.w = parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2));
+		this.p.h = parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2));
+		this.p.cx = parseInt(computedStyle.width.substr(0, computedStyle.width.length - 2))/2;
+		this.p.cy = parseInt(computedStyle.height.substr(0, computedStyle.height.length - 2))/2;
+
+		// Adjust it according to the current view of the stage
+		if(this.stage.viewport) {
+			x -= this.stage.viewport.x;
+			y -= this.stage.viewport.y;
+		}
+
+		this.el.style.left = x + "px";
+		this.el.style.top = y + "px";
+    },
+
+    step: function(dt) {
+      this.position();
+    },
   });
 
   Q.UI.VerticalLayout = Q.Sprite.extend("UI.VerticalLayout",{

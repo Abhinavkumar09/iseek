@@ -9,29 +9,29 @@
    <properties>
     <property name="Class" value="Player"/>
     <property name="frame" value="1"/>
-    <property name="sheet" value="mira_sheet"/>
+    <property name="sheet" value="player_sheet"/>
     <property name="sprite" value="person_animation"/>
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="295" name="sahiya" tilewidth="32" tileheight="64">
-  <image source="../figs/sahiya.png" width="32" height="64"/>
-  <tile id="0">
-   <properties>
-    <property name="Class" value="Enterpreneur"/>
-    <property name="asset" value="People/sahiya.png"/>
-    <property name="name" value="Entrepreneur"/>
-   </properties>
-  </tile>
- </tileset>
- <tileset firstgid="296" name="SHG members" tilewidth="32" tileheight="64">
+ <tileset firstgid="295" name="SHG members" tilewidth="32" tileheight="64">
   <image source="../figs/Mira.png" width="96" height="254"/>
   <tile id="1">
    <properties>
     <property name="Class" value="Person"/>
     <property name="frame" value="1"/>
     <property name="name" value="SHG member"/>
-    <property name="sheet" value="mira_sheet"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="304" name="Enterpreneur" tilewidth="32" tileheight="64">
+  <image source="../figs/People/Enterpreneur.png" width="96" height="254"/>
+  <tile id="1">
+   <properties>
+    <property name="Class" value="Enterpreneur"/>
+    <property name="frame" value="1"/>
+    <property name="name" value="Enterpreneur"/>
+    <property name="sheet" value="enterpreneur_sheet"/>
    </properties>
   </tile>
  </tileset>
@@ -3755,9 +3755,25 @@
     <property name="name" value="Mira"/>
    </properties>
   </object>
-  <object gid="295" x="105" y="427"/>
-  <object gid="297" x="65" y="161"/>
-  <object gid="297" x="128" y="160"/>
-  <object gid="297" x="194" y="160"/>
+  <object gid="296" x="65" y="161">
+   <properties>
+    <property name="sheet" value="person_4_sheet"/>
+   </properties>
+  </object>
+  <object gid="296" x="128" y="160">
+   <properties>
+    <property name="sheet" value="person_5_sheet"/>
+   </properties>
+  </object>
+  <object gid="296" x="194" y="160">
+   <properties>
+    <property name="sheet" value="person_6_sheet"/>
+   </properties>
+  </object>
+  <object gid="305" x="161" y="453">
+   <properties>
+    <property name="isInteractable" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

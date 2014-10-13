@@ -1,41 +1,19 @@
-Q.Sprite.extend("MyVideo",{ 
-	init: function(p) {
-		this._super(p, {
-			w: 300,
-			h: 200,
-		});
-		this.p.video = document.getElementById('myvideo');
-		this.p.video.play();
-	},
-
-	draw: function(ctx) {
-		ctx.drawImage(this.p.video, -this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
-	},
-});
-
-Q.component("Video", {
-	extend: {
-		show_video: function(lesson) {
-			console.log("Video.show_video");
-			newvideo = document.getElementById("myvideo");
-			newvideo.play();
-			var myvideo = new Q.MyVideo({filename: lesson.filename, w: 400, h: 300, x: this.p.x, y: this.p.y});
-			this.stage.insert(myvideo);
-			lesson.status = 0;
-			newvideo.onended = function(e) {
-				myvideo.destroy();
-				lesson.status = 1;
-			};
-		},
-
-	}
-});
-
-
 Q.component("Talk", {
 	extend: {
 		info: function(options) {
 			this.stage.insert(new Q.Info(Q._defaults(options, {speaker: this})), this);
+		},
+
+		bottom_quote: function(label, mirror, duration) {
+			if(! mirror)
+				mirror = 1;
+
+			if(this.p.quote) {
+				this.p.quote.destroy();
+				this.p.quote = null;
+			}
+			this.p.quote = new Q.BottomQuote({speaker:this, label:label, duration: duration});
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(this.p.quote);
 		},
 
 		quote: function(labels, mirror, duration) {
@@ -43,11 +21,15 @@ Q.component("Talk", {
 				mirror = 1;
 
 			if(this.p.quote) {
-				this.p.quote.trigger("destroyme");
+				this.p.quote.destroy();
 				this.p.quote = null;					
 			}
 			this.p.quote = new Q.Quote({speaker:this, labels:labels, mirror: mirror, duration: duration});
-			this.stage.insert(this.p.quote);
+			this.stage.insert(this.p.quote, this);
+		},
+
+		show_card: function(card) {
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(card);
 		},
 
 	}
@@ -56,6 +38,7 @@ Q.component("Talk", {
 Q.Sprite.extend("Info",{ 
 	init: function(p) {
 		this._super(Q._defaults(p, {
+			x: 0,
 			z: 3,
 			name: "Info",
 			type: Q.SPRITE_NONE,
@@ -65,27 +48,78 @@ Q.Sprite.extend("Info",{
 			asset: 'Icons/icon_info.png',
 			showOnMiniMap: false,
 		}));
-		this.p.x = 0;
 		this.p.y = - this.p.speaker.p.h/2 - this.p.h/2;
 		this.on("inserted");
 	},
 
 	inserted: function() {
 		if(this.p.showOnMiniMap) {
-			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", this.p.speaker);
+			var minimapinfo = Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first();
+			if(minimapinfo)
+				minimapinfo.trigger("show", this.p.speaker);
 		}
 	},
 
 	step: function(dt) {
 		this.p.time_spent += dt
 		if((this.p.time_spent > this.p.duration) && (this.p.duration > 0)) {
-			Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first().trigger("show", null);
+			var minimapinfo = Q("MiniMapInfo", Q.STAGE_LEVEL_NAVIGATION).first();
+			if(minimapinfo)
+				minimapinfo.trigger("show", null);
 			this.destroy();
 		}
 	}
 });
 
 
+
+
+Q.UI.Layout.extend("BottomQuote",{ 
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.HORIZONTAL, 
+			separation_x: 10,
+			name: "Quote",
+			labels: ["Hi!"],
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+			time_spent: 0,
+			duration: 5,
+			speaker: null,
+			z: 10,
+			x: Q.width/2,
+			w: Q.width,
+			h: 120,
+			y: Q.height - 60,
+			border: 1,
+			fill: "white",
+		}));
+
+		this.ui_text = new Q.UI.WrappableText({label: this.p.label, type: Q.SPRITE_NONE, w: Q.width - 50, h: 50});
+		this.speaker_sprite = new Q.Sprite({sheet: this.p.speaker.p.sheet, asset: this.p.speaker.p.asset, frame: this.p.speaker.p.frame, x:-250});
+
+		this.on("inserted");
+	},
+
+	destroyed: function() {
+		this.ui_text.destroy();
+		this.speaker_sprite.destroy();
+	},
+
+	inserted: function() {
+		this.insert(this.ui_text);
+		this.insert(this.speaker_sprite);
+		this.fit(10);
+		this.p.y = Q.height - this.p.cy - 0;
+	},
+
+	step: function(dt) {
+		this.p.time_spent += dt;
+		if(this.p.time_spent > this.p.duration)
+			this.destroy();
+	}
+
+});
 
 
 Q.Sprite.extend("Quote",{ 
@@ -119,17 +153,14 @@ Q.Sprite.extend("Quote",{
 		this.p.height = this.p.ui_text.p.h + 2 * this.p.radius;
 
 		var mirror = this.p.mirror;
-		this.p.x = this.p.speaker.p.x + mirror * ( this.p.speaker.p.cx + this.p.width / 2);
-		this.p.y = this.p.speaker.p.y +  (-this.p.speaker.p.cy - this.p.height / 2);
+		this.p.x = mirror * ( this.p.speaker.p.cx + this.p.width / 2);
+		this.p.y = (-this.p.speaker.p.cy - this.p.height / 2);
 
-		this.on("destroyme");
 		this.on("inserted");
 	},
 
-	destroyme: function() {
-//		console.log("destroyme");
+	destroyed: function() {
 		this.p.ui_text.destroy();
-		this.destroy();
 	},
 
 	inserted: function() {
@@ -146,7 +177,7 @@ Q.Sprite.extend("Quote",{
 
 		ctx.beginPath();
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = "2";
+//		ctx.lineWidth = "2";
 		ctx.moveTo(newx + mirror * this.p.radius, newy);
 		ctx.lineTo(newx + mirror * this.p.radius/2, newy + this.p.radius/2);
 		ctx.lineTo(newx + mirror * this.p.radius * 2, newy);
@@ -166,204 +197,8 @@ Q.Sprite.extend("Quote",{
 	step: function(dt) {
 		this.p.time_spent += dt;
 		if(this.p.time_spent > this.p.duration)
-			this.trigger("destroyme");
+			this.destroy();
 	}
 
 });
-
-
-
-Q.Sprite.extend("QuestionChoices", {
-	init: function(p) {
-		this._super(p, {
-			name: "QuestionChoices",
-			type: Q.SPRITE_PURE_UI,
-			collisionMask: Q.SPRITE_NONE,
-			label: "Choice",
-			isClickable: false,
-			size: 16,
-			family: 'Arial',
-			h: 30,
-		});
-
-		console.log(this.p.label);
-		if(this.p.isClickable) {
-			this.p.size = 12;
-		}
-
-		this.add("Touch");
-		this.on("touch");
-		this.on("destroyme");
-		this.on("inserted");
-	},
-
-	destroyme: function() {
-		this.children.forEach(function(child) {
-			child.destroy();
-		});
-		this.destroy();
-	},
-
-
-	draw: function(ctx) {
-		var offset = 50;
-		if(this.p.isClickable) {
-			ctx.beginPath();
-			ctx.rect(-this.p.w/2, -this.p.h/2, this.p.w, this.p.h);
-			ctx.lineWidth = 1;
-			ctx.strokeStyle = 'grey';
-			ctx.stroke();
-			ctx.beginPath();
-			ctx.strokeStyle = 'black';
-			ctx.arc(-this.p.w/2 + offset/2, 0, 5, 0, 2 * Math.PI, false);
-			ctx.stroke();
-		}
-	},
-
-	inserted: function() {
-		var offset = 10;
-		var height = 0;
-		var l = 0;
-		while(l != this.p.label.length) {
-			var newlabel = this.p.label.substr(l, 100);
-			var textUI = null;
-			var textUI = new Q.UI.Text({label: newlabel, size: this.p.size, color: "black", y: height});
-			if(this.p.textUI) {
-			}
-			else {
-				this.p.textUI = textUI;
-			}
-			height += textUI.p.h;
-			l += newlabel.length;
-			this.stage.insert(textUI, this);
-		}
-		this.p.textUI.p.x = -this.p.w/2 + offset + this.p.textUI.p.w/2;
-		if(this.p.isClickable)
-			this.p.textUI.p.x += 50;
-
-		this.p.h = height + 10; 
-	},
-
-	touch: function(e) {
-		if(!this.p.isClickable)
-			return;
-		console.log("choice touched");
-
-		this.p.question.status = 1;
-		this.p.question.answer_index = this.p.index;
-		this.p.listener.trigger("answered");
-	},
-});
-
-
-Q.Sprite.extend("MyQuestion", {
-	init: function(p) {
-		this._super(p, {
-			w: 300,
-			h: 200,
-			question_choices: [],
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-		});
-		this.on("destroyme");
-	},
-
-	destroyme: function() {
-		this.p.box.children.forEach(function(child) {
-			child.trigger("destroyme");
-		});
-		this.p.box.destroy();
-		this.destroy();
-	},
-
-	show: function(question) {
-		text_height = 20;
-		this.p.box = new Q.UI.Container({
-			w: this.p.w,
-			h: this.p.h,
-			fill: "rgba(255,255,255,0.7)"
-		});
-		box = this.stage.insert(this.p.box, this);
-
-		max_height = text_height + 2 * (question.choices.length + 1.5) * text_height;
-		questionSprite = new Q.QuestionChoices({label: question.question.text, y: - max_height / 2 + text_height, w: this.p.w, question: question, listener: this.p.listener});
-		box.insert(questionSprite);
-		for(i = 0; i < question.choices.length; i++) {
-			choice = question.choices[i];
-			questionSprite = new Q.QuestionChoices({index: i, label: choice.text, y: questionSprite.p.y + questionSprite.p.h / 2 + 2 * text_height, w: this.p.w, isClickable:true, question: question, listener: this.p.listener});
-			box.insert(questionSprite);
-		}
-		box.fit(20);
-	},
-});
-
-
-Q.component("Question", {
-	added: function() {
-		this.entity.p.question_playing = false;
-		this.entity.on("answered");
-	},
-
-	extend: {
-		answered: function() {
-			console.log("answered");
-			this.p.myquestion.trigger("destroyme");
-		},
-
-		show_question: function(question) {
-			console.log("show_question");
-			
-			question.status = 0; //Running
-			this.p.myquestion = new Q.MyQuestion({w: Q.width - 50, h: Q.height, listener: this});
-			this.stage.insert(this.p.myquestion, this);
-			this.p.myquestion.show(question);
-		},
-	},
-});
-
-
-
-Q.Sprite.extend("Questionnaire", {
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			type: Q.SPRITE_NONE,
-			collisionMask: Q.SPRITE_NONE,
-		}));
-		this.add("Question, Video");
-	},
-
-	show: function(wait) {
-		console.log("Questionnaire.show");
-		questionnaire = this;
-		if(this.p.questions.status == 0){ // Running
-			setTimeout(function(){questionnaire.show(true);}, 1000);
-			return;
-		}
-
-		if(this.p.questions.status == 1) { // Finished
-			console.log("Show next question");
-			this.p.questions = this.p.questions.nextElement();
-		}
-
-		if(this.p.questions == null) {
-			console.log("end of questions");
-			this.oncompletion();
-
-			Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {dialog: "Congratulations! Go to Ram"});
-			return;
-		}
-
-		if(this.p.questions instanceof MultipleChoiceQuestion) {
-			console.log("instanceof Question");
-			this.show_question(this.p.questions);
-		}
-		else if(this.p.questions instanceof Video) {
-			console.log("instanceof Video");
-			this.show_video(this.p.questions);
-		}
-		setTimeout(function(){questionnaire.show(true);}, 1000);
-	},
-});
-
-
 

@@ -1,28 +1,34 @@
+console.log("loaded Market Research Lecture element");
+
 Q.scene("market_research_1",function(stage) {
 	stage.name = "market_research_1";
-	Q.stageTMX("VirtualWorld.tmx", stage);
 
-	var Mira = Q("Player").first();
-	stage.add("viewport").follow(Mira);
-	Mira.addMaterialContainer("Player");
+	stage.desc_card = new Q.StageInfoCard({
+		description: new Q.ImageText({
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+		}),
+		context: stage,
+	});
+
+	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+	guru.trigger("register", stage.desc_card);
+
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX(game.TMX.VirtualWorld, stage);
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
+
+	var player = Q("Player").first();
+	stage.player = player;
+	player.addMaterialContainer();
+	stage.add("viewport").follow(player);
 
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
-		console.log(b.p.name + ": " +stage.options.element.interactability[b.p.name]);
 		b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = stage.name + "_" + b.p.name;
-		console.log("nextScene: " + b.p.nextScene);
 		i += 1;
 	}
-
-//	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
-//	guru.trigger("newconcept", "Start");
-
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
-	};
 });
 
 
@@ -31,6 +37,7 @@ Q.scene("market_research_1_House", function(stage) {
 	stage.acceptable_materials = [];
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("house.tmx", stage);
 
 
@@ -41,19 +48,21 @@ Q.scene("market_research_1_House", function(stage) {
 
 
 	// Mira
-	var Mira = Q("Player").first();
-	Mira.addMaterialContainer("Player");
-	stage.player = Mira;
+	var player = Q("Player").first();
+	player.addMaterialContainer("Player");
+	stage.player = player;
 
 });
 
 
 
 Q.scene("market_research_1_School",function(stage) {
-//	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
-
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	stage.add("viewport").centerOn(400, 300);
 	Q.stageTMX("school.tmx", stage);
 
+
+	game.AUDIO.stop();
 
 	// Map Exit Door
 	var exit_door = new Q.Door({width:175, height: 1, h: 1, w: 175, x: 420, y: 590});
@@ -61,13 +70,12 @@ Q.scene("market_research_1_School",function(stage) {
 
 
 	// Mira
-	var Mira = new Q.Player({sheet: "mira_sheet", sprite: 'person_animation', frame:1, x: 100, y: 450, name:"Mira (inside Market)"});
-	stage.insert(Mira);
-	stage.player = Mira;
+	var player = new Q.Player({sheet: "player_sheet", sprite: 'person_animation', frame:1, x: 100, y: 450, name:"Player"});
+	stage.insert(player);
+	stage.player = player;
 
 
-	Mira.onquestioncompletion = function () {
-		console.log("Done");
+	stage.onquestioncompletion = function () {
 		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 		stage.pause();
 	};
@@ -120,18 +128,13 @@ Q.scene("market_research_1_School",function(stage) {
 				],
 			}),
 		],
-		context: Mira,
+		context: stage,
 		func: "onquestioncompletion",
-
 	});
 
-	stage.insert(lecture);
-
-	stage.accept_material = function(material_name) {
-		console.log("cannot accept the material");
-		return false;
-	};
-
+	setTimeout(function(){
+		stage.insert(lecture);
+	}, 1000);		
 });
 
 

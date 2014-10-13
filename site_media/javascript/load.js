@@ -1,13 +1,5 @@
 Q.loadTMX(Q.options.resources,function() {
 	console.log("loading resources");
-	Q.sheet("nav_icons",
-		"nav_icons.png",
-		{
-			tilew: 42,
-			tileh: 42,
-			sx: 0,
-			sy: 0
-		});
 
 	Q.sheet("emptyclassroom",
 		"emptyclassroom.png",
@@ -76,8 +68,8 @@ Q.loadTMX(Q.options.resources,function() {
 	Q.sheet('coin',
 		'Icons/coin.png',
 		{
-			tilew: 40,
-			tileh: 45,
+			tilew: 32,
+			tileh: 32,
 			sx: 0,
 			sy: 0,
 		});
@@ -136,15 +128,16 @@ Q.loadTMX(Q.options.resources,function() {
 			sy: 0    // and y=0
 		});
 
-	Q.sheet("mira_sheet",
-		"People/Mira.png",
-		{
-			tilew: 32,  // Each tile is 40 pixels wide
-			tileh: 64,  // and 40 pixels tall
-			sx: 0,   // start the sprites at x=0
-			sy: 0    // and y=0
-		});
-
+	for(key in game.PEOPLE.RESOURCES) {
+		Q.sheet(key + "_sheet",
+			game.PEOPLE.RESOURCES[key],
+			{
+				tilew: 32,  
+				tileh: 64,  
+				sx: 0,   // start the sprites at x=0
+				sy: 0    // and y=0
+			});
+	};
 
 	Q.animations('person_animation', {
 		run_down    : { frames: [0,1,2], next: 'stand_down', rate: 1/5},
@@ -164,7 +157,17 @@ Q.loadTMX(Q.options.resources,function() {
 
 	Q.state.reset({ material_names: game.material_names, Player_stock: game.Player_stock, House_stock: game.House_stock, Market_stock: game.Market_stock, Workshop_stock: game.Workshop_stock, Health:100, money:100});
 
+	syncFromServer();
+
+	setInterval(function(){
+		syncToServer();
+	}, 50000);		
+	
 	Q.stageScene("LevelSelector", Q.STAGE_LEVEL_LEARNING_MODULE, {certificates: Q.game.certificates});
+//	Q.stageScene("health_1", Q.STAGE_LEVEL_PRIMARY, {element: Q.game.certificates[0].badges[0].elements[1]});
+//	Q.stageScene("market_research_0_setup", Q.STAGE_LEVEL_PRIMARY, {element: Q.game.certificates[0].badges[0].elements[1]});
+	Q.stageScene("Dialog", Q.STAGE_LEVEL_DIALOG, {});
+//	Q.stageScene("market_research_1_House", Q.STAGE_LEVEL_LEARNING_MODULE, {sort:true,});
 //	Q.stageScene("test_cards", Q.STAGE_LEVEL_LEARNING_MODULE, {});
 }, {
 	progressCallback: function(loaded,total) {
