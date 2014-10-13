@@ -264,6 +264,9 @@ Q.UI.Layout.extend("MultipleChoiceQuestion", {
 				if(choice != this.p.choices[i]) {
 					this.p.choices[i].select(false);
 				}
+				else{
+					this.p.result = this.p.choices[i].p.label.p.label;
+				}
 			}
 		}		
 	},
@@ -722,6 +725,8 @@ Q.Card.extend("Form", {
 
 
 	done: function() {
+		console.log(this.p.content);
+		console.log(this.p.content[0]);
 		this.destroy();
 		if(this.p.context)
 			this.p.context[this.p.func]();
@@ -885,6 +890,11 @@ Q.Card.extend("ActivityCard", {
 });
 
 Q.scene("test_cards", function(stage) {
+	stage.onquestioncompletion = function () {
+		console.log('receipt'+receipt);	
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+		stage.pause();
+	};
 	var receipt = new Q.Form({
 		content: [
 			new Q.MultipleChoiceQuestion({
@@ -902,7 +912,7 @@ Q.scene("test_cards", function(stage) {
 						fill: null,
 					}), 
 					new Q.ImageText({
-						label: new Q.UI.Text({label: "Buy", type: Q.SPRITE_NONE}),
+						label: new Q.UI.Text({label: "Sell", type: Q.SPRITE_NONE}),
 						isSelectable: true,
 						fill: null,
 					}), 
@@ -940,4 +950,31 @@ Q.scene("test_cards", function(stage) {
 		func: "onquestioncompletion",
 	});
 	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt);
+	stage.onquestioncompletion = function () {
+		console.log('receipt'+receipt);	
+		console.log(receipt.p.content[0])
+		for(var i = 0; i < receipt.p.content.length; i++) {
+			console.log(receipt.p.content[i].p.result);
+		}
+		var obj = {};
+	    obj['op']=receipt.p.content[0].p.result; //string
+	    obj['price'] = 50;  // integer.
+	    obj['quantity']= 50; //array
+	    var jsonString =JSON.stringify(obj);
+	    $.ajax({  
+			type:"POST",  
+			async :false,  
+			url:'http://iseek.etal.in:8069',  
+			data: jsonString,
+			jsonpCallback: 'jsonCallback',
+    		contentType: "application/json",
+			dataType:"jsonp",  
+			success:function(data){  
+			 	console.log(data);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});  
+	};
 });
