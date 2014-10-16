@@ -86,6 +86,16 @@ function syncFromServer() {
 			game.player.phone = data[0]['work_phone'];
 		});
 	}
+	
+	if(! game.sync_data["products"]) {
+		cosole.log("fetch game.products")
+		$POST( "/getproducts/" , {'name': 'Administrator'}, function( data )){
+			game.product.id = data[0]['id'];
+			game.product.qtyavailable = data[0]['qty_available'];
+			game.product.name = data[0]['name']; 
+			game.product.price = data[0]['list_price'];
+		});
+	}	
 }
 
 
