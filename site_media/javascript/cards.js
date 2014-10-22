@@ -957,11 +957,15 @@ Q.scene("test_cards", function(stage) {
 			console.log(receipt.p.content[i].p.result);
 		}
 		var obj = {};
+		obj['state'] = 'paid';
 	    obj['op']=receipt.p.content[0].p.result; //string
 	    obj['price'] = 50;  // integer.
 	    obj['quantity']= 50; //array
+	    obj['name'] = 'SAJ/2014/0008';
+	    obj['account_id'] = 2;
+	    obj['partner_id'] = 12;
 	    var jsonString =JSON.stringify(obj);
-	    $.ajax({  
+	    /*$.ajax({  
 			type:"POST",  
 			async :false,  
 			url:'http://iseek.etal.in:8069',  
@@ -975,6 +979,27 @@ Q.scene("test_cards", function(stage) {
 			error: function(error){
 				console.log(error);
 			}
-		});  
+		}); */ 
+		$.ajax({
+        type: 'POST',
+        url: '/createInvoice/',
+        data: {'data': jsonString},
+        success:function(data){  
+		 	console.log(data);
+		},
+		error: function(error){
+			console.log(error);
+		}
+		/*$.ajax({
+        type: 'POST',
+        url: '/getInvoice/',
+        //data: {'data': jsonString},
+        success:function(data){  
+		 	console.log('success');
+		},
+		error: function(error){
+			console.log(error);
+		}*/
+    });
 	};
 });

@@ -10,6 +10,8 @@ urlpatterns = patterns('',
     url(r'^readEmployee/$', 'crm.openERP.read_employee', name='read_employee'),
     url(r'^addEmployee/$', 'crm.openERP.add_employee', name='add_employee'),
     url(r'^editEmployee/$', 'crm.openERP.edit_employee', name='edit_employee'),
+    url(r'^createInvoice/$', 'crm.api_openERP.createInvoice', name='createInvoice'),
+    url(r'^getInvoice/$', 'crm.api_openERP.getInvoice', name='getInvoice'),
 
 
     url(r'^game/(?P<name>.*)/$', 'crm.views.game', name='game'),

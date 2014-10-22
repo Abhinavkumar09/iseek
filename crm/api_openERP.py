@@ -5,17 +5,18 @@ import xmlrpclib
 import csv
 import datetime
 from datetime import date
+import json
 
 username = 'admin'  #the user
-pwd = 'test1'  #the password of the user
-dbname = 'test5'    #the database
+pwd = 'rohitj'  #the password of the user
+dbname = 'iseek'    #the database
 
 # Get the uid
-sock_common = xmlrpclib.ServerProxy ('http://localhost:8069/xmlrpc/common')
+sock_common = xmlrpclib.ServerProxy ('http://iseek.etal.in:8069/xmlrpc/common')
 uid = sock_common.login(dbname, username, pwd)
 
 #replace localhost with the address of the server
-sock = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/object')
+sock = xmlrpclib.ServerProxy('http://iseek.etal.in:8069/xmlrpc/object')
 
 #load categories first
 #Function to add products to the OpenERP system
@@ -46,8 +47,7 @@ def addProduct(name,std_price,listPrice):
 
         product_id = sock.execute(dbname,uid,pwd,'product.product','create',product_product)
         #print product_product
-
-    print "End product load"
+        print "End product load"
 
 #Function to get products from the openERP system. If no search expression is provided, it will return a list of all the products
 def getProducts(expr=None):
@@ -81,6 +81,7 @@ def getCustomer(name):
 
 def getInvoice(expr=None):
     if expr is None:
+        print 'AAAAA'
         expr =[('amount_total','>','0')]
         temp = sock.execute(dbname,uid,pwd,'account.invoice','search',expr)
         fields = ['origin','currency_id']
@@ -93,7 +94,22 @@ def getInvoice(expr=None):
         return data
 
 #Function to create invoice on openERP system        
-def createInvoice(state,account_id,name,partner_id):
+def createInvoice(request):
+    data = request.POST['data']
+    datalist = json.loads(data)
+    for key, value in datalist.iteritems():
+        if key == 'state':
+            state = value
+        elif key == 'name':
+            name = value
+        elif key == 'account_id':
+            account_id= value
+        elif key == 'partner_id':
+            partner_id = value
+        elif key == 'quantity':
+            amount = value
+        elif key == 'price':
+            price = value
     invoice  = {
     'type': 'out_invoice',
     'state': state,
