@@ -29,6 +29,13 @@ function Person(properties) {
 	this.phone = properties.phone;
 }
 
+function Product(properties) {
+	this.id = properties.id;
+	this.name = properties.name;
+	this.qtyavailable = properties.qtyavailable;
+	this.price = properties.price;
+}
+
 function loadjscssfile(filename, filetype){
 	if (filetype=="js"){ //if filename is a external JavaScript file
 		var fileref=document.createElement('script')
