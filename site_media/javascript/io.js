@@ -87,15 +87,19 @@ function syncFromServer() {
 		});
 	}
 	
+/* New Code */
 	if(! game.sync_data["products"]) {
 		cosole.log("fetch game.products")
 		$POST( "/getproducts/" , { }, function( data )){
-			game.product.id = data[0]['id'];
-			game.product.name = data[0]['name']; 
-			game.product.qtyavailable = data[0]['qty_available'];
-			game.product.price = data[0]['list_price'];
+			
+			for(var i =0 ; i < data.length ; i++){				
+			   game.productInventory[i] = [
+				new Product({game.product.id: data[i]['id'], game.product.name: data[i]['name'], game.product.qtyavailable: data[i]['qty_available'], game.product.price: data[i]['list_price']})	
+			
+			}
 		});
 	}
+/* New Code */
 }
 
 
