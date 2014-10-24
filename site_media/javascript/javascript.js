@@ -207,6 +207,17 @@ function Game(name) {
 			game.Q.state.trigger("change.money", this.money);
 		},
 	};
+	
+ /* New Code */
+	this.product = {
+	id: -1,
+	name: "test",
+	qtyavailable: 0, 
+	price: 100,
+	};
+	
+	var productInventory = {};	
+/* New Code */
 
 	var properties = {};
 	properties["name"] = "SHG";
