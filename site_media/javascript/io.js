@@ -89,13 +89,13 @@ function syncFromServer() {
 	
 /* New Code */
 	if(! game.sync_data["products"]) {
-		cosole.log("fetch game.products")
-		$POST( "/getproducts/" , { }, function( data )){
+		console.log("fetch game.products")
+		$.post( "/getproducts/" , { }, function( data ){
 			
 			for(var i =0 ; i < data.length ; i++){				
 			   game.productInventory[i] = [
-				new Product({game.product.id: data[i]['id'], game.product.name: data[i]['name'], game.product.qtyavailable: data[i]['qty_available'], game.product.price: data[i]['list_price']})	
-			
+				new Product({'id': data[i]['id'], 'name': data[i]['name'], 'qtyavailable': data[i]['qty_available'], 'price': data[i]['list_price']})	
+			]
 			}
 		});
 	}
