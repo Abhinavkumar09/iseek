@@ -899,14 +899,24 @@ Q.Card.extend("showInventory", {
 		
 		var rows = [];
 
-		var proName = new Q.UI.WrappableText({label: "Product Name", x: 0, y: 0});
-		var price = new Q.UI.WrappableText({label: "Price", x: 0, y: 0});
+		var proName = new Q.UI.Text({label: "Product Name", x: 0, y: 0});
+		var price = new Q.UI.Text({label: "price", x: 0, y: 0});
 
 		rows.push([proName, price]);
+		
+		var productName = ["test1","test2","test3"];
+		var productprice = ["100","200","300"];
+		var namePro = [];
+		var pricePro = [];	
+		for(var i=0; i < productName.length ; i++) {
+			namePro[i] = new Q.UI.Text({label: productName[i], x: 0, y: 0});
+ 			pricePro[i] = new Q.UI.Text({label: productprice[i], x: 0, y: 0});
+			rows.push([namePro[i], pricePro[i]]);
+		}
 
 		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 
-		this.insert(content2);
+		this.insert(content2); 
 
 		var typeB = Q.ControlButtons.OK;
 		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
