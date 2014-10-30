@@ -883,3 +883,48 @@ Q.Card.extend("ActivityCard", {
 		this.destroy();
 	},
 });
+
+/* new code */
+
+Q.Card.extend("showInventory", {
+	
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},	
+	
+	inserted: function() {
+		
+		var rows = [];
+
+		var proName = new Q.UI.WrappableText({label: "Product Name", x: 0, y: 0});
+		var price = new Q.UI.WrappableText({label: "Price", x: 0, y: 0});
+
+		rows.push([proName, price]);
+
+		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+
+		this.insert(content2);
+
+		var typeB = Q.ControlButtons.OK;
+		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
+
+		
+	},		
+
+	back: function() {
+		console.log("go back");
+		this.destroy();
+		this.stage.insert(this.p.back_card);
+	},	
+	
+	done: function() {
+		console.log("done");
+		this.destroy();
+	},
+
+});
+
+/* new code */
