@@ -28,7 +28,7 @@ Q.scene("show_inventory",function(stage) {
 		}, 500);		
 	};
 
-var card = new Q.showInventory({context: stage, oncompletion: "oncompletion"});
+var card = new Q.showInventory({ });
 
 	setTimeout(function(){
 		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(card);
