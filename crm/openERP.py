@@ -95,3 +95,47 @@ def edit_employee(request):
 
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
+def add_invoice(request):
+	client = openERPClient()
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
+	invoice  = {
+	    'type': request.POST.get('type', False),
+	    'state': request.POST.get('state', False),
+	    'origin': 'import xmlrpc',
+	    'account_id': request.POST.get('account_id', False),          #balance sheet id
+	    'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
+
+	    # Change the following each time:
+	    'name' : data.get('name', False),   # TBD
+	    'partner_id': data.get('partner_id', False),          # Customer
+	    'address_invoice_id': data.get('address_invoice_id', False),  # Address
+	    'amount_total': data.get('amount_total', False)   
+	    }
+	#Don't know what to do here
+	#parent_id = client.create('product.product', product_product)
+	return HttpResponse(json.dumps(data), content_type="application/json")
+
+def get_invoice(request):
+	client = openERPClient()
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
+
+	invoice  = {
+    'type': data['type'],
+    'state': data['state'],
+    'origin': data['origin'],
+    'account_id': data['account_id'],          #balance sheet id
+    'date_invoice': date['time'],   # today
+
+    # Change the following each time:
+    'name' : data['name'],   # TBD
+    'partner_id': data['partner_id'],          # Customer
+    'address_invoice_id': data['address_invoice_id'],  # Address
+    'amount_total': data['amount_total']   
+    }
+	#data = client.search('product_product', product_product)
+	return HttpResponse(json.dumps(data), content_type="application/json")
+

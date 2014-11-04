@@ -79,8 +79,8 @@ def getCustomer(name):
     data = sock.execute(dbname,uid,pwd,'res.partner','read',temp,fields)
     print data
 
-def getInvoice(expr=None):
-    if expr is None:
+def getInvoice(request):
+    if request.POST['data'] is None:
         print 'AAAAA'
         expr =[('amount_total','>','0')]
         temp = sock.execute(dbname,uid,pwd,'account.invoice','search',expr)
@@ -95,34 +95,35 @@ def getInvoice(expr=None):
 
 #Function to create invoice on openERP system        
 def createInvoice(request):
-    data = request.POST['data']
-    datalist = json.loads(data)
-    for key, value in datalist.iteritems():
-        if key == 'state':
-            state = value
-        elif key == 'name':
-            name = value
-        elif key == 'account_id':
-            account_id= value
-        elif key == 'partner_id':
-            partner_id = value
-        elif key == 'quantity':
-            amount = value
-        elif key == 'price':
-            price = value
+    #data = request.POST.get('data')
+    #datalist = json.loads(data)
+    #for key, value in datalist.iteritems():
+    #    if key == 'state':
+    #        state = value
+    #    elif key == 'name':
+    #        name = value
+    #    elif key == 'account_id':
+    #        account_id= value
+    #    elif key == 'partner_id':
+    #        partner_id = value
+    #    elif key == 'quantity':
+    #        amount = value
+    #    elif key == 'price':
+    #        price = value
     invoice  = {
     'type': 'out_invoice',
-    'state': state,
+    'state': 'paid',
     'origin': 'import xmlrpc',
-    'account_id': account_id,          #balance sheet id
+    'account_id': 1,          #balance sheet id
     'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
 
     # Change the following each time:
-    'name' : name,   # TBD
-    'partner_id': partner_id,          # Customer
-    'address_invoice_id': partner_id,  # Address
-    'amount_total': 0.00     
+    'name' : 'SAJ/2014/0008',   # TBD
+    'partner_id': 2,          # Customer
+    'address_invoice_id': 2,  # Address
+    'amount_total': 0.00   
     }
+
     invoice_id = sock.execute(dbname, uid, pwd, 'account.invoice', 'create', invoice)
     print 'Invoice id=', invoice_id, 'added'
     return invoice_id

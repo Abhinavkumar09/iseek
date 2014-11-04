@@ -956,50 +956,76 @@ Q.scene("test_cards", function(stage) {
 		for(var i = 0; i < receipt.p.content.length; i++) {
 			console.log(receipt.p.content[i].p.result);
 		}
-		var obj = {};
-		obj['state'] = 'paid';
+		var obj = [];
 	    obj['op']=receipt.p.content[0].p.result; //string
-	    obj['price'] = 50;  // integer.
-	    obj['quantity']= 50; //array
+	    obj['amount_total'] = 50;  // integer.
+	    obj['address_invoice_id']= 2; //array
+	    obj['type'] = 'out_invoice';
+	    obj['state'] = 'paid';
+	    obj['account_id'] = 1;
 	    obj['name'] = 'SAJ/2014/0008';
-	    obj['account_id'] = 2;
-	    obj['partner_id'] = 12;
+	    obj['partner_id'] = 2;
+
 	    var jsonString =JSON.stringify(obj);
-	    /*$.ajax({  
+	    $.ajax({  
 			type:"POST",  
 			async :false,  
-			url:'http://iseek.etal.in:8069',  
+			url:'http://localhost:8000/createInvoice/',  
 			data: jsonString,
 			jsonpCallback: 'jsonCallback',
     		contentType: "application/json",
 			dataType:"jsonp",  
 			success:function(data){  
+				console.log("AAAAAA1");
 			 	console.log(data);
 			},
 			error: function(error){
+				console.log("BBBBBB2");
 				console.log(error);
 			}
-		}); */ 
-		$.ajax({
-        type: 'POST',
-        url: '/createInvoice/',
-        data: {'data': jsonString},
-        success:function(data){  
-		 	console.log(data);
-		},
-		error: function(error){
-			console.log(error);
-		}
-		/*$.ajax({
-        type: 'POST',
-        url: '/getInvoice/',
-        //data: {'data': jsonString},
-        success:function(data){  
-		 	console.log('success');
-		},
-		error: function(error){
-			console.log(error);
-		}*/
-    });
+		});  
+		/*$.ajax({  
+			type:"GET",  
+			async :false,  
+			url:'http://iseek.etal.in:8069/getInvoice',  
+			//data: jsonString,
+			jsonpCallback: 'jsonCallback',
+			contentType: "application/json",
+			dataType:"jsonp",  
+			success:function(data){  
+				console.log("AAAAAA3");
+			 	console.log(data);
+			},
+			error: function(error){
+				console.log("BBBBBB4");
+				console.log(error);
+			}
+		}); 
+		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt1);*/
+	};
+
+	var receipt1 = new Q.Form({
+		content: [
+			new Q.StageInfoCard({
+				description: [
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "Buy", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+					new Q.ImageText({
+						label: new Q.UI.Text({label: "Sell", type: Q.SPRITE_NONE}),
+						isSelectable: true,
+						fill: null,
+					}), 
+				],
+			})
+		],
+		context: stage,
+		func: "onquestioncompletion1",
+	});
+	stage.onquestioncompletion1 = function () {
+		console.log(data);	
+	     
 	};
 });
