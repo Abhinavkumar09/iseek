@@ -22,7 +22,7 @@ class openERPClient():
 
 
 	def create(self, model, parameters):
-		return sock.execute(self.dbname, self.uid, self.pwd, model, 'create', parameters)
+		return self.sock.execute(self.dbname, self.uid, self.pwd, model, 'create', parameters)
 
 	def edit(self, model, parameters, ids):
 		return self.sock.execute(self.dbname, self.uid, self.pwd, model, 'write', ids, parameters)
@@ -33,27 +33,27 @@ class openERPClient():
 		return data
 
 
-def add_product(name,std_price,listPrice):
-	product_template = {
-		'name': name,
-		'standard_price':std_price,
-		'list_price':listPrice,
-		'mes_type':'fixed',
-		'uom_id':1,
-		'uom_po_id':1,
-		#'type':'product',
-		'procure_method':'make_to_stock',
-		'cost_method':'standard',
-		'categ_id':1
-	}
-	template_id = client.create('product.template', product_template)
-	product_product = {
-		'product_tmpl_id':template_id,
-		'default_code': row[0],
-		'active': True,
-	}
-
-	product_id = client.create('product.product', product_product)
+#def add_product(name,std_price,listPrice):
+#	product_template = {
+#		'name': name,
+#		'standard_price':std_price,
+#		'list_price':listPrice,
+#		'mes_type':'fixed',
+#		'uom_id':1,
+#		'uom_po_id':1,
+#		#'type':'product',
+#		'procure_method':'make_to_stock',
+#		'cost_method':'standard',
+#		'categ_id':1
+#	}
+#	template_id = client.create('product.template', product_template)
+#	product_product = {
+#		'product_tmpl_id':template_id,
+#		'default_code': row[0],
+#		'active': True,
+#	}
+#
+#	product_id = client.create('product.product', product_product)
 
 
 def read_employee(request):
@@ -68,16 +68,17 @@ def read_employee(request):
 	data = client.search('hr.employee', employee)
 	return HttpResponse(json.dumps(data), content_type="application/json")
 
-def add_employee(request):
-	client = openERPClient()
-	data = request.GET
-	if(request.method == 'POST'):
-		data = request.POST
-	employee = {
-		'name' : request.GET['name'],
-		'work_phone' : request.GET['phone'],
-	}
-	parent_id = client.create('hr.employee', employee)
+
+#def add_employee(request):
+#	client = openERPClient()
+#	data = request.GET
+#	if(request.method == 'POST'):
+#		data = request.POST
+#	employee = {
+#		'name' : request.GET['name'],
+#		'work_phone' : request.GET['phone'],
+#	}
+#	parent_id = client.create('hr.employee', employee)
 
     
 def edit_employee(request):
@@ -100,11 +101,12 @@ def add_invoice(request):
 	data = request.GET
 	if(request.method == 'POST'):
 		data = request.POST
+
 	invoice  = {
-	    'type': request.POST.get('type', False),
-	    'state': request.POST.get('state', False),
-	    'origin': 'import xmlrpc',
-	    'account_id': request.POST.get('account_id', False),          #balance sheet id
+	    'type': data.get('type', False),
+	    'state': data.get('state', False),
+#	    'origin': 'import xmlrpc',
+	    'account_id': data.get('account_id', False),          #balance sheet id
 	    'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
 
 	    # Change the following each time:
@@ -112,10 +114,11 @@ def add_invoice(request):
 	    'partner_id': data.get('partner_id', False),          # Customer
 	    'address_invoice_id': data.get('address_invoice_id', False),  # Address
 	    'amount_total': data.get('amount_total', False)   
-	    }
+    }
+
 	#Don't know what to do here
-	#parent_id = client.create('product.product', product_product)
-	return HttpResponse(json.dumps(data), content_type="application/json")
+	parent_id = client.create('account.invoice', invoice)
+	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
 def get_invoice(request):
 	client = openERPClient()
