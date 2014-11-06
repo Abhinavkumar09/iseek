@@ -912,7 +912,7 @@ Q.Card.extend("showInventory", {
 		var qtyPro = [];	
 		for(var i=0; i < game.productLength ; i++) {
 			namePro[i] = new Q.UI.Text({label: game.productInventory[i].name, x: 0, y: 0});
- 			qtyPro[i] = new Q.UI.Text({label: productprice[i], x: 0, y: 0});
+ 			qtyPro[i] = new Q.UI.Text({label: ""+game.productInventory[i].qtyavailable, x: 0, y: 0});
 			rows.push([namePro[i], qtyPro[i]]);
 		}
 
