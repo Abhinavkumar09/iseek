@@ -102,7 +102,7 @@ def add_invoice(request):
 	data = request.GET
 	if(request.method == 'POST'):
 		data = request.POST
-	#print(data['type'])
+
 	invoice  = {
 	    'type': data['type'],
 	    'state': data['state'],
@@ -119,6 +119,7 @@ def add_invoice(request):
 
 	#Don't know what to do here
 	parent_id = client.create('account.invoice', invoice)
+	print parent_id
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
 def get_invoice(request):

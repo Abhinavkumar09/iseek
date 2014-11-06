@@ -968,7 +968,7 @@ Q.scene("test_cards", function(stage) {
 
 	    var jsonString =JSON.stringify(obj);
 	    console.log(jsonString);
-	    $.ajax({  
+/*	    $.ajax({  
 			type:"POST",  
 			async :false,  
 			url:'http://localhost:8000/createInvoice/',  
@@ -984,7 +984,7 @@ Q.scene("test_cards", function(stage) {
 				console.log("BBBBBB2");
 				console.log(error);
 			}
-		});  
+		});  */
 		$.post("/createInvoice/", {'op': obj.op, 'amount_total': obj.amount_total, 'address_invoice_id': obj.address_invoice_id, 'type': obj.type, 'state': obj.state, 'account_id': obj.account_id, 'name': obj.name, 'partner_id': obj.partner_id}, function( data ) {
 		});
 		/*$.ajax({  
