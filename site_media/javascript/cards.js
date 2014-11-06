@@ -952,13 +952,13 @@ Q.scene("test_cards", function(stage) {
 	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt);
 	stage.onquestioncompletion = function () {
 		console.log('receipt'+receipt);	
-		console.log(receipt.p.content[0])
+		console.log(receipt.p.content[1])
 		for(var i = 0; i < receipt.p.content.length; i++) {
 			console.log(receipt.p.content[i].p.result);
 		}
 		var obj = {};
 	    obj.op=receipt.p.content[0].p.result; //string
-	    obj.amount_total = 50;  // integer.
+	    obj.amount_total = receipt.p.content[1].p.answer.p.value * receipt.p.content[2].p.answer.p.value;  // integer.
 	    obj.address_invoice_id = 2; //array
 	    obj.type = 'out_invoice';
 	    obj.state = 'paid';

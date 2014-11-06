@@ -29,8 +29,12 @@ class openERPClient():
 
 	def search(self, model, parameters):
 		ids = self.sock.execute(self.dbname, self.uid, self.pwd, model,'search', parameters)
+		print ids
 		data = self.sock.execute(self.dbname, self.uid, self.pwd, model, 'read', ids, [])
 		return data
+
+	def unlink(self, model, ids):
+		data = self.sock.execute(self.dbname, self.uid, self.pwd, model, 'unlink', ids)
 
 
 #def add_product(name,std_price,listPrice):
@@ -117,6 +121,7 @@ def add_invoice(request):
 	    'amount_total': data['amount_total'] 
     }
 
+	print invoice
 	#Don't know what to do here
 	parent_id = client.create('account.invoice', invoice)
 	print parent_id
