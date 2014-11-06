@@ -210,13 +210,14 @@ function Game(name) {
 	
  /* New Code */
 	this.product = {
-	id: -1,
-	name: "test",
-	qtyavailable: 0, 
-	price: 100,
+		id: -1,
+		name: "test",
+		qtyavailable: 0, 
+		price: 100,
 	};
 	
-	var productInventory = {};	
+	this.productInventory = {};
+	this.productLength = 0;	
 /* New Code */
 
 	var properties = {};
