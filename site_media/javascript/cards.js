@@ -895,30 +895,32 @@ Q.Card.extend("showInventory", {
 		this.on("inserted");
 	},	
 	
-	inserted: function() {
-		
+	inserted: function() {		
+		game.sync_data["products"] = false;
+		console.log(game.productInventory[0].qtyavailable);
+		console.log(game.productLength);
 		var rows = [];
 
 		var proName = new Q.UI.Text({label: "Product Name", x: 0, y: 0});
-		var price = new Q.UI.Text({label: "price", x: 0, y: 0});
+		var quantityAvl = new Q.UI.Text({label: "Quantity Available", x: 0, y: 0});
 
-		rows.push([proName, price]);
+		rows.push([proName, quantityAvl]);
 		
-		var productName = ["test1","test2","test3"];
+		//var productName = ["test1","test2","test3"];
 		var productprice = ["100","200","300"];
 		var namePro = [];
-		var pricePro = [];	
-		for(var i=0; i < productName.length ; i++) {
-			namePro[i] = new Q.UI.Text({label: productName[i], x: 0, y: 0});
- 			pricePro[i] = new Q.UI.Text({label: productprice[i], x: 0, y: 0});
-			rows.push([namePro[i], pricePro[i]]);
+		var qtyPro = [];	
+		for(var i=0; i < game.productLength ; i++) {
+			namePro[i] = new Q.UI.Text({label: game.productInventory[i].name, x: 0, y: 0});
+ 			qtyPro[i] = new Q.UI.Text({label: productprice[i], x: 0, y: 0});
+			rows.push([namePro[i], qtyPro[i]]);
 		}
 
 		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 
 		this.insert(content2); 
 
-		var typeB = Q.ControlButtons.OK;
+		var typeB = Q.ControlButtons.DONE;
 		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
 
 		
@@ -932,6 +934,7 @@ Q.Card.extend("showInventory", {
 	
 	done: function() {
 		console.log("done");
+		
 		this.destroy();
 	},
 
