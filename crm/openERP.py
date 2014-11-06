@@ -97,23 +97,24 @@ def edit_employee(request):
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
 def add_invoice(request):
+	#return HttpResponse(json.dumps(request), content_type="application/json")
 	client = openERPClient()
 	data = request.GET
 	if(request.method == 'POST'):
 		data = request.POST
-
+	#print(data['type'])
 	invoice  = {
-	    'type': data.get('type', False),
-	    'state': data.get('state', False),
+	    'type': data['type'],
+	    'state': data['state'],
 #	    'origin': 'import xmlrpc',
-	    'account_id': data.get('account_id', False),          #balance sheet id
+	    'account_id': data['account_id'],          #balance sheet id
 	    'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
 
 	    # Change the following each time:
-	    'name' : data.get('name', False),   # TBD
-	    'partner_id': data.get('partner_id', False),          # Customer
-	    'address_invoice_id': data.get('address_invoice_id', False),  # Address
-	    'amount_total': data.get('amount_total', False)   
+	    'name' : data['name'],   # TBD
+	    'partner_id': data['partner_id'],          # Customer
+	    'address_invoice_id': data['address_invoice_id'],  # Address
+	    'amount_total': data['amount_total'] 
     }
 
 	#Don't know what to do here
@@ -126,19 +127,9 @@ def get_invoice(request):
 	if(request.method == 'POST'):
 		data = request.POST
 
-	invoice  = {
-    'type': data['type'],
-    'state': data['state'],
-    'origin': data['origin'],
-    'account_id': data['account_id'],          #balance sheet id
-    'date_invoice': date['time'],   # today
-
-    # Change the following each time:
-    'name' : data['name'],   # TBD
-    'partner_id': data['partner_id'],          # Customer
-    'address_invoice_id': data['address_invoice_id'],  # Address
-    'amount_total': data['amount_total']   
-    }
-	#data = client.search('product_product', product_product)
+	invoice  = [
+    	('name', '=', data['name'])   # TBD 
+    ]
+	data = client.search('account.invoice', invoice)
 	return HttpResponse(json.dumps(data), content_type="application/json")
 

@@ -956,17 +956,18 @@ Q.scene("test_cards", function(stage) {
 		for(var i = 0; i < receipt.p.content.length; i++) {
 			console.log(receipt.p.content[i].p.result);
 		}
-		var obj = [];
-	    obj['op']=receipt.p.content[0].p.result; //string
-	    obj['amount_total'] = 50;  // integer.
-	    obj['address_invoice_id']= 2; //array
-	    obj['type'] = 'out_invoice';
-	    obj['state'] = 'paid';
-	    obj['account_id'] = 1;
-	    obj['name'] = 'SAJ/2014/0008';
-	    obj['partner_id'] = 2;
+		var obj = {};
+	    obj.op=receipt.p.content[0].p.result; //string
+	    obj.amount_total = 50;  // integer.
+	    obj.address_invoice_id = 2; //array
+	    obj.type = 'out_invoice';
+	    obj.state = 'paid';
+	    obj.account_id = 1;
+	    obj.name = 'SAJ/2014/0008';
+	    obj.partner_id = 2;
 
 	    var jsonString =JSON.stringify(obj);
+	    console.log(jsonString);
 	    $.ajax({  
 			type:"POST",  
 			async :false,  
@@ -984,6 +985,8 @@ Q.scene("test_cards", function(stage) {
 				console.log(error);
 			}
 		});  
+		$.post("/createInvoice/", {'op': obj.op, 'amount_total': obj.amount_total, 'address_invoice_id': obj.address_invoice_id, 'type': obj.type, 'state': obj.state, 'account_id': obj.account_id, 'name': obj.name, 'partner_id': obj.partner_id}, function( data ) {
+		});
 		/*$.ajax({  
 			type:"GET",  
 			async :false,  
