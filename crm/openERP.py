@@ -101,7 +101,6 @@ def edit_employee(request):
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
 def add_invoice(request):
-	#return HttpResponse(json.dumps(request), content_type="application/json")
 	client = openERPClient()
 	data = request.GET
 	if(request.method == 'POST'):
@@ -115,16 +114,18 @@ def add_invoice(request):
 	    'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
 
 	    # Change the following each time:
-	    'name' : data['name'],   # TBD
+	    'id' : data['name'],   # TBD
 	    'partner_id': data['partner_id'],          # Customer
 	    'address_invoice_id': data['address_invoice_id'],  # Address
 	    'amount_total': data['amount_total'] 
     }
 
 	print invoice
-	#Don't know what to do here
 	parent_id = client.create('account.invoice', invoice)
-	print parent_id
+	# Call addLine function
+	for item in json.loads(data['items']):
+		addLine(client, parent_id, invoice['account_id'],item['name'],item['id'],item['price'],item['quantity']);
+
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
 def get_invoice(request):
@@ -139,3 +140,15 @@ def get_invoice(request):
 	data = client.search('account.invoice', invoice)
 	return HttpResponse(json.dumps(data), content_type="application/json")
 
+#Function to add lines to invoice 
+def addLine(client, invoice_id,account_id,prod_name,prod_id,prod_price,prod_quantity):
+	line1 = {
+	    'invoice_id': invoice_id,
+	    'account_id': account_id,     #Balance sheet id
+	    'name': prod_name,
+	    'product_id': prod_id,     # Product id     
+	    'price_unit': prod_price,  
+	    'quantity': prod_quantity
+	}
+	line_id = client.create('account.invoice.line', line1);
+	print 'Invoice line id=', line_id, 'added'

@@ -521,6 +521,7 @@ Q.Card.extend("Product", {
 
 	buy: function() {
 		console.log("buy");
+		this.p.back_card.p.product.Product.push(this.p);
 	},
 
 	sell: function() {
@@ -889,13 +890,186 @@ Q.Card.extend("ActivityCard", {
 	},
 });
 
+/* Product Card
+ * Ask for price and quantity
+*/
+Q.Card.extend("ProductCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+			grid: Q.TileCard.GRID_3_2,
+			type: Q.SPRITE_NONE,
+			collisionMask: Q.SPRITE_NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function(){
+		this.p.quantity = new Q.ImageText({
+					label: new Q.UI.Text({
+						label: "What is the price?", 
+						type: Q.SPRITE_NONE, 
+					}),
+					x: -50,
+					y: -50,
+					fill: null,
+				});
+		this.p.qanswer = new Q.UI.Spinner({
+					min_value: 0,
+					max_value: 100,
+					value: 5,
+					isSelectable: true,
+					fill: null,
+					x: 150,
+					y: -50,
+				});
+		this.p.price = new Q.ImageText({
+				label: new Q.UI.Text({
+					label: "What's the quantity?", 
+					type: Q.SPRITE_NONE, 
+				}),
+				x: -50,
+				y: 50,
+				fill: null,
+			}); 
+		this.p.panswer = new Q.UI.Spinner({
+				min_value: 0,
+				max_value: 100,
+				value: 50,
+				isSelectable: true,
+				fill: null,
+				x: 150,
+				y: 50,
+			});
+		this.insert(this.p.price);
+		this.insert(this.p.panswer);
+		this.insert(this.p.quantity);
+		this.insert(this.p.qanswer);
+		
+
+		var type = 0;
+		type += Q.ControlButtons.DONE;		
+
+		this.insert((new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25})));
+	},
+
+	done: function() {
+		//var card = new Q.ReceiptCard(this.p);
+		//this.stage.insert(card);
+		var product = new Q.Product({image: new Q.Sprite({asset: "CardObjects/healthkit.png"}), name: this.p.name.p.label, description: "Product AAA", price: this.p.panswer.p.value, quantity: this.p.qanswer.p.value, id: 11});
+		this.p.products.push(product);
+		console.log(this.p.products);
+		var receipt = new Q.ReceiptCard({op: this.p.op, products: this.p.products, context: this.stage});
+		this.stage.insert(receipt);
+		this.destroy();
+	},
+
+});
+
+/* Receipt Card
+ * Card to show the list of items on a receipt
+ */
+Q.Card.extend("ReceiptCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+		var rows = [];
+		if(this.p.products){
+			for(var i = 0; i < this.p.products.length; i++) {
+				//var name = new Q.UI.WrappableText({label: "Name", x: 0, y: 0});
+				var ninput = new Q.UI.WrappableText({label: "" + this.p.products[i].p.name, x: 0, y: 0});
+				//rows.push([name, ninput]);
+
+				//var quantity = new Q.UI.Text({label: "Quantity", x: 0, y: 0});
+				var qinput = new Q.UI.Text({label: "" + this.p.products[i].p.quantity});
+				//rows.push([quantity, qinput]);
+
+				//var price = new Q.UI.Text({label: "Price", x: 0, y: 0});
+				var pinput = new Q.UI.Text({label: "" + this.p.products[i].p.price});
+				rows.push([ninput, qinput, pinput]);
+				console.log(rows[0]);
+			}
+		}
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.4, 0.3, 0.3], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(con1);
+
+		var type = Q.ControlButtons.OK;
+		type += Q.ControlButtons.EDIT;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	ok: function() {
+			var obj = {};
+			obj.items = [];
+			obj.amount_total = 0;
+			for(var i = 0; i < this.p.products.length; i++) {
+				obj.amount_total += this.p.products[i].p.price * this.p.products[i].p.quantity;
+				obj.items[i] = {};
+				obj.items[i].name = this.p.products[i].p.name;
+				obj.items[i].id = this.p.products[i].p.id;
+				obj.items[i].price = this.p.products[i].p.price;
+				obj.items[i].quantity = this.p.products[i].p.quantity;
+				console.log(obj.items[i].name);
+				console.log(obj.items[i].id);
+				console.log(obj.items[i].price);
+				console.log(obj.items[i].quantity);
+			}
+			
+		    obj.op=this.p.op; //string
+		    console.log(obj.op);
+		    obj.address_invoice_id = 2; //array
+		    obj.type = 'out_invoice';
+		    obj.state = 'paid';
+		    obj.account_id = 2;
+		    obj.name = 'SAJ/2014/0008';
+		    obj.partner_id = 2;
+		    //obj.items = this.p.products;
+
+			$.post("/createInvoice/", {'op': obj.op, 'amount_total': obj.amount_total, 'address_invoice_id': obj.address_invoice_id, 'type': obj.type, 'state': obj.state, 'account_id': obj.account_id, 'name': obj.name, 'partner_id': obj.partner_id, 'items': JSON.stringify(obj.items)}, function( data ) {
+			});
+
+		this.destroy();
+		//this.p.context[this.p.oncompletion]();
+	},
+
+	edit: function() {
+		var myTiles = Array(5);
+		var i =0;
+		for(p in game.material_names) {
+			myTiles[i] = new Q.Tile({
+				image: new Q.Sprite({sheet: game.material_names[p].sheet, frame: game.material_names[p].frame}),
+				//label: new Q.UI.Text({label: "AAA"}),
+				disabled: false,
+				action_card: new Q.ProductCard({
+								name: new Q.UI.Text({label: "" + p}),
+								op: this.p.op,
+								products: this.p.products,
+								context: this.stage,
+							}),
+			});
+			i++;
+		}
+		var product_card = new Q.TileCard({tiles: myTiles, grid: Q.TileCard.GRID_3_2, context: this.stage, op: this.p.op, products: this.p.products});
+		product_card.ok = function() {
+			var receipt = new Q.ReceiptCard({op: this.p.op, products:this.p.products, context: this.stage});
+			this.stage.insert(receipt);
+			this.destroy();
+		}
+		this.stage.insert(product_card);
+
+		this.destroy();
+	},
+});
+
 Q.scene("test_cards", function(stage) {
-	stage.onquestioncompletion = function () {
-		console.log('receipt'+receipt);	
-		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
-		stage.pause();
-	};
-	var receipt = new Q.Form({
+	var operation = new Q.Form({
 		content: [
 			new Q.MultipleChoiceQuestion({
 				question: new Q.ImageText({
@@ -917,118 +1091,15 @@ Q.scene("test_cards", function(stage) {
 						fill: null,
 					}), 
 				],
-			}),
-			new Q.RangeQuestion({
-				question: new Q.ImageText({
-					label: new Q.UI.Text({
-						label: "What is the price?", 
-						type: Q.SPRITE_NONE, 
-					}),
-					fill: null,
-				}), 
-				answer: new Q.UI.Spinner({
-					min_value: 0,
-					max_value: 100,
-					value: 50,
-				}), 
-			}),
-			new Q.RangeQuestion({
-				question: new Q.ImageText({
-					label: new Q.UI.Text({
-						label: "What's the quantity?", 
-						type: Q.SPRITE_NONE, 
-					}),
-					fill: null,
-				}), 
-				answer: new Q.UI.Spinner({
-					isSelectable: true,
-					fill: null,
-				}), 
-			}),
-		],
-		context: stage,
-		func: "onquestioncompletion",
-	});
-	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt);
-	stage.onquestioncompletion = function () {
-		console.log('receipt'+receipt);	
-		console.log(receipt.p.content[1])
-		for(var i = 0; i < receipt.p.content.length; i++) {
-			console.log(receipt.p.content[i].p.result);
-		}
-		var obj = {};
-	    obj.op=receipt.p.content[0].p.result; //string
-	    obj.amount_total = receipt.p.content[1].p.answer.p.value * receipt.p.content[2].p.answer.p.value;  // integer.
-	    obj.address_invoice_id = 2; //array
-	    obj.type = 'out_invoice';
-	    obj.state = 'paid';
-	    obj.account_id = 1;
-	    obj.name = 'SAJ/2014/0008';
-	    obj.partner_id = 2;
-
-	    var jsonString =JSON.stringify(obj);
-	    console.log(jsonString);
-/*	    $.ajax({  
-			type:"POST",  
-			async :false,  
-			url:'http://localhost:8000/createInvoice/',  
-			data: jsonString,
-			jsonpCallback: 'jsonCallback',
-    		contentType: "application/json",
-			dataType:"jsonp",  
-			success:function(data){  
-				console.log("AAAAAA1");
-			 	console.log(data);
-			},
-			error: function(error){
-				console.log("BBBBBB2");
-				console.log(error);
-			}
-		});  */
-		$.post("/createInvoice/", {'op': obj.op, 'amount_total': obj.amount_total, 'address_invoice_id': obj.address_invoice_id, 'type': obj.type, 'state': obj.state, 'account_id': obj.account_id, 'name': obj.name, 'partner_id': obj.partner_id}, function( data ) {
-		});
-		/*$.ajax({  
-			type:"GET",  
-			async :false,  
-			url:'http://iseek.etal.in:8069/getInvoice',  
-			//data: jsonString,
-			jsonpCallback: 'jsonCallback',
-			contentType: "application/json",
-			dataType:"jsonp",  
-			success:function(data){  
-				console.log("AAAAAA3");
-			 	console.log(data);
-			},
-			error: function(error){
-				console.log("BBBBBB4");
-				console.log(error);
-			}
-		}); 
-		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(receipt1);*/
-	};
-
-	var receipt1 = new Q.Form({
-		content: [
-			new Q.StageInfoCard({
-				description: [
-					new Q.ImageText({
-						label: new Q.UI.Text({label: "Buy", type: Q.SPRITE_NONE}),
-						isSelectable: true,
-						fill: null,
-					}), 
-					new Q.ImageText({
-						label: new Q.UI.Text({label: "Sell", type: Q.SPRITE_NONE}),
-						isSelectable: true,
-						fill: null,
-					}), 
-				],
 			})
-		],
+			],
 		context: stage,
-		func: "onquestioncompletion1",
+		func: "onopcompletion",
 	});
-	stage.onquestioncompletion1 = function () {
-		console.log(data);	
-	     
+	stage.onopcompletion = function () {
+	    var receipt = new Q.ReceiptCard({op: operation.p.content[0].p.result, products: [], context: stage});
+		stage.insert(receipt);
+		operation.destroy();
 	};
+	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(operation);
 });

@@ -118,7 +118,7 @@ def createInvoice(request):
     'date_invoice': date.today().strftime("%Y-%m-%d"),   # today
 
     # Change the following each time:
-    'name' : 'SAJ/2014/0008',   # TBD
+    'number' : 'SAJ/2014/0008',   # TBD
     'partner_id': 2,          # Customer
     'address_invoice_id': 2,  # Address
     'amount_total': 0.00   
