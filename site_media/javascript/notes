@@ -148,4 +148,7 @@ Load the finished elements js file only on request
 
 What happens if a player logs in from another device when the previous device hasn't synced yet? Discard changes from one of the device.
 
+Update openERP code to fix the amount_total constraint error
+ 
+News feed of changes being made by the players (when sold, bought, produced etc.)
 
