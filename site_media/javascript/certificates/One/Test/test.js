@@ -1,8 +1,5 @@
 Q.scene("test_cards1", function(stage) {
-	stage.name = "test_1";
-	console.log("AAAAAA");
-	Q.stageTMX("market.tmx", stage);
-	var receipt = new Q.Form({
+	var operation = new Q.Form({
 		content: [
 			new Q.MultipleChoiceQuestion({
 				question: new Q.ImageText({
@@ -19,48 +16,22 @@ Q.scene("test_cards1", function(stage) {
 						fill: null,
 					}), 
 					new Q.ImageText({
-						min_value: 0,
-						max_value: 100,
-						value: 50,
-					}), 
-				],
-			}),
-			new Q.RangeQuestion({
-				question: new Q.ImageText({
-					label: new Q.UI.Text({
-						label: "What is the price?", 
-						type: Q.SPRITE_NONE, 
-					}),
-					fill: null,
-				}), 
-				answer: [
-					new Q.UI.Spinner({
-						min_value: 0,
-						max_value: 100,
-						value: 50,
-					}), 
-				],
-			}),
-			new Q.RangeQuestion({
-				question: new Q.ImageText({
-					label: new Q.UI.Text({
-						label: "What's the quantity?", 
-						type: Q.SPRITE_NONE, 
-					}),
-					fill: null,
-				}), 
-				answer: [
-					new Q.UI.Spinner({
+						label: new Q.UI.Text({label: "Sell", type: Q.SPRITE_NONE}),
 						isSelectable: true,
 						fill: null,
 					}), 
 				],
-			}),
-		],
+			})
+			],
 		context: stage,
-		func: "onquestioncompletion",
+		func: "onopcompletion",
 	});
-	stage.insert(receipt);
+	stage.onopcompletion = function () {
+	    var receipt = new Q.ReceiptCard({op: operation.p.content[0].p.result, products: [], context: stage});
+		stage.insert(receipt);
+		operation.destroy();
+	};
+	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(operation);
 
 	stage.onquestioncompletion = function() {
 			setTimeout(function(){

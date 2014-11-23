@@ -141,14 +141,14 @@ game.certificates = [
 				]
 			),
 			new CertificateBadge(
-				"Test", 
-				"Test",
+				"Create Invoice", 
+				"Create Invoice",
 				"Objects/Medal/badge01.png",
 				false, 
 				[
 					new CertificateElement(
 						"test_1",
-						"Test",
+						"Create Invoice",
 						"test.js",
 						false,
 						null,
