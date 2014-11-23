@@ -95,3 +95,43 @@ def edit_employee(request):
 
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
 
+def get_prescriptions(request):
+	username = 'admin'  #the user
+	pwd = 'shalin'  #the password of the user
+	dbname = 'medical'    #the database
+
+	sock_common = xmlrpclib.ServerProxy ('http://localhost:8069/xmlrpc/common')
+	uid = sock_common.login(dbname, username, pwd)
+
+	#replace localhost with the address of the server
+	sock = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/object')
+	#REMOVE THE ABOVE LINES ONCE A CLIENT FOR THE MEDICAL SYSTEM HAS BEEN CREATED
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
+	patient = [
+		('ref','=',data['ref'])
+	]
+	temp = sock.execute(dbname,uid,pwd,'oemedical.patient','search',patient)
+	fields=['id','name']
+	data = sock.execute(dbname,uid,pwd,'oemedical.patient','read',temp,fields)
+	data = data[0]
+	patientid = [
+		('patient_id', '=' , [data['id']])
+	]
+	temp = sock.execute(dbname,uid,pwd,'oemedical.prescription.order','search',patientid)
+	fields=['prescription_line']
+	data = sock.execute(dbname,uid,pwd,'oemedical.prescription.order','read',temp,fields)
+	line_ids = []
+	for x in data:
+		line_ids.append(x['prescription_line'])
+	retlist = []
+	fields = ['dose','common_dosage','template','duration','duration_period','start_treatment','end_treatment','dose_unit']
+	for x in line_ids:
+		data = sock.execute(dbname,uid,pwd,'oemedical.prescription.line','read',x,fields)
+		retlist.append(data[0])
+
+	return HttpResponse(json.dumps(retlist), content_type="application/json")
+
+
+

@@ -86,6 +86,21 @@ function syncFromServer() {
 			game.player.phone = data[0]['work_phone'];
 		});
 	}
+
+	if (! game.sync_data["prescription"]) {
+		console.log("fetch game.prescriptions");
+		$.post( "/getPrescriptions/", {'ref': 's1test1'}, function( data ) {
+			game.prescriptionslength = data.length;
+			for(var x = 0; x<data.length; x++) {
+				game.prescriptions[x] = 
+					new Prescription({'name' : data[x]['template'][1],'frequency' : data[x]['common_dosage'][1],
+						'startdate' : data[x]['start_treatment'], 'enddate' : data[x]['end_treatment'], 'dosage' : data[x]['dose'],
+						'dosunit' : data[x]['dose_unit']['name']});
+			}
+			console.log(game.prescriptions[0].name);
+
+		});
+	}
 }
 
 
