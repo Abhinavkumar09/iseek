@@ -525,6 +525,43 @@ Q.Card.extend("Product", {
 	},
 });
 
+/* Health Card */
+Q.Card.extend("HealthCard", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+		var type = 0;
+		var medicine = new Q.UI.Text({label: "Medicine", x: this.p.cx + 150, y: this.p.cy - 100});
+		var minput = new Q.UI.Text({label: this.p.mname, x: this.p.cx + 150, y: this.p.cy - 50});
+
+		//var dosage = new Q.UI.Text({label: "Dosage", x: 0, y: 0});
+		//var dinput = new Q.UI.Text({label: this.p.dosage, x:0, y: 0});
+		this.insert(medicine);
+		this.insert(minput);
+		//this.insert(dosage);
+		//this.insert(dinput);
+		type = Q.ControlButtons.OK;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	ok: function() {
+		this.destroy();
+		this.p.context[this.p.oncompletion]();
+	},
+});
+
+
+
+
+
+
 Q.Card.extend("BusinessCard", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
@@ -882,4 +919,47 @@ Q.Card.extend("ActivityCard", {
 		console.log("done");
 		this.destroy();
 	},
+});
+
+Q.Card.extend("showPrescription", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+			// type: Q.ControlButtons.BACK,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		console.log(game.prescriptionslength);
+		var rows = [];
+		var medName = new Q.UI.Text({label: "Medicine", x:0,y:0});
+		var dosage = new Q.UI.Text({label: "Dosage", x:0,y:0});
+		var frequency = new Q.UI.Text({label: "Frequency", x:0,y:0});
+		var startdate = new Q.UI.Text({label: "Start Date", x:0,y:0});
+		var enddate = new Q.UI.Text({label: "End Date", x:0,y:0});
+
+		rows.push([medName,dosage,frequency,startdate,enddate]);
+
+		for(var i=0; i<game.prescriptionslength; i++) {
+			var medl = new Q.UI.Text({label: game.prescriptions[i].name, x:0, y:0});
+			var dosl = new Q.UI.Text({label: game.prescriptions[i].dosage + " " + game.prescriptions[i].dosunit, x:0, y:0});
+			var frequencyl = new Q.UI.Text({label: game.prescriptions[i].frequency, x:0, y:0});
+			var startdatel = new Q.UI.Text({label: game.prescriptions[i].startdate, x:0, y:0});
+			var enddatel = new Q.UI.Text({label: game.prescriptions[i].enddate, x:0, y:0});
+			rows.push([medl,dosl,frequencyl,startdatel,enddatel]);
+		}
+
+		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.2, 0.2, 0.2,0.2,0.2], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(content2);
+		var typeB = Q.ControlButtons.DONE;
+		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
+	},
+
+	done: function() {
+		console.log("done");
+		
+		this.destroy();
+	},
+
 });
