@@ -428,6 +428,9 @@ Q.Card.extend("StageInfoCard", {
 		this.insert(box);
 		box.insert(this.p.speaker);
 
+//		console.log("description.p.w = " + this.p.description.p.w);
+//		this.p.description.p.label.p.w = Math.min(this.p.description.p.label.p.w, Q.width -10 - this.p.speaker.p.w);
+//		console.log("description.p.w = " + this.p.description.p.label.p.w);
 		box.insert(this.p.description);
 
 		this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.OK, y: this.p.cy - 25}));
@@ -624,7 +627,6 @@ Q.Card.extend("BusinessCardForm", {
 		this.insert(player);
 
 		var rows = [];
-//		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
 		var name = new Q.UI.WrappableText({label: "Name", w: 100, h: 300, x: 0, y: 0});
 		this.ninput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.name + "' />", x: 0, y: 0});
 		rows.push([name, this.ninput]);
@@ -641,7 +643,22 @@ Q.Card.extend("BusinessCardForm", {
 		this.sinput = new Q.UI.HTMLElement({html: "<select> <option value='Knitting'>Knitting</option><option value='Weaving'>Weaving</option><option value='Sowing'>Sowing</option> </select>", x: 0, y: 0});
 		rows.push([skill, this.sinput]);
 
-		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+
+		/*
+		// To be used for the real business part, where the player will tell us the details of the SHG. For now, the player is assigned a SHG
+		var members = new Q.UI.WrappableText({label: "How many people are in your SHG?", value: 0, w: this.p.w/2});
+		this.membersinput = new Q.UI.Spinner({});
+		rows.push([members, this.membersinput]);
+
+		var money = new Q.UI.WrappableText({label: "How much amount will each person put in at the beginning?", w: this.p.w/2});
+		this.moneyinput = new Q.UI.HTMLElement({html: "<input type='text'value='" + "' />", x: 0, y: 0});
+		rows.push([money, this.moneyinput]);
+
+		var hours = new Q.UI.WrappableText({label: "How many hours will each person put in?", value: 0, w: this.p.w/2});
+		this.hoursinput = new Q.UI.Spinner({});
+		rows.push([hours, this.hoursinput]);
+		*/
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.60, 0.40], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 		this.insert(con1);
 
 		var type = Q.ControlButtons.CANCEL;

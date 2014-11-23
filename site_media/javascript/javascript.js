@@ -27,6 +27,9 @@ function Person(properties) {
 	this.frame = properties.frame;
 	this.address = properties.address;
 	this.phone = properties.phone;
+
+	this.money = 100;
+	this.health = 100;
 }
 
 function loadjscssfile(filename, filetype){
@@ -68,9 +71,6 @@ function Game(name) {
 		'Objects/Medal/badge01.png',
 
 
-		//People
-//		'People/Mira.png', 'People/Shyam.png', 'People/Asif.png', 'People/Ashwin.png', 'People/Sahiya.png', 'People/Enterpreneur.png', 
-//		'People/Rama.png', 'People/Seeta.png', 'People/Seema.png',
 		
 		//People emotions
 		'People/meera_angry3.png', 'People/meera_dizzyspinning3.png', 'People/meera_sick1.png', 'People/meera_cry6.png',
@@ -90,11 +90,6 @@ function Game(name) {
 		'VirtualWorld.png', "Icons/coin.png", 'Icons/score.png', 'Icons/close.png',
 		'Icons/medal.png', "Icons/money.png", "Icons/health.png",
 
-		// TMX
-		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'healthcenter.tmx',
-
-		// Audio
-//		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
 
 		// Video
 //		"output1.mp4",
@@ -185,7 +180,7 @@ function Game(name) {
 	};
 
 
-	this.player = {
+	this.player = new Person({
 		id: -1,
 		name: "Mira",
 		sheet: "player_sheet",
@@ -194,20 +189,21 @@ function Game(name) {
 		phone: "Phone",
 		money: 100,
 		health: 100,
-		keys: [],
-		change_money: function(price) {
-			this.money += price;
-			game.Q.state.trigger("change.money", this.money);
-		},
+	});
+	this.player.keys = [];
+	this.player.change_money = function(price) {
+		this.money += price;
+		game.Q.state.trigger("change.money", this.money);
 	};
+
 
 	var properties = {};
 	properties["name"] = "SHG";
-	properties["people"] = [
+	properties["members"] = [
 		new Person({"id": -1, "name": "Sheela", "sheet": "person_4_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
 		new Person({"id": -1, "name": "Rama", "sheet": "person_5_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
 		new Person({"id": -1, "name": "Swati", "sheet": "person_6_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
-	]
+	];
 	properties.address = "SHG Address";
 	this.SHG = new SHG(properties);
 
@@ -272,6 +268,18 @@ function Game(name) {
 
 	this.TMX = {};
 	this.TMX.VirtualWorld = "VirtualWorld.tmx";
+	this.TMX.House = "house.tmx";
+	//, 'house_inside.tmx', 
+	this.TMX.Market = 'market.tmx';
+	this.TMX.Workshop = 'workshop.tmx';
+	this.TMX.OtherWorkshop = 'seemaworkshop.tmx';
+	//, 'VirtualWorld1.tmx', 
+	this.TMX.School = 'school.tmx';
+	this.TMX.HealthCenter = 'healthcenter.tmx';
+
+	for( tmx in this.TMX) {
+		this.resources.push(this.TMX[tmx]);
+	}
 
 	this.FONTS = {};
 	this.FONTS['REGULAR'] = "helvetica";

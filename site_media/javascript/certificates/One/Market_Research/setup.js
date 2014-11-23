@@ -3,7 +3,7 @@ Q.scene("market_research_0_setup",function(stage) {
 
 	stage.desc_card = new Q.StageInfoCard({
 		description: new Q.ImageText({
-			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+			label: new Q.UI.WrappableText({label: "A self-help group is a group of about 10 individuals which you can form with your friends who are interested in joining you for work. The Gramin Bank provides loan to SHGs to help them get started."}),
 		}),
 		context: stage,
 	});
@@ -28,13 +28,8 @@ Q.scene("market_research_0_setup",function(stage) {
 
 	var card = new Q.BusinessCardForm({person: game.player, SHG: game.SHG, context: stage, oncompletion: "oncompletion"});
 
-	setTimeout(function(){
+	stage.desc_card.ok = function() {
 		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(card);
-	}, 1000);		
-
-
-//	var guru = Q("GuruIcon", Q.STAGE_LEVEL_SCORECARD).first();
-//	guru.trigger("newconcept", "Start");
-
+	};
 });
 
