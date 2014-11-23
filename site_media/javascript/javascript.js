@@ -29,6 +29,15 @@ function Person(properties) {
 	this.phone = properties.phone;
 }
 
+function Prescription(properties) {
+	this.dosage = properties.dosage;
+	this.dosunit = properties.dosunit;
+	this.frequency = properties.frequency;
+	this.startdate = properties.startdate;
+	this.enddate = properties.enddate;
+	this.name = properties.name;
+}
+
 function loadjscssfile(filename, filetype){
 	if (filetype=="js"){ //if filename is a external JavaScript file
 		var fileref=document.createElement('script')
@@ -113,6 +122,9 @@ function Game(name) {
 	this.formula_list = {
 		basket_01: {production_speed: 5, Sticks: 2},
 	};
+
+	this.prescriptions = {};
+	this.prescriptionslength = 0;
 
 	this.stocks = {
 		House: {

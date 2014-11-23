@@ -3,12 +3,13 @@ console.log("loaded Market Research Lecture element");
 Q.scene("market_research_1",function(stage) {
 	stage.name = "market_research_1";
 
-	stage.desc_card = new Q.StageInfoCard({
+	/*stage.desc_card = new Q.StageInfoCard({
 		description: new Q.ImageText({
 			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
 		}),
 		context: stage,
-	});
+	});*/
+	stage.desc_card = new Q.HealthCard({mname: "Crocin", dosage:"Once at bedtime",context: stage});
 
 	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
 	guru.trigger("register", stage.desc_card);
@@ -51,6 +52,7 @@ Q.scene("market_research_1_House", function(stage) {
 	var player = Q("Player").first();
 	player.addMaterialContainer("Player");
 	stage.player = player;
+
 
 });
 

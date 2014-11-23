@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^readEmployee/$', 'crm.openERP.read_employee', name='read_employee'),
     url(r'^addEmployee/$', 'crm.openERP.add_employee', name='add_employee'),
     url(r'^editEmployee/$', 'crm.openERP.edit_employee', name='edit_employee'),
+    url(r'^getPrescriptions/$', 'crm.openERP.get_prescriptions', name='get_prescriptions'),
 
 
     url(r'^game/(?P<name>.*)/$', 'crm.views.game', name='game'),
