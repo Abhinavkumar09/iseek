@@ -22,7 +22,7 @@ class openERPClient():
 
 
 	def create(self, model, parameters):
-		return sock.execute(self.dbname, self.uid, self.pwd, model, 'create', parameters)
+		return self.sock.execute(self.dbname, self.uid, self.pwd, model, 'create', parameters)
 
 	def edit(self, model, parameters, ids):
 		return self.sock.execute(self.dbname, self.uid, self.pwd, model, 'write', ids, parameters)
@@ -94,6 +94,48 @@ def edit_employee(request):
 	parent_id = client.edit('hr.employee', employee, ids)
 
 	return HttpResponse(json.dumps({"id": parent_id}), content_type="application/json")
+
+def add_products(request):
+	client = openERPClient()
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
+	product = {
+		'name' : data['name'],
+		'list_price' : data['price'],
+	}
+	product_id = client.create('product.product', product)
+
+	return HttpResponse(json.dumps({"id": product_id}), content_type="application/json")
+
+def get_bom(request):
+	client = openERPClient()
+	data = request.GET
+	if(request.method == 'POST'):
+		data = request.POST
+
+        expr =[('product_qty','>','0')]
+	data = client.search('mrp.bom', expr)
+	return HttpResponse(json.dumps(data), content_type="application/json")
+	
+def add_man_order(request):
+	client = openERPClient()
+	data = request.GET	
+	if(request.method == 'POST'):
+		data = request.POST
+	manufacture_template = {
+		'name': data['name'],
+		'product_uom': data['uom'],
+		'product_id': data['prod'],
+		'bom_id': data['bom'],
+		'location_src_id' : 12,
+		'location_dest_id' : 12,
+		'product_qty': data['qty']
+
+	}
+	client.create('mrp.production', manufacture_template)
+
+	return HttpResponse(json.dumps({ }), content_type="application/json")
 
 def get_products(request):
     	client = openERPClient()
