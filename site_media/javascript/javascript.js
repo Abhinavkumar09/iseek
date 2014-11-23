@@ -34,6 +34,10 @@ function Product(properties) {
 	this.name = properties.name;
 	this.qtyavailable = properties.qtyavailable;
 	this.price = properties.price;
+	this.sellable = properties.sellable;
+	this.buyable = properties.buyable;
+	this.bom_id = properties.bom_id;
+	this.qty = properties.qty;
 }
 
 function loadjscssfile(filename, filetype){
@@ -216,8 +220,12 @@ function Game(name) {
 		price: 100,
 	};
 	
+	
 	this.productInventory = {};
-	this.productLength = 0;	
+	this.productLength = 0;
+	this.nameProduct;
+	this.priceProduct;
+	this.qtyProduct;
 /* New Code */
 
 	var properties = {};
