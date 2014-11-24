@@ -173,7 +173,7 @@ Q.scene("show_products_Workshop", function(stage) {
 										answer: new Q.UI.Spinner({
 											min_value: 0,
 											max_value: 100,
-											value: 50,
+											value: 0,
 										}), 										}),
 								],
 								context: stage,
@@ -182,7 +182,7 @@ Q.scene("show_products_Workshop", function(stage) {
 					
 							Q.stage(Q.STAGE_LEVEL_DIALOG).insert(prodqty);
 							stage.onquestioncompletion2 = function () {
-								// = prodqty.p.content[2].p.answer.p.value;
+								// = prodqty.p.content[0].p.answer.p.value;
 								
 								
 							};
@@ -210,7 +210,7 @@ Q.scene("show_products_Workshop", function(stage) {
 										answer: new Q.UI.Spinner({
 											min_value: 0,
 											max_value: 100,
-											value: 50,
+											value: 0,
 										}), 										}),
 								],
 								context: stage,
@@ -218,7 +218,7 @@ Q.scene("show_products_Workshop", function(stage) {
 								});
 								Q.stage(Q.STAGE_LEVEL_DIALOG).insert(prodqty);
 								stage.onquestioncompletion2 = function () {
-								 game.productInventory[j].qty = prodqty.p.content[2].p.answer.p.value;
+								 game.productInventory[j].qty = prodqty.p.content[0].p.answer.p.value;
 								 game.sync_data["Manufacture"] = true;
 								
 								};
