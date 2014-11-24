@@ -130,6 +130,7 @@ def add_man_order(request):
 		'bom_id': data['bom'],
 		'location_src_id' : 12,
 		'location_dest_id' : 12,
+		'state': 'done',
 		'product_qty': data['qty']
 
 	}
