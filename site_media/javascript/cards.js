@@ -565,7 +565,8 @@ Q.Card.extend("BusinessCard", {
 		var shg_card = new Q.SHGCard(this.p);
 
 		var shg = new Q.Tile({
-			label: new Q.UI.Text({label: "SHG"}), 
+//			label: new Q.UI.Text({label: "SHG"}), 
+			image: new Q.Sprite({asset: game.BUILDING.Workshop}),
 			x: -this.p.w/2 + 50, 
 			y: -this.p.h/2 + 275,
 			disabled: false,

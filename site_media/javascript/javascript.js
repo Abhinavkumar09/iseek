@@ -81,9 +81,6 @@ function Game(name) {
 		'CardObjects/cutnailscard.png', 'CardObjects/mosquitospraycard.png', 'CardObjects/padscard.png',
 		'CardObjects/healthkit.png',
 
-		//Buildings
-		'Building/workshop.png', 'Building/mira_house.png', 'Building/newHut.png',  'Building/school.png', 'Building/market.png', 'Building/healthcenter.png',
-		"mira_house.png", "market.png", "school.png", "workshop.png",
 
 		// Icons
 		"Icons/Guru_icon.png", "Icons/icon_info.png", "Icons/mute.png", "Icons/unmute.png", 
@@ -279,6 +276,21 @@ function Game(name) {
 
 	for( tmx in this.TMX) {
 		this.resources.push(this.TMX[tmx]);
+	}
+
+	this.BUILDING = {};
+	this.BUILDING.RESOURCES = {
+		'Workshop': 'Building/workshop.png', 
+		'House': 'Building/mira_house.png', 
+		//'Building/newHut.png',  
+		'School': 'Building/school.png', 
+		'Market': 'Building/market.png', 
+		'HealthCenter': 'Building/healthcenter.png',
+		//"mira_house.png", "market.png", "school.png", "workshop.png",
+	};
+
+	for( building in this.BUILDING.RESOURCES) {
+		this.resources.push(this.BUILDING.RESOURCES[building]);
 	}
 
 	this.FONTS = {};
