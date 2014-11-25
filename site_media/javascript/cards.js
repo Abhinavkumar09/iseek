@@ -901,3 +901,108 @@ Q.Card.extend("ActivityCard", {
 		this.destroy();
 	},
 });
+
+/* new code */
+
+Q.Card.extend("showInventory", {
+	
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},	
+	
+	inserted: function() {		
+		game.sync_data["products"] = false;
+		console.log(game.productInventory[0].qtyavailable);
+		console.log(game.productLength);
+		var rows = [];
+
+		var proName = new Q.UI.Text({label: "Product Name", x: 0, y: 0});
+		var quantityAvl = new Q.UI.Text({label: "Quantity Available", x: 0, y: 0});
+
+		rows.push([proName, quantityAvl]);
+		
+		//var productName = ["test1","test2","test3"];
+		var productprice = ["100","200","300"];
+		var namePro = [];
+		var qtyPro = [];	
+		for(var i=0; i < game.productLength ; i++) {
+			namePro[i] = new Q.UI.Text({label: game.productInventory[i].name, x: 0, y: 0});
+ 			qtyPro[i] = new Q.UI.Text({label: ""+game.productInventory[i].qtyavailable, x: 0, y: 0});
+			rows.push([namePro[i], qtyPro[i]]);
+		}
+
+		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+
+		this.insert(content2); 
+
+		var typeB = Q.ControlButtons.DONE;
+		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
+
+		
+	},		
+
+	back: function() {
+		console.log("go back");
+		this.destroy();
+		this.stage.insert(this.p.back_card);
+	},	
+	
+	done: function() {
+		console.log("done");
+		
+		this.destroy();
+	},
+
+});
+
+/* new code */
+
+/* product test */
+
+Q.Card.extend("productCreation", {
+	
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		this.movefront();
+
+		var rows = [];
+
+		var name = new Q.UI.WrappableText({label: "Product Name", w: 100, h: 300, x: 0, y: 0});
+		this.pval = "Enter here";
+		
+		this.npinput = new Q.UI.HTMLElement({html: "<input type='text'value= >", x: 0, y: 0});
+		rows.push([name, this.npinput]);
+
+		var price = new Q.UI.WrappableText({label: "Product Price", w: 100, x: 0, y: 0});
+		this.ppinput = new Q.UI.HTMLElement({html: "<input type='text'value= >", x: 0, y: 0});
+		rows.push([price, this.ppinput]);
+
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		this.insert(con1);
+
+		var type = Q.ControlButtons.CANCEL;
+		type += Q.ControlButtons.NEXT;
+		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
+
+	},
+
+	cancel: function() {
+		console.log("cancel");
+		this.destroy();
+	},		
+
+
+});
+
+
+
+/* product test */

@@ -138,6 +138,22 @@ game.certificates = [
 						null,
 						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
 					),
+					new CertificateElement(
+						"show_inventory",
+						"test",
+						"testinventory.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+					new CertificateElement(
+						"show_products",
+						"Product test",
+						"testproduct.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: true, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
 				]
 			),
 		]
