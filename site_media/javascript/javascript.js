@@ -29,6 +29,17 @@ function Person(properties) {
 	this.phone = properties.phone;
 }
 
+function Product(properties) {
+	this.id = properties.id;
+	this.name = properties.name;
+	this.qtyavailable = properties.qtyavailable;
+	this.price = properties.price;
+	this.sellable = properties.sellable;
+	this.buyable = properties.buyable;
+	this.bom_id = properties.bom_id;
+	this.qty = properties.qty;
+}
+
 function loadjscssfile(filename, filetype){
 	if (filetype=="js"){ //if filename is a external JavaScript file
 		var fileref=document.createElement('script')
@@ -200,6 +211,22 @@ function Game(name) {
 			game.Q.state.trigger("change.money", this.money);
 		},
 	};
+	
+ /* New Code */
+	this.product = {
+		id: -1,
+		name: "test",
+		qtyavailable: 0, 
+		price: 100,
+	};
+	
+	
+	this.productInventory = {};
+	this.productLength = 0;
+	this.nameProduct;
+	this.priceProduct;
+	this.qtyProduct;
+/* New Code */
 
 	var properties = {};
 	properties["name"] = "SHG";
