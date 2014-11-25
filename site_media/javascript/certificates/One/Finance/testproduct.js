@@ -113,22 +113,24 @@ Q.scene("show_products_Workshop", function(stage) {
 				var productTiles = Array();
 			   	var pro_cards = ["CardObjects/fruitbasket.png", "Objects/bamboo.png", "Objects/bamboo.png"];
 
+				var j = 0;
 				for(i = 0; i < game.productLength; i++) {
 					if(game.productInventory[i].sellable == true) {
-						productTiles[i] = new Q.Tile({
+						productTiles[j] = new Q.Tile({
 							image: new Q.Sprite({asset: pro_cards[i]}),
 							label: new Q.UI.Text({label: game.productInventory[i].name}),
 							disabled: true,
 			   			});
+						j++;
 					}
 			   	}
 			   
-  			   	productTiles[i] = new Q.Tile({
+  			   	productTiles[j] = new Q.Tile({
 			   		image: new Q.Sprite({asset: "Objects/basket_02.png"}),
 			   		label: new Q.UI.Text({label: "Create new Product"}),
 			   		disabled: true,
 			   	});
-				var create_pro = i;
+				var create_pro = j;
 				var product_card = new Q.TileCard({tiles: productTiles, grid: Q.TileCard.GRID_2_2, context: stage,});	
 			   	Q.stage(Q.STAGE_LEVEL_DIALOG).insert(product_card);
 
