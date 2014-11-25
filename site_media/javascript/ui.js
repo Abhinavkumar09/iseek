@@ -453,7 +453,7 @@ Q.UI.TableLayout = Q.UI.Container.extend("UI.TableLayout", {
 		}
 	},
 
-	redraw: function(ctx) {
+	reddraw: function(ctx) {
 		ctx.save();
 		ctx.beginPath();
 		ctx.moveTo(-this.p.cx, -this.p.cy);
