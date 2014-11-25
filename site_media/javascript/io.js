@@ -104,14 +104,14 @@ function syncFromServer() {
 		});
 	}
 /* New Code */
-	if(!game.sync_data["products"]) {
+	if(! game.sync_data["products"]) {
 		console.log("fetch game.products")
 		$.post( "/getproducts/" , { }, function( data ){
 			game.productLength = data.length;
 			for(var i =0 ; i < data.length ; i++){				
 			   game.productInventory[i] = 
 				new Product({'id': data[i]['id'], 'name': data[i]['name'], 'qtyavailable': data[i]['qty_available'], 'price': data[i]['list_price'], 'sellable' : data[i]['sale_ok'], 'buyable' : data[i]['purchase_ok'], 'bom_id' : 'false', 'qty' : 0});
-		//console.log(data[i]['id'] + " " + data[i]['name']);
+			console.log(data[i]['id'] + " " + data[i]['name']);
 			}
 			game.productInventory[1].bom_id = 7;
 			game.productInventory[2].bom_id = 3;
@@ -119,7 +119,7 @@ function syncFromServer() {
 		});		
 	}
 /* New Code */
-	if(!game.sync_data["bom"]) {
+	if(! game.sync_data["bom"]) {
 		console.log("fetch game.bom")
 		$.post( "/getbom/" , { }, function( data ){
 			for(var i=0 ; i < data.length ; i++){
