@@ -258,10 +258,10 @@ function Game(name) {
 
 	this.AUDIO = {};
 	this.AUDIO.RESOURCES = {
-		"VILLAGE": "Tavern.wav", 
-		"BOARD": "Lazy_Day.wav",
-		"MONEY": "sell_buy_item.wav", 
-		"MOVE_ITEM": "put_pick_item.wav", 
+		//"VILLAGE": "Tavern.wav", 
+		//"BOARD": "Lazy_Day.wav",
+		//"MONEY": "sell_buy_item.wav", 
+		//"MOVE_ITEM": "put_pick_item.wav", 
 	};
 
 	for( audio in this.AUDIO.RESOURCES) {
@@ -300,6 +300,8 @@ function Game(name) {
 	//, 'VirtualWorld1.tmx', 
 	this.TMX.School = 'school.tmx';
 	this.TMX.HealthCenter = 'healthcenter.tmx';
+
+	this.TMX.Opening = 'VirtualWorld2.tmx';
 
 	for( tmx in this.TMX) {
 		this.resources.push(this.TMX[tmx]);

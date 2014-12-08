@@ -62,9 +62,14 @@ Q.Sprite.extend("Transition", {
 			}
 			if(this.p.spent_time >= this.p.total_time) { // going towards dark
 				if(this.p.direction == "dark") {
+					console.log(this.stage.options);
 					for(i in this.stage.options.nextStage) {
+						console.log(i);
 						if(this.stage.options.nextStage[i][0] == "stageScene") {
 							// start the scene related to this building
+							console.log(this.stage.options.nextStage[i][1]);
+							console.log(this.stage.options.nextStage[i][2]);
+							console.log(this.stage.options.nextStage[i][3]);
 							Q.stageScene(this.stage.options.nextStage[i][1], this.stage.options.nextStage[i][2], this.stage.options.nextStage[i][3]);
 						}
 						else if(this.stage.options.nextStage[i][0] == "unpause") {
@@ -387,7 +392,7 @@ Q.UI.Container.extend("GameStats", {
 });
 
 
-
+/*
 Q.scene("LevelSelector", function(stage) {
 	stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
 	stage.insert(stage.certificateselector);
@@ -397,4 +402,61 @@ Q.scene("LevelSelector", function(stage) {
 	stage.insert(stage.gamestats);
 
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
+});*/
+
+Q.scene("LevelSelector", function(stage) {
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX("VirtualWorld2.tmx", stage);
+	//game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
+
+	var Mira = Q("Player").first();
+	Mira.add("KeyCarrier");
+	stage.add("viewport").follow(Mira);
+	Mira.addMaterialContainer("Player");
+
+	Mira.addKeyContainer();
+
+
+	var i = 0;
+	while(Q("Building", Q.STAGE_LEVEL_LEARNING_MODULE).at(i) != null) {
+		b = Q("Building").at(i);
+		var elementID = "";
+		console.log(b.p.name + ": ");
+		//console.log(stage.options.certificates[0].badges[i].elements[0].element_id);
+		switch(b.p.name){
+			case "School":
+				elementID = stage.options.certificates[0].badges[0].elements[0].element_id;
+				b.setInteractable(true);
+				break;
+			case "Market":
+				elementID = stage.options.certificates[0].badges[2].elements[0].element_id;
+				b.setInteractable(true);
+				break
+			case "seemaWorkshop":
+				break;
+			case "Workshop":
+				break;
+			case "House":
+				break;
+			case "HealthCenter":
+				elementID = stage.options.certificates[0].badges[1].elements[0].element_id;
+				b.setInteractable(true);
+				break;
+			default:
+				break;
+		}
+		//b.setInteractable(stage.options.element.interactability[b.p.name]);
+		b.p.nextScene = elementID;
+		console.log("nextScene: " + b.p.nextScene);
+		i += 1;
+	}
+
+	//stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
+	//stage.insert(stage.certificateselector);
+
+
+	//stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, });
+	//stage.insert(stage.gamestats);
+
+	//game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
 });
