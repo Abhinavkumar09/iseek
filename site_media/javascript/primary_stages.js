@@ -416,7 +416,6 @@ Q.scene("LevelSelector", function(stage) {
 
 	Mira.addKeyContainer();
 
-
 	var i = 0;
 	while(Q("Building", Q.STAGE_LEVEL_LEARNING_MODULE).at(i) != null) {
 		b = Q("Building").at(i);
@@ -447,9 +446,12 @@ Q.scene("LevelSelector", function(stage) {
 		}
 		//b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = elementID;
+		stage.options.nextScene = elementID;
 		console.log("nextScene: " + b.p.nextScene);
 		i += 1;
 	}
+	Q.stageScene("navigation", Q.STAGE_LEVEL_NAVIGATION, {});
+	Q.stageScene("scorecard", Q.STAGE_LEVEL_SCORECARD, {});
 
 	//stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
 	//stage.insert(stage.certificateselector);

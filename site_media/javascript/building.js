@@ -42,7 +42,9 @@ Q.Sprite.extend("Door", {
 			// unpause the original stage
 			var options = Q._defaults(this.stage.options, {direction: "dark"});
 			options["nextStage"] = [
-				["unpause", Q.STAGE_LEVEL_PRIMARY],
+				["clearStage", Q.STAGE_LEVEL_PRIMARY],
+				["stageScene", this.stage.options.nextScene, Q.STAGE_LEVEL_PRIMARY, {}],
+				//["unpause", Q.STAGE_LEVEL_PRIMARY],
 				["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
 			];
 
