@@ -392,17 +392,31 @@ Q.UI.Container.extend("GameStats", {
 });
 
 
-/*
-Q.scene("LevelSelector", function(stage) {
-	stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
+
+Q.scene("StartScreen", function(stage) {
+	/*stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
 	stage.insert(stage.certificateselector);
 
 
 	stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, });
-	stage.insert(stage.gamestats);
+	stage.insert(stage.gamestats);*/
 
+	var button = stage.insert(new Q.UI.Button({ x: 250, y: 250, fill: "#CCCCCC", label: "Start" }))         
+	//var label = box.insert(new Q.UI.Text({x:0, y: -10 - button.p.h, label: stage.options.label }));
+
+	button.on("click",function() {
+		var options = Q._defaults(this.stage.options, {direction: "dark"});
+		options["nextStage"] = [
+			["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
+			["stageScene", "navigation", Q.STAGE_LEVEL_NAVIGATION, {}],
+			["stageScene", "LevelSelector", Q.STAGE_LEVEL_PRIMARY, {certificates: stage.options.certificates}],
+			["stageScene", "scorecard", Q.STAGE_LEVEL_SCORECARD, {}]
+		];
+
+		Q.stageScene("TransitionScene", Q.STAGE_LEVEL_TRANSITION, options);
+	});
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
-});*/
+});
 
 Q.scene("LevelSelector", function(stage) {
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
@@ -415,20 +429,20 @@ Q.scene("LevelSelector", function(stage) {
 	Mira.addMaterialContainer("Player");
 
 	Mira.addKeyContainer();
-
+	stage.options.startScreen = 1;
+	console.log("Start: "+stage.options.startScreen);
 	var i = 0;
-	while(Q("Building", Q.STAGE_LEVEL_LEARNING_MODULE).at(i) != null) {
+	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
 		var elementID = "";
+		var element;
 		console.log(b.p.name + ": ");
-		//console.log(stage.options.certificates[0].badges[i].elements[0].element_id);
+		//console.log(this.certificates[0].badges[i].elements[0].element_id);
 		switch(b.p.name){
 			case "School":
-				elementID = stage.options.certificates[0].badges[0].elements[0].element_id;
 				b.setInteractable(true);
 				break;
 			case "Market":
-				elementID = stage.options.certificates[0].badges[2].elements[0].element_id;
 				b.setInteractable(true);
 				break
 			case "seemaWorkshop":
@@ -438,7 +452,6 @@ Q.scene("LevelSelector", function(stage) {
 			case "House":
 				break;
 			case "HealthCenter":
-				elementID = stage.options.certificates[0].badges[1].elements[0].element_id;
 				b.setInteractable(true);
 				break;
 			default:
@@ -446,12 +459,12 @@ Q.scene("LevelSelector", function(stage) {
 		}
 		//b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = elementID;
-		stage.options.nextScene = elementID;
+
+		//Q.stageScene("TransitionScene", Q.STAGE_LEVEL_TRANSITION, options);
+
 		console.log("nextScene: " + b.p.nextScene);
 		i += 1;
 	}
-	Q.stageScene("navigation", Q.STAGE_LEVEL_NAVIGATION, {});
-	Q.stageScene("scorecard", Q.STAGE_LEVEL_SCORECARD, {});
 
 	//stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
 	//stage.insert(stage.certificateselector);
