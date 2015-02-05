@@ -19,6 +19,8 @@ Q.scene("loan_1", function(stage) {
 	var guru = Q("GuruIcon", Q.STAGE_LEVEL_NAVIGATION).first();
 	guru.trigger("register", stage.desc_card);
 
+	var home = Q("ExitIcon", Q.STAGE_LEVEL_NAVIGATION).first();
+
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX("VirtualWorld.tmx", stage);
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);

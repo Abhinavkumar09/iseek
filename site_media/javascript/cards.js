@@ -921,6 +921,20 @@ Q.Card.extend("ActivityCard", {
 	},
 });
 
+Q.Card.extend("doneLevel", {
+	init: function(p) {
+		this._super(Q._defaults(p, {
+			layout: Q.UI.Layout.NONE,
+			// type: Q.ControlButtons.BACK,
+		}));
+		this.on("inserted");
+	},
+
+	inserted: function() {
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+	},
+});
+
 Q.Card.extend("showPrescription", {
 	init: function(p) {
 		this._super(Q._defaults(p, {
@@ -935,22 +949,22 @@ Q.Card.extend("showPrescription", {
 		var rows = [];
 		var medName = new Q.UI.Text({label: "Medicine", x:0,y:0});
 		var dosage = new Q.UI.Text({label: "Dosage", x:0,y:0});
-		var frequency = new Q.UI.Text({label: "Frequency", x:0,y:0});
-		var startdate = new Q.UI.Text({label: "Start Date", x:0,y:0});
-		var enddate = new Q.UI.Text({label: "End Date", x:0,y:0});
+		var frequency = new Q.UI.Text({label: "Frequency", x:10,y:0});
+		var startdate = new Q.UI.Text({label: "Start Date", x:110,y:0});
+		var enddate = new Q.UI.Text({label: "End Date", x:250,y:0});
 
 		rows.push([medName,dosage,frequency,startdate,enddate]);
 
 		for(var i=0; i<game.prescriptionslength; i++) {
 			var medl = new Q.UI.Text({label: game.prescriptions[i].name, x:0, y:0});
 			var dosl = new Q.UI.Text({label: game.prescriptions[i].dosage + " " + game.prescriptions[i].dosunit, x:0, y:0});
-			var frequencyl = new Q.UI.Text({label: game.prescriptions[i].frequency, x:0, y:0});
-			var startdatel = new Q.UI.Text({label: game.prescriptions[i].startdate, x:0, y:0});
-			var enddatel = new Q.UI.Text({label: game.prescriptions[i].enddate, x:0, y:0});
+			var frequencyl = new Q.UI.Text({label: game.prescriptions[i].frequency, x:10, y:0});
+			var startdatel = new Q.UI.Text({label: game.prescriptions[i].startdate, x:110, y:0});
+			var enddatel = new Q.UI.Text({label: game.prescriptions[i].enddate, x:250, y:0});
 			rows.push([medl,dosl,frequencyl,startdatel,enddatel]);
 		}
 
-		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.2, 0.2, 0.2,0.2,0.2], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.2, 0.2, 0.2,0.2,0.2], x: 50, y: 150 - this.p.h/5, rows: rows, w: this.p.w - 100, h: 200});
 		this.insert(content2);
 		var typeB = Q.ControlButtons.DONE;
 		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));

@@ -2,6 +2,7 @@ Q.scene("navigation",function(stage) {
 
 	stage.insert(new Q.GuruIcon({}));
 //	stage.insert(new Q.AudioIcon({}));
+	stage.insert(new Q.ExitIcon({}));
 
 
 	var minimap_width = 160;
@@ -216,6 +217,24 @@ Q.UI.Container.extend("ScoreBar", {
 	}
 });
 
+Q.Sprite.extend("ExitIcon", {
+	init: function(p) {
+		this._super(p, {
+			name: "ExitIcon",
+			asset: "Icons/home.png",
+			x: Q.width - 40,
+			y: 120,
+			type: Q.SPRITE_UI,
+		});
+		this.add('Touch');
+		this.on("touch");
+	},
+
+	touch: function(e) {
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+	},
+
+});
 
 Q.Sprite.extend("GuruIcon", {
 	init: function(p) {
@@ -237,11 +256,12 @@ Q.Sprite.extend("GuruIcon", {
 
 		this.p.card = card;
 		this.p.card.p.speaker = new Q.Sprite({asset: this.p.asset});
-		this.touch();
+		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(this.p.card);
+		//this.touch();
 	},
 
 	touch: function(e) {
-		Q.stage(Q.STAGE_LEVEL_DIALOG).insert(this.p.card);;
+		Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
 	}
 
 });
