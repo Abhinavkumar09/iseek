@@ -75,7 +75,7 @@ game.certificates = [
 					),
 					new CertificateElement(
 						"market_research_1",
-						"Lecture",
+						"Classroom",
 						"Lecture.js",
 						false,
 						null,
@@ -91,55 +91,8 @@ game.certificates = [
 					),
 				]
 			),
-			new CertificateBadge(
-				"Mind, Body, Relations", 
-				"Mind_Body_Relations",
-				"Objects/Medal/badge01.png",
-				false, 
-				[
-					new CertificateElement(
-						"health_1",
-						"Health",
-						"Health.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
-					),
-					new CertificateElement(
-						"health_2",
-						"Test",
-						"Test.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
-					),
-					new CertificateElement(
-						"health_3",
-						"Activities",
-						"Activities.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
-					),
-				]
 
-			),
-			new CertificateBadge(
-				"Finance", 
-				"Finance",
-				"Objects/Medal/badge01.png",
-				false, 
-				[
-					new CertificateElement(
-						"loan_1",
-						"Loan",
-						"loan.js",
-						false,
-						null,
-						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
-					),
-				]
-			),
+
 		]
 	),
 ];
