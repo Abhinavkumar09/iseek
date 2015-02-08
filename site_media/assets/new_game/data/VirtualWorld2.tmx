@@ -4,7 +4,7 @@
   <image source="../figs/tileSet.png" width="128" height="448"/>
  </tileset>
  <tileset firstgid="57" name="mira_house" tilewidth="193" tileheight="193">
-  <image source="../figs/mira_house.png" width="193" height="193"/>
+  <image source="../figs/Building/mira_house.png" width="193" height="193"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Building"/>
@@ -24,7 +24,7 @@
   </tile>
  </tileset>
  <tileset firstgid="67" name="market" tilewidth="321" tileheight="209">
-  <image source="../figs/market.png" width="321" height="209"/>
+  <image source="../figs/Building/loan.png" width="321" height="209"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Building"/>
@@ -32,7 +32,7 @@
   </tile>
  </tileset>
  <tileset firstgid="68" name="workshop" tilewidth="193" tileheight="193">
-  <image source="../figs/workshop.png" width="193" height="193"/>
+  <image source="../figs/Building/workshop.png" width="193" height="193"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Building"/>
@@ -41,7 +41,7 @@
   </tile>
  </tileset>
  <tileset firstgid="69" name="school" tilewidth="150" tileheight="128">
-  <image source="../figs/school.png" width="150" height="128"/>
+  <image source="../figs/Building/market_research.png" width="150" height="128"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Building"/>
@@ -49,7 +49,7 @@
   </tile>
  </tileset>
  <tileset firstgid="70" name="healthcenter" tilewidth="150" tileheight="128">
-  <image source="../figs/Building/healthcenter.png" width="150" height="128"/>
+  <image source="../figs/Building/health.png" width="150" height="128"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Building"/>
@@ -10993,7 +10993,7 @@
  <objectgroup name="Buildings" width="91" height="60">
   <object name="Market" gid="67" x="1500" y="920">
    <properties>
-    <property name="asset" value="Building/market.png"/>
+    <property name="asset" value="Building/loan.png"/>
     <property name="name" value="Market"/>
    </properties>
   </object>
@@ -11010,7 +11010,7 @@
   </object>
   <object name="School" gid="69" x="1214" y="820">
    <properties>
-    <property name="asset" value="Building/school.png"/>
+    <property name="asset" value="Building/market_research.png"/>
     <property name="name" value="School"/>
    </properties>
   </object>
@@ -11024,7 +11024,7 @@
   <object name="HealthCenter" gid="70" x="1000" y="820">
    <properties>
     <property name="Class" value="Building"/>
-    <property name="asset" value="Building/healthcenter.png"/>
+    <property name="asset" value="Building/health.png"/>
     <property name="name" value="HealthCenter"/>
    </properties>
   </object>

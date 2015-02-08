@@ -315,6 +315,9 @@ function Game(name) {
 		'School': 'Building/school.png', 
 		'Market': 'Building/market.png', 
 		'HealthCenter': 'Building/healthcenter.png',
+		'Loan': 'Building/loan.png',
+		'MarketResearch': 'Building/market_research.png',
+		'Health': 'Building/health.png',
 		//"mira_house.png", "market.png", "school.png", "workshop.png",
 	};
 
