@@ -5,7 +5,7 @@ Q.scene("health_1",function(stage) {
 
 	stage.desc_card = new Q.StageInfoCard({
 		description: new Q.ImageText({
-			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here"}),
+			label: new Q.UI.WrappableText({label: "Hi! TODO: Fill the details of the element here!"}),
 		}),
 		context: stage,
 	});
@@ -41,6 +41,7 @@ Q.scene("health_1",function(stage) {
 
 	var Nurse = new Q.Person({sheet: "nurse_sheet", frame: 0, x:1050, y:600, isInteractable:true, name:"Nurse"});
 	stage.insert(Nurse);
+	Nurse.info({duration:5, showOnMiniMap: true});
 
 	Nurse.collision = function(col) {
 		if(Q.game.player.keys.length >= 3){ // assumed 'relationship' key attained at the end
@@ -83,14 +84,129 @@ Q.scene("health_1",function(stage) {
 
 	Amar.off("hit", Amar, "collision");
 	Amar.collision = function(col) {
+		var aquote = [
+						0,
+						"I am so healthy, physically fit and strong. Do you want to be healthy and strong like me?",
+						"I ate nutritious food, took my iron supplements, kept up my hygiene, rested properly each night, and did some physical activities each day. I also urinate far away from my home in a designated area, so that I don’t get sick from germs that could leave. I believe you want me to come with you. I will come with you after you prove to me how important it is to you to be healthy. You will have to go do 2 things to contribute to your physical fitness first. Then, you can come back.",
+						"Go home and have some fresh food that has been kept for you and an iron supplement. Then, run back to me.",
+						"Very good! You can be as healthy as you can with different tips you will learn. I don’t know if I want to help you, because I feel sad. I will come with you to the health center to unlock the door.",
+						"Try my key. I am the healthiest. It should surely work!",
+						"That is weird. I took this key from this lock. Who could be healthier than me?"
+						];
+		var pquote = [
+						0,
+						"Yes! How did you become like this?"
+						];
+		var nquote = [
+						0,
+						"Maybe that is not the right key. Please find the right key. Amar can wait here with me and keep trying."
+						];
 		if(Q.game.player.keys.length >= 1) {
-			Amar.p.label = "Congrats Mira! You now have the 'body' key.";
+			//Amar.p.label = "Congrats Mira! You now have the 'body' key.";
+			aquote[0] = 3;
+			pquote[0] = 1;
+			stage.onquestioncompletion = function () {
+				setTimeout(function(){
+					aquote[0]++;
+					//console.log(Amar.p.quote[0]);
+					//console.log(Amar.p.quote[Amar.p.quote[0]]);
+					Amar.bottom_quote(aquote[aquote[0]],0,5);
+				}, 0);
+				setTimeout(function(){
+					aquote[0]++;
+					//console.log(Amar.p.quote[0]);
+					//console.log(Amar.p.quote[Amar.p.quote[0]]);
+					Amar.bottom_quote(aquote[aquote[0]],0,5);
+				}, 5000);
+				setTimeout(function(){
+					aquote[0]++;
+					//console.log(Amar.p.quote[0]);
+					//console.log(Amar.p.quote[Amar.p.quote[0]]);
+					Amar.bottom_quote(aquote[aquote[0]],0,5);
+				}, 10000);
+				setTimeout(function(){
+					nquote[0]++;
+					//console.log(Amar.p.quote[0]);
+					//console.log(Amar.p.quote[Amar.p.quote[0]]);
+					Nurse.bottom_quote(nquote[nquote[0]],0,5);
+				}, 15000);
+			};
+
+			var form = new Q.Form(
+		{
+			content: [ 
+				new Q.MultipleChoiceQuestion({
+					question: new Q.ImageText({
+						label: new Q.UI.Text({label: "What have you completed?", size: 18, type: Q.SPRITE_NONE, }),
+						fill: null,
+					}), 
+					choices: [
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Eat nutritional food", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Take supplements", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "keep up hygiene", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Rest", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Physical activity", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						}), 
+						new Q.ImageText({
+							label: new Q.UI.Text({label: "Proper urination sanitation", size: 16, type: Q.SPRITE_NONE}),
+							isSelectable: true,
+							fill: null,
+						})
+					],
+					isSelectAll: true,
+				})
+			],
+			context: stage,
+			func: "onquestioncompletion",
+		});
+			Q.stage(Q.STAGE_LEVEL_DIALOG).insert(form);
 		}
-		else if(Q.game.player.keys.length < 1)
-			Amar.p.label = "नमस्ते Mira. In order to get the 'body' key, you need to complete certain activities. Go home and complete as many of the 'body' activities as you can";
+		else if(Q.game.player.keys.length < 1){
+			//Amar.p.label = "I am so healthy, physically fit and strong. Do you want to be healthy and strong like me?";
+			setTimeout(function(){
+				aquote[0]++;
+				//console.log(Amar.p.quote[0]);
+				//console.log(Amar.p.quote[Amar.p.quote[0]]);
+				Amar.bottom_quote(aquote[aquote[0]],0,5);
+			}, 0);
+			//player.p.label = "Yes! How did you become like this?";
+			
+			setTimeout(function(){
+				pquote[0]++;
+				player.bottom_quote(pquote[pquote[0]],0,5);
+			}, 5000);
+			//Amar.p.label = "I ate nutritious food, took my iron supplements, kept up my hygiene, rested properly each night, and did some physical activities each day. I also urinate far away from my home in a designated area, so that I don’t get sick from germs that could leave. I believe you want me to come with you. I will come with you after you prove to me how important it is to you to be healthy. You will have to go do 2 things to contribute to your physical fitness first. Then, you can come back.";
+			setTimeout(function(){
+				aquote[0]++;
+				Amar.bottom_quote(aquote[aquote[0]],0,10);
+			}, 10000);
+			//player.p.label = "Go home and have some fresh food that has been kept for you and an iron supplement. Then, run back to me.";
+			setTimeout(function(){
+				aquote[0]++;
+				Amar.bottom_quote(aquote[aquote[0]],0,3);
+			}, 20000);
+		}
 
-
-		Amar.bottom_quote(Amar.p.label);
+		
 		var i = 0;
 		while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 			b = Q("Building").at(i);
