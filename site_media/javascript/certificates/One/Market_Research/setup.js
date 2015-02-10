@@ -13,7 +13,7 @@ Q.scene("market_research_0_setup",function(stage) {
 
 	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
 	Q.stageTMX(game.TMX.VirtualWorld, stage);
-	//game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
+	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
 
 	var player = Q("Player").first();
 	stage.player = player;
