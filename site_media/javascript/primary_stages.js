@@ -62,9 +62,14 @@ Q.Sprite.extend("Transition", {
 			}
 			if(this.p.spent_time >= this.p.total_time) { // going towards dark
 				if(this.p.direction == "dark") {
+					console.log(this.stage.options);
 					for(i in this.stage.options.nextStage) {
+						console.log(i);
 						if(this.stage.options.nextStage[i][0] == "stageScene") {
 							// start the scene related to this building
+							console.log(this.stage.options.nextStage[i][1]);
+							console.log(this.stage.options.nextStage[i][2]);
+							console.log(this.stage.options.nextStage[i][3]);
 							Q.stageScene(this.stage.options.nextStage[i][1], this.stage.options.nextStage[i][2], this.stage.options.nextStage[i][3]);
 						}
 						else if(this.stage.options.nextStage[i][0] == "unpause") {
@@ -388,13 +393,85 @@ Q.UI.Container.extend("GameStats", {
 
 
 
-Q.scene("LevelSelector", function(stage) {
-	stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
+Q.scene("StartScreen", function(stage) {
+	/*stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
 	stage.insert(stage.certificateselector);
 
 
 	stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, });
-	stage.insert(stage.gamestats);
+	stage.insert(stage.gamestats);*/
 
+	var button = stage.insert(new Q.UI.Button({ x: 250, y: 250, fill: "#CCCCCC", label: "Start" }))         
+	//var label = box.insert(new Q.UI.Text({x:0, y: -10 - button.p.h, label: stage.options.label }));
+
+	button.on("click",function() {
+		var options = Q._defaults(this.stage.options, {direction: "dark"});
+		options["nextStage"] = [
+			["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
+			["stageScene", "navigation", Q.STAGE_LEVEL_NAVIGATION, {}],
+			["stageScene", "LevelSelector", Q.STAGE_LEVEL_PRIMARY, {certificates: stage.options.certificates}],
+			["stageScene", "scorecard", Q.STAGE_LEVEL_SCORECARD, {}]
+		];
+
+		Q.stageScene("TransitionScene", Q.STAGE_LEVEL_TRANSITION, options);
+	});
 	game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
+});
+
+Q.scene("LevelSelector", function(stage) {
+	stage.insert(new Q.Repeater({ sheet: "tiles", frame:229, speedX: 1, speedY: 1 }));
+	Q.stageTMX("VirtualWorld2.tmx", stage);
+	//game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.VILLAGE);
+
+	var Mira = Q("Player").first();
+	Mira.add("KeyCarrier");
+	stage.add("viewport").follow(Mira);
+	Mira.addMaterialContainer("Player");
+
+	Mira.addKeyContainer();
+	stage.options.startScreen = 1;
+	console.log("Start: "+stage.options.startScreen);
+	var i = 0;
+	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
+		b = Q("Building").at(i);
+		var elementID = "";
+		var element;
+		console.log(b.p.name + ": ");
+		//console.log(this.certificates[0].badges[i].elements[0].element_id);
+		switch(b.p.name){
+			case "School":
+				b.setInteractable(true);
+				break;
+			case "Market":
+				b.setInteractable(true);
+				break
+			case "seemaWorkshop":
+				break;
+			case "Workshop":
+				break;
+			case "House":
+				break;
+			case "HealthCenter":
+				b.setInteractable(true);
+				break;
+			default:
+				break;
+		}
+		//b.setInteractable(stage.options.element.interactability[b.p.name]);
+		b.p.nextScene = elementID;
+
+		//Q.stageScene("TransitionScene", Q.STAGE_LEVEL_TRANSITION, options);
+
+		console.log("nextScene: " + b.p.nextScene);
+		i += 1;
+	}
+
+	//stage.certificateselector = new Q.CertificateSelector({x: Q.width * 3 / 4 + 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, certificates: stage.options.certificates});
+	//stage.insert(stage.certificateselector);
+
+
+	//stage.gamestats = new Q.GameStats({x: Q.width * 1 / 4 - 1, y: Q.height/2, h: Q.height, w: Q.width/2 - 1, });
+	//stage.insert(stage.gamestats);
+
+	//game.AUDIO.stop_n_play(game.AUDIO.RESOURCES.BOARD);
 });

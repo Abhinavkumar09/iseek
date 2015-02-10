@@ -694,5 +694,12 @@ Q.scene("market_research_1_SeemaWorkshop", function(stage) {
 	seller3.on("hit", seller3, "collision");
 	game.score = stage.player.money;
 	
+	/*stage.oncompletion = function() {
+		setTimeout(function(){
+			Q.stageScene("LevelFinished", Q.STAGE_LEVEL_NAVIGATION, {label: "Done"});
+			stage.pause();
+		}, 500);		
+	};*/
+	
 });
 
