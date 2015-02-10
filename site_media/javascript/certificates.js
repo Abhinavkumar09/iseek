@@ -75,11 +75,11 @@ game.certificates = [
 					),
 					new CertificateElement(
 						"market_research_1",
-						"Lecture",
+						"Classroom",
 						"Lecture.js",
 						false,
 						null,
-						{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
+						{House: true, Market: true, Workshop: false, School:true, SeemaWorkshop: true, HealthCenter: false}
 					),
 					new CertificateElement(
 						"market_research_2",
@@ -91,38 +91,8 @@ game.certificates = [
 					),
 				]
 			),
-			new CertificateBadge(
-				"Mind, Body, Relations", 
-				"Mind_Body_Relations",
-				"Objects/Medal/badge01.png",
-				false, 
-				[
-					new CertificateElement(
-						"health_1",
-						"Health",
-						"Health.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
-					),
-					new CertificateElement(
-						"health_2",
-						"Test",
-						"Test.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
-					),
-					new CertificateElement(
-						"health_3",
-						"Activities",
-						"Activities.js",
-						false,
-						null,
-						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
-					),
-				]
 
+<<<<<<< HEAD
 			),
 			new CertificateBadge(
 				"Finance", 
@@ -156,6 +126,9 @@ game.certificates = [
 					),
 				]
 			),
+=======
+
+>>>>>>> Abhinavkumar09_marketdemo
 		]
 	),
 ];

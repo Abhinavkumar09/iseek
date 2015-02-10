@@ -221,6 +221,8 @@ function Game(name) {
 /* New Code */
 
 
+	this.score = 0;
+		
 	var properties = {};
 	properties["name"] = "SHG";
 	properties["members"] = [
@@ -301,6 +303,8 @@ function Game(name) {
 	this.TMX.School = 'school.tmx';
 	this.TMX.HealthCenter = 'healthcenter.tmx';
 
+	this.TMX.Opening = 'VirtualWorld2.tmx';
+
 	for( tmx in this.TMX) {
 		this.resources.push(this.TMX[tmx]);
 	}
@@ -313,6 +317,9 @@ function Game(name) {
 		'School': 'Building/school.png', 
 		'Market': 'Building/market.png', 
 		'HealthCenter': 'Building/healthcenter.png',
+		'Loan': 'Building/loan.png',
+		'MarketResearch': 'Building/market_research.png',
+		'Health': 'Building/health.png',
 		//"mira_house.png", "market.png", "school.png", "workshop.png",
 	};
 
