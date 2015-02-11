@@ -91,7 +91,7 @@ function Game(name) {
 		'Icons/medal.png', "Icons/money.png", "Icons/health.png",
 
 		// TMX
-		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'healthcenter.tmx',
+		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'VirtualWorld2.tmx','healthcenter.tmx',
 
 		// Audio
 //		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",

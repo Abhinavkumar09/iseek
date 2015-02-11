@@ -117,34 +117,28 @@ Q.Sprite.extend("Building", {
 				//console.log(this.certificates[0].badges[i].elements[0].element_id);
 				switch(this.p.name){
 					case "School":
-						b.setInteractable(true);
 						elementID = this.stage.options.certificates[0].badges[0].elements[1].element_id;
 						elementObj = this.stage.options.certificates[0].badges[0].elements[1];
 						break;
 					case "Market":
-						b.setInteractable(true);
-						elementID = this.stage.options.certificates[0].badges[2].elements[0].element_id;
-						elementObj = this.stage.options.certificates[0].badges[2].elements[0];
+						elementID = this.stage.options.certificates[0].badges[0].elements[0].element_id;
+						elementObj = this.stage.options.certificates[0].badges[0].elements[0];
 						break
 					case "seemaWorkshop":
-						b.setInteractable(true);
-						elementID = this.stage.options.certificates[0].badges[1].elements[1].element_id;
-						elementObj = this.stage.options.certificates[0].badges[1].elements[1];
+						elementID = this.stage.options.certificates[0].badges[0].elements[1].element_id;
+						elementObj = this.stage.options.certificates[0].badges[0].elements[1];
 						break;
 					case "Workshop":
-						b.setInteractable(true);
-						elementID = this.stage.options.certificates[0].badges[1].elements[1].element_id;
-						elementObj = this.stage.options.certificates[0].badges[1].elements[1];
+						elementID = this.stage.options.certificates[0].badges[0].elements[1].element_id;
+						elementObj = this.stage.options.certificates[0].badges[0].elements[1];
 						break;
 					case "House":
-						b.setInteractable(true);
-						elementID = this.stage.options.certificates[0].badges[1].elements[1].element_id;
-						elementObj = this.stage.options.certificates[0].badges[1].elements[1];
+						elementID = this.stage.options.certificates[0].badges[0].elements[1].element_id;
+						elementObj = this.stage.options.certificates[0].badges[0].elements[1];
 						break;
 					case "HealthCenter":
-						b.setInteractable(true);
-						elementID = this.stage.options.certificates[0].badges[1].elements[0].element_id;
-						elementObj = this.stage.options.certificates[0].badges[1].elements[0];
+						elementID = this.stage.options.certificates[0].badges[0].elements[0].element_id;
+						elementObj = this.stage.options.certificates[0].badges[0].elements[0];
 						break;
 					default:
 						break;
