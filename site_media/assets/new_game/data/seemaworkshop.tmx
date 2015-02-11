@@ -3755,6 +3755,21 @@
     <property name="name" value="Mira"/>
    </properties>
   </object>
+  <object gid="296" x="65" y="161">
+   <properties>
+    <property name="sheet" value="person_4_sheet"/>
+   </properties>
+  </object>
+  <object gid="296" x="128" y="160">
+   <properties>
+    <property name="sheet" value="person_5_sheet"/>
+   </properties>
+  </object>
+  <object gid="296" x="194" y="160">
+   <properties>
+    <property name="sheet" value="person_6_sheet"/>
+   </properties>
+  </object>
   <object gid="305" x="161" y="453">
    <properties>
     <property name="isInteractable" value="true"/>

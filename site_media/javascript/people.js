@@ -259,7 +259,7 @@ Q.Person.extend("Buyer", {
 Q.Person.extend("Enterpreneur", {
 	init: function(p) {
 		this._super(p);
-		this.p.label = "We make baskets to sell at the local market. Each girl weaves the type of basket that they are best at making.";
+		this.p.label = "We make baskets to sell at the local market. Each girl weaves the type of basket that they are best at making. Can you sell some of these baskets? If you sell, we will give you 10% commission.";
 	},
 
 	collision: function(col) {

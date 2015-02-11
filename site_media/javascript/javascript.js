@@ -221,8 +221,6 @@ function Game(name) {
 /* New Code */
 
 
-	this.score = 0;
-		
 	var properties = {};
 	properties["name"] = "SHG";
 	properties["members"] = [
