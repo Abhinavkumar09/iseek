@@ -79,7 +79,7 @@ game.certificates = [
 						"Lecture.js",
 						false,
 						null,
-						{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
+						{House: true, Market: true, Workshop: true, School:true, SeemaWorkshop: true, HealthCenter: false}
 					),
 					new CertificateElement(
 						"market_research_2",
