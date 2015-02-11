@@ -75,11 +75,11 @@ game.certificates = [
 					),
 					new CertificateElement(
 						"market_research_1",
-						"Classroom",
+						"Lecture",
 						"Lecture.js",
 						false,
 						null,
-						{House: true, Market: true, Workshop: false, School:true, SeemaWorkshop: true, HealthCenter: false}
+						{House: true, Market: false, Workshop: false, School:true, SeemaWorkshop: false, HealthCenter: false}
 					),
 					new CertificateElement(
 						"market_research_2",
@@ -91,8 +91,75 @@ game.certificates = [
 					),
 				]
 			),
+			new CertificateBadge(
+				"Mind, Body, Relations", 
+				"Mind_Body_Relations",
+				"Objects/Medal/badge01.png",
+				false, 
+				[
+					new CertificateElement(
+						"health_1",
+						"Health",
+						"Health.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+					new CertificateElement(
+						"health_2",
+						"Test",
+						"Test.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
+					),
+					new CertificateElement(
+						"health_3",
+						"Activities",
+						"Activities.js",
+						false,
+						null,
+						{House: false, Market: false, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: true}
+					),
+				]
 
+<<<<<<< HEAD
 
+=======
+			),
+			new CertificateBadge(
+				"Finance", 
+				"Finance",
+				"Objects/Medal/badge01.png",
+				false, 
+				[
+					new CertificateElement(
+						"loan_1",
+						"Loan",
+						"loan.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+					new CertificateElement(
+						"show_inventory",
+						"test",
+						"testinventory.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: false, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+					new CertificateElement(
+						"show_products",
+						"Product test",
+						"testproduct.js",
+						false,
+						null,
+						{House: false, Market: true, Workshop: true, School: false, SeemaWorkshop: false, HealthCenter: false}
+					),
+				]
+			),
+>>>>>>> parent of 74f5f25... Merge branch 'Abhinavkumar09_marketdemo' into michaelize_80_create_opening_view
 		]
 	),
 ];
