@@ -27,20 +27,6 @@ function Person(properties) {
 	this.frame = properties.frame;
 	this.address = properties.address;
 	this.phone = properties.phone;
-
-	this.money = 100;
-	this.health = 100;
-}
-
-function Product(properties) {
-	this.id = properties.id;
-	this.name = properties.name;
-	this.qtyavailable = properties.qtyavailable;
-	this.price = properties.price;
-	this.sellable = properties.sellable;
-	this.buyable = properties.buyable;
-	this.bom_id = properties.bom_id;
-	this.qty = properties.qty;
 }
 
 function loadjscssfile(filename, filetype){
@@ -82,6 +68,9 @@ function Game(name) {
 		'Objects/Medal/badge01.png',
 
 
+		//People
+//		'People/Mira.png', 'People/Shyam.png', 'People/Asif.png', 'People/Ashwin.png', 'People/Sahiya.png', 'People/Enterpreneur.png', 
+//		'People/Rama.png', 'People/Seeta.png', 'People/Seema.png',
 		
 		//People emotions
 		'People/meera_angry3.png', 'People/meera_dizzyspinning3.png', 'People/meera_sick1.png', 'People/meera_cry6.png',
@@ -92,12 +81,20 @@ function Game(name) {
 		'CardObjects/cutnailscard.png', 'CardObjects/mosquitospraycard.png', 'CardObjects/padscard.png',
 		'CardObjects/healthkit.png',
 
+		//Buildings
+		'Building/workshop.png', 'Building/mira_house.png', 'Building/newHut.png',  'Building/school.png', 'Building/market.png', 'Building/healthcenter.png',
+		"mira_house.png", "market.png", "school.png", "workshop.png",
 
 		// Icons
 		"Icons/Guru_icon.png", "Icons/icon_info.png", "Icons/mute.png", "Icons/unmute.png", 
 		'VirtualWorld.png', "Icons/coin.png", 'Icons/score.png', 'Icons/close.png',
 		'Icons/medal.png', "Icons/money.png", "Icons/health.png",
 
+		// TMX
+		'house.tmx', 'house_inside.tmx', 'market.tmx', 'workshop.tmx', 'seemaworkshop.tmx', 'VirtualWorld1.tmx', 'school.tmx', 'VirtualWorld.tmx', 'healthcenter.tmx',
+
+		// Audio
+//		"sell_buy_item.wav", "put_pick_item.wav", "Lazy_Day.wav", "Tavern.wav",
 
 		// Video
 //		"output1.mp4",
@@ -188,7 +185,7 @@ function Game(name) {
 	};
 
 
-	this.player = new Person({
+	this.player = {
 		id: -1,
 		name: "Mira",
 		sheet: "player_sheet",
@@ -197,37 +194,22 @@ function Game(name) {
 		phone: "Phone",
 		money: 100,
 		health: 100,
-	});
-	this.player.keys = [];
-	this.player.change_money = function(price) {
-		this.money += price;
-		game.Q.state.trigger("change.money", this.money);
+		keys: [],
+		change_money: function(price) {
+			this.money += price;
+			game.Q.state.trigger("change.money", this.money);
+		},
 	};
-	
- /* New Code */
-	this.product = {
-		id: -1,
-		name: "test",
-		qtyavailable: 0, 
-		price: 100,
-	};
-	
-	
-	this.productInventory = {};
-	this.productLength = 0;
-	this.nameProduct;
-	this.priceProduct;
-	this.qtyProduct;
-/* New Code */
 
-
+	this.score = 0;
+		
 	var properties = {};
 	properties["name"] = "SHG";
-	properties["members"] = [
+	properties["people"] = [
 		new Person({"id": -1, "name": "Sheela", "sheet": "person_4_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
 		new Person({"id": -1, "name": "Rama", "sheet": "person_5_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
 		new Person({"id": -1, "name": "Swati", "sheet": "person_6_sheet", "frame": 1, "address": "Address", "phone": "phone"}),
-	];
+	]
 	properties.address = "SHG Address";
 	this.SHG = new SHG(properties);
 
@@ -292,38 +274,6 @@ function Game(name) {
 
 	this.TMX = {};
 	this.TMX.VirtualWorld = "VirtualWorld.tmx";
-	this.TMX.House = "house.tmx";
-	//, 'house_inside.tmx', 
-	this.TMX.Market = 'market.tmx';
-	this.TMX.Workshop = 'workshop.tmx';
-	this.TMX.OtherWorkshop = 'seemaworkshop.tmx';
-	//, 'VirtualWorld1.tmx', 
-	this.TMX.School = 'school.tmx';
-	this.TMX.HealthCenter = 'healthcenter.tmx';
-
-	this.TMX.Opening = 'VirtualWorld2.tmx';
-
-	for( tmx in this.TMX) {
-		this.resources.push(this.TMX[tmx]);
-	}
-
-	this.BUILDING = {};
-	this.BUILDING.RESOURCES = {
-		'Workshop': 'Building/workshop.png', 
-		'House': 'Building/mira_house.png', 
-		//'Building/newHut.png',  
-		'School': 'Building/school.png', 
-		'Market': 'Building/market.png', 
-		'HealthCenter': 'Building/healthcenter.png',
-		'Loan': 'Building/loan.png',
-		'MarketResearch': 'Building/market_research.png',
-		'Health': 'Building/health.png',
-		//"mira_house.png", "market.png", "school.png", "workshop.png",
-	};
-
-	for( building in this.BUILDING.RESOURCES) {
-		this.resources.push(this.BUILDING.RESOURCES[building]);
-	}
 
 	this.FONTS = {};
 	this.FONTS['REGULAR'] = "helvetica";

@@ -428,9 +428,6 @@ Q.Card.extend("StageInfoCard", {
 		this.insert(box);
 		box.insert(this.p.speaker);
 
-//		console.log("description.p.w = " + this.p.description.p.w);
-//		this.p.description.p.label.p.w = Math.min(this.p.description.p.label.p.w, Q.width -10 - this.p.speaker.p.w);
-//		console.log("description.p.w = " + this.p.description.p.label.p.w);
 		box.insert(this.p.description);
 
 		this.insert(new Q.ControlButtons({context: this, button_type: Q.ControlButtons.OK, y: this.p.cy - 25}));
@@ -565,8 +562,7 @@ Q.Card.extend("BusinessCard", {
 		var shg_card = new Q.SHGCard(this.p);
 
 		var shg = new Q.Tile({
-//			label: new Q.UI.Text({label: "SHG"}), 
-			image: new Q.Sprite({asset: game.BUILDING.RESOURCES.Workshop, scale:0.5}),
+			label: new Q.UI.Text({label: "SHG"}), 
 			x: -this.p.w/2 + 50, 
 			y: -this.p.h/2 + 275,
 			disabled: false,
@@ -628,6 +624,7 @@ Q.Card.extend("BusinessCardForm", {
 		this.insert(player);
 
 		var rows = [];
+//		var name = new Q.UI.Text({label: "Name", x: 0, y: 0});
 		var name = new Q.UI.WrappableText({label: "Name", w: 100, h: 300, x: 0, y: 0});
 		this.ninput = new Q.UI.HTMLElement({html: "<input type='text'value='" + this.p.person.name + "' />", x: 0, y: 0});
 		rows.push([name, this.ninput]);
@@ -644,22 +641,7 @@ Q.Card.extend("BusinessCardForm", {
 		this.sinput = new Q.UI.HTMLElement({html: "<select> <option value='Knitting'>Knitting</option><option value='Weaving'>Weaving</option><option value='Sowing'>Sowing</option> </select>", x: 0, y: 0});
 		rows.push([skill, this.sinput]);
 
-
-		/*
-		// To be used for the real business part, where the player will tell us the details of the SHG. For now, the player is assigned a SHG
-		var members = new Q.UI.WrappableText({label: "How many people are in your SHG?", value: 0, w: this.p.w/2});
-		this.membersinput = new Q.UI.Spinner({});
-		rows.push([members, this.membersinput]);
-
-		var money = new Q.UI.WrappableText({label: "How much amount will each person put in at the beginning?", w: this.p.w/2});
-		this.moneyinput = new Q.UI.HTMLElement({html: "<input type='text'value='" + "' />", x: 0, y: 0});
-		rows.push([money, this.moneyinput]);
-
-		var hours = new Q.UI.WrappableText({label: "How many hours will each person put in?", value: 0, w: this.p.w/2});
-		this.hoursinput = new Q.UI.Spinner({});
-		rows.push([hours, this.hoursinput]);
-		*/
-		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.60, 0.40], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
+		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
 		this.insert(con1);
 
 		var type = Q.ControlButtons.CANCEL;
@@ -901,108 +883,3 @@ Q.Card.extend("ActivityCard", {
 		this.destroy();
 	},
 });
-
-/* new code */
-
-Q.Card.extend("showInventory", {
-	
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			layout: Q.UI.Layout.NONE,
-		}));
-		this.on("inserted");
-	},	
-	
-	inserted: function() {		
-		game.sync_data["products"] = false;
-		console.log(game.productInventory[0].qtyavailable);
-		console.log(game.productLength);
-		var rows = [];
-
-		var proName = new Q.UI.Text({label: "Product Name", x: 0, y: 0});
-		var quantityAvl = new Q.UI.Text({label: "Quantity Available", x: 0, y: 0});
-
-		rows.push([proName, quantityAvl]);
-		
-		//var productName = ["test1","test2","test3"];
-		var productprice = ["100","200","300"];
-		var namePro = [];
-		var qtyPro = [];	
-		for(var i=0; i < game.productLength ; i++) {
-			namePro[i] = new Q.UI.Text({label: game.productInventory[i].name, x: 0, y: 0});
- 			qtyPro[i] = new Q.UI.Text({label: ""+game.productInventory[i].qtyavailable, x: 0, y: 0});
-			rows.push([namePro[i], qtyPro[i]]);
-		}
-
-		var content2 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
-
-		this.insert(content2); 
-
-		var typeB = Q.ControlButtons.DONE;
-		this.insert(new Q.ControlButtons({context: this, button_type: typeB, y: this.p.cy - 25}));
-
-		
-	},		
-
-	back: function() {
-		console.log("go back");
-		this.destroy();
-		this.stage.insert(this.p.back_card);
-	},	
-	
-	done: function() {
-		console.log("done");
-		
-		this.destroy();
-	},
-
-});
-
-/* new code */
-
-/* product test */
-
-Q.Card.extend("productCreation", {
-	
-	init: function(p) {
-		this._super(Q._defaults(p, {
-			layout: Q.UI.Layout.NONE,
-		}));
-		this.on("inserted");
-	},
-
-	inserted: function() {
-		this.movefront();
-
-		var rows = [];
-
-		var name = new Q.UI.WrappableText({label: "Product Name", w: 100, h: 300, x: 0, y: 0});
-		this.pval = "Enter here";
-		
-		this.npinput = new Q.UI.HTMLElement({html: "<input type='text'value= >", x: 0, y: 0});
-		rows.push([name, this.npinput]);
-
-		var price = new Q.UI.WrappableText({label: "Product Price", w: 100, x: 0, y: 0});
-		this.ppinput = new Q.UI.HTMLElement({html: "<input type='text'value= >", x: 0, y: 0});
-		rows.push([price, this.ppinput]);
-
-		var con1 = new Q.UI.TableLayout({align: [Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN, Q.UI.TableLayout.LEFT_ALIGN | Q.UI.TableLayout.CENTER_VERTICAL_ALIGN], colwidths: [0.5, 0.5], x: 50, y: 150 - this.p.h/2, rows: rows, w: this.p.w - 100, h: 200});
-		this.insert(con1);
-
-		var type = Q.ControlButtons.CANCEL;
-		type += Q.ControlButtons.NEXT;
-		this.insert(new Q.ControlButtons({context: this, button_type: type, y: this.p.cy - 25}));
-
-	},
-
-	cancel: function() {
-		console.log("cancel");
-		this.destroy();
-	},		
-
-
-});
-
-
-
-/* product test */
