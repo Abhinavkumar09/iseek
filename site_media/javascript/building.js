@@ -125,16 +125,10 @@ Q.Sprite.extend("Building", {
 						elementObj = this.stage.options.certificates[0].badges[2].elements[0];
 						break
 					case "seemaWorkshop":
-						elementID = this.stage.options.certificates[0].badges[2].elements[0].element_id;
-						elementObj = this.stage.options.certificates[0].badges[2].elements[0];
 						break;
 					case "Workshop":
-						elementID = this.stage.options.certificates[0].badges[2].elements[0].element_id;
-						elementObj = this.stage.options.certificates[0].badges[2].elements[0];
 						break;
 					case "House":
-						elementID = this.stage.options.certificates[0].badges[2].elements[0].element_id;
-						elementObj = this.stage.options.certificates[0].badges[2].elements[0];
 						break;
 					case "HealthCenter":
 						elementID = this.stage.options.certificates[0].badges[1].elements[0].element_id;
