@@ -23,6 +23,8 @@ Q.scene("market_research_1",function(stage) {
 	stage.add("viewport").follow(player);
 
 	var i = 0;
+	
+	stage.options.nextScene = stage.name;
 	while(Q("Building", Q.STAGE_LEVEL_PRIMARY).at(i) != null) {
 		b = Q("Building").at(i);
 		b.setInteractable(stage.options.element.interactability[b.p.name]);

@@ -43,7 +43,7 @@ Q.Sprite.extend("Door", {
 			var options = Q._defaults(this.stage.options, {direction: "dark"});
 			options["nextStage"] = [
 				["clearStage", Q.STAGE_LEVEL_PRIMARY],
-				["stageScene", this.stage.options.nextScene, Q.STAGE_LEVEL_PRIMARY, {}],
+				["stageScene", this.stage.options.nextScene, Q.STAGE_LEVEL_PRIMARY, this.stage.options],
 				//["unpause", Q.STAGE_LEVEL_PRIMARY],
 				["clearStage", Q.STAGE_LEVEL_LEARNING_MODULE],
 			];
@@ -145,7 +145,7 @@ Q.Sprite.extend("Building", {
 				}
 				//stage.options.nextScene = elementID;
 				console.log(elementObj);
-				console.log("AA");
+				//console.log("AA");
 				var options = Q._defaults(this.stage.options, {direction: "dark"});
 				options["nextStage"] = [
 					["clearStage", Q.STAGE_LEVEL_PRIMARY],
