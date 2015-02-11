@@ -14,6 +14,7 @@ Quintus.UI_extension = function(Q) {
     },
 
     splitLabel: function(ctx) {
+		console.log("splitLabel");
       this.p.oldLabel = this.p.label;
       ctx.save();
       this.setFont(ctx);
@@ -59,12 +60,13 @@ Quintus.UI_extension = function(Q) {
       this.p.cx = this.p.w / 2;
       this.p.cy = this.p.h / 2;
       ctx.restore();
+      this.p.oldw = this.p.w;
     },
 
     draw: function(ctx) {
       if(this.p.opacity === 0) { return; }
 
-      if(this.p.oldLabel !== this.p.label) { this.splitLabel(ctx); }
+      if((this.p.oldLabel !== this.p.label) || (this.p.oldw !== this.p.w)){ this.splitLabel(ctx); }
       ctx.save();
       this.setFont(ctx);
       if(this.p.opacity !== void 0) { ctx.globalAlpha = this.p.opacity; }
