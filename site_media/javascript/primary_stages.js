@@ -446,10 +446,13 @@ Q.scene("LevelSelector", function(stage) {
 				b.setInteractable(true);
 				break
 			case "seemaWorkshop":
+				b.setInteractable(true);
 				break;
 			case "Workshop":
+				b.setInteractable(true);
 				break;
 			case "House":
+				b.setInteractable(true);
 				break;
 			case "HealthCenter":
 				b.setInteractable(true);
