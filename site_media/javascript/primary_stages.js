@@ -438,25 +438,6 @@ Q.scene("LevelSelector", function(stage) {
 		var element;
 		console.log(b.p.name + ": ");
 		//console.log(this.certificates[0].badges[i].elements[0].element_id);
-		switch(b.p.name){
-			case "School":
-				b.setInteractable(true);
-				break;
-			case "Market":
-				b.setInteractable(true);
-				break
-			case "seemaWorkshop":
-				break;
-			case "Workshop":
-				break;
-			case "House":
-				break;
-			case "HealthCenter":
-				b.setInteractable(true);
-				break;
-			default:
-				break;
-		}
 		//b.setInteractable(stage.options.element.interactability[b.p.name]);
 		b.p.nextScene = elementID;
 
