@@ -201,6 +201,8 @@ function Game(name) {
 		},
 	};
 
+	this.score = 0;
+		
 	var properties = {};
 	properties["name"] = "SHG";
 	properties["people"] = [
